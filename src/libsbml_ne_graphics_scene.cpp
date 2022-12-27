@@ -37,3 +37,11 @@ void MyGraphicsScene::exportSceneFigure(const QString& fileName) {
 void MyGraphicsScene::clearScene() {
     clear();
 }
+
+void MyGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsScene::mousePressEvent(event);
+    if (event->button() == Qt::LeftButton) {
+        emit mouseLeftButtonIsPressed();
+        event->accept();
+    }
+}

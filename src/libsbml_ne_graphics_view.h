@@ -20,7 +20,6 @@ public:
     
 private slots:
     
-    void exportFigure(const QString& fileName, QPrinter::OutputFormat outputFormat);
     void resetScale();
     void scalingTime(qreal x);
     void animFinished();

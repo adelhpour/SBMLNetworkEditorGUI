@@ -88,6 +88,7 @@ void MyInteractor::screenshot() {
 }
 
 bool MyInteractor::isReadyToLoad() {
+    emit askForRemoveFeatureMenu();
     if (isDocumentModified())
         return displayAskForSaveMessage();
     
@@ -290,6 +291,8 @@ void MyInteractor::addText(GraphicalObject* graphicalObject) {
 void MyInteractor::addNetworkElement(MyNetworkElementBase* element) {
     connect(element, SIGNAL(askForColorDefinition(const QString&)), this, SLOT(getColorDefinition(const QString&)));
     connect(element, SIGNAL(askForGradientDefinition(const QString&)), this, SLOT(getGradientDefinition(const QString&)));
+    connect(element, SIGNAL(askForDisplayFeatureMenu(QWidget*)), this, SIGNAL(askForDisplayFeatureMenu(QWidget*)));
+    
     element->updateGraphicsItem();
     emit askForAddGraphicsItem(element->graphicsItem());
     _networkElements.push_back(element);

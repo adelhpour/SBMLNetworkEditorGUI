@@ -44,10 +44,6 @@ void MyGraphicsView::resetScale() {
     resetTransform();
 }
 
-void MyGraphicsView::exportFigure(const QString& fileName, QPrinter::OutputFormat outputFormat) {
-    
-}
-
 void MyGraphicsView::scalingTime(qreal x) {
     qreal factor = 1.0 + qreal(_numScheduledScalings) / 10000.0;
     if ((factor  > 1.00000 && (currentScale() < _maxScale)) || (factor  < 1.00000 && (currentScale() > _minScale))) {

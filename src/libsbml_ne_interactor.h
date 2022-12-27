@@ -87,6 +87,10 @@ signals:
     
     void documentIsModified(const bool&);
     
+    void askForDisplayFeatureMenu(QWidget*);
+    
+    void askForRemoveFeatureMenu();
+    
 private slots:
     
     void readFromFile();

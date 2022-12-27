@@ -18,12 +18,15 @@ public:
     
     const QRectF getExtents();
     
+    QWidget* getFeatureMenu();
+    
 signals:
     SBase* askForModelEntity(const QString&);
     GraphicalObject* askForGraphicalObject(const QString&);
     ColorDefinition* askForColorDefinition(const QString&);
     GradientBase* askForGradientDefinition(const QString&);
     LineEnding* askForLineEnding(const QString&);
+    void askForDisplayFeatureMenu(QWidget*);
     
 protected:
     GraphicalObject* _graphicalObject;

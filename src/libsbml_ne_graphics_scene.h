@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
 class MyGraphicsScene : public QGraphicsScene {
     Q_OBJECT
@@ -10,6 +11,10 @@ class MyGraphicsScene : public QGraphicsScene {
 public:
     
     MyGraphicsScene(QWidget* parent = nullptr);
+    
+signals:
+    
+    void mouseLeftButtonIsPressed();
 
 public slots:
     
@@ -19,6 +24,10 @@ public slots:
     void removeGraphicsItem(QGraphicsItem* item);
     void exportSceneFigure(const QString& fileName);
     void clearScene();
+    
+protected:
+    
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif

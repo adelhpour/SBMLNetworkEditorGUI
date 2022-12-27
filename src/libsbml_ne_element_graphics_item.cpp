@@ -74,3 +74,11 @@ void MyElementGraphicsItem::addTextGraphicsItem(RenderGroup* group, BoundingBox*
     }
     shape->updateFeatures(group, boundingBox, plainText);
 }
+
+void MyElementGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsItem::mouseDoubleClickEvent(event);
+    if (event->button() == Qt::LeftButton) {
+        emit mouseLeftButtonIsDoubleClicked();
+        event->accept();
+    }
+}

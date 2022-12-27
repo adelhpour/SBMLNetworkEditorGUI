@@ -5,6 +5,7 @@
 #include "src/libsbml_ne_render.h"
 #include <QObject>
 #include <QGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 
 class MyElementGraphicsItem : public QObject, public QGraphicsItemGroup {
     Q_OBJECT
@@ -32,6 +33,11 @@ signals:
     
     ColorDefinition* askForColorDefinition(const QString&);
     GradientBase* askForGradientDefinition(const QString&);
+    
+    void mouseLeftButtonIsDoubleClicked();
+    
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif

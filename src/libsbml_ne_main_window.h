@@ -23,6 +23,10 @@ private slots:
     
     void setExportActionEnabled(const bool& enabled);
     
+    void displayFeatureMenu(QWidget* featureMenu);
+    
+    void removeFeatureMenu();
+    
 protected:
     void setWidgets();
     void setInteractions();
@@ -30,6 +34,7 @@ protected:
     QWidget* _view;
     QObject* _interactor;
     QList<QAction*> _menuActions;
+    QWidget* _featureMenu;
 };
 
 #endif
