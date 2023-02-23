@@ -8,6 +8,10 @@ class MyText : public MyNetworkElementBase {
 public:
     MyText(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue);
     
+    const QString getType() override;
+    
+    const QString getId() override;
+    
     void updateGraphicsItem() override;
     
 };

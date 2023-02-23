@@ -15,8 +15,7 @@ MyInteractor::MyInteractor(QObject *parent) : QObject(parent) {
     connect(this, SIGNAL(savedSuccessfully(const QString&)), this, SLOT(setCurrentFileName(const QString&)));
     connect(this, SIGNAL(notLoadedSuccessfully(const QString&)), this, SLOT(displayFailedMessage(const QString&)));
     connect(this, SIGNAL(notSavedSuccessfully(const QString&)), this, SLOT(displayFailedMessage(const QString&)));
-    connect(this, SIGNAL(documentIsModified(const bool&)), this, SLOT(setDocumentModified(const bool&)));
-    connect(this, SIGNAL(documentIsModified(const bool&)), this, SIGNAL(askForSetSaveActionEnabled(const bool&)));
+    connect(this, &MyInteractor::documentIsModified, this, [this] () { setDocumentModified(true); });
 }
 
 QList<QAction*> MyInteractor::createMenuActions() {
@@ -71,7 +70,7 @@ bool MyInteractor::saveToFile() {
     if (!fileName.isEmpty()) {
         if (exportNetwork(fileName)) {
             emit savedSuccessfully(fileName);
-            emit documentIsModified(false);
+            emit setDocumentModified(false);
             return true;
         }
     }
@@ -177,6 +176,7 @@ SBMLDocument* MyInteractor::document() {
 
 void MyInteractor::setDocumentModified(const bool& isModified) {
     _isDocumentModified = isModified;
+    emit askForSetSaveActionEnabled(isModified);
 }
 
 Layout* MyInteractor::layout() {
@@ -187,7 +187,7 @@ Layout* MyInteractor::layout() {
     else {
         layout = createLayout(_document);
         setDefaultLayoutFeatures(document(), layout);
-        emit documentIsModified(true);
+        emit documentIsModified();
     }
     
     return layout;
@@ -201,7 +201,7 @@ GlobalRenderInformation* MyInteractor::globalRenderInformation() {
     else {
         globalRenderInformation = createGlobalRender(_document);
         setDefaultGlobalRenderFeatures(document(), globalRenderInformation);
-        emit documentIsModified(true);
+        emit documentIsModified();
     }
     
     return globalRenderInformation;
@@ -215,7 +215,7 @@ LocalRenderInformation* MyInteractor::localRenderInformation() {
     else {
         localRenderInformation = createLocalRender(layout());
         setDefaultLocalRenderFeatures(document(), layout(), localRenderInformation);
-        emit documentIsModified(true);
+        emit documentIsModified();
     }
     
     return localRenderInformation;
@@ -282,16 +282,18 @@ void MyInteractor::addText(GraphicalObject* graphicalObject) {
     
     if (style) {
         MyNetworkElementBase* element = createText(graphicalObject, style);
-        connect(element, SIGNAL(askForGraphicalObject(const QString&)), this, SLOT(getGraphicalObject(const QString&)));
-        connect(element, SIGNAL(askForModelEntity(const QString&)), this, SLOT(getModelEntity(const QString&)));
         addNetworkElement(element);
     }
 }
 
 void MyInteractor::addNetworkElement(MyNetworkElementBase* element) {
+    connect(element, &MyNetworkElementBase::askForSetDocumentModified, this, [this] () { setDocumentModified(true); });
+    connect(element, SIGNAL(askForModelEntity(const QString&)), this, SLOT(getModelEntity(const QString&)));
+    connect(element, SIGNAL(askForGraphicalObject(const QString&)), this, SLOT(getGraphicalObject(const QString&)));
     connect(element, SIGNAL(askForColorDefinition(const QString&)), this, SLOT(getColorDefinition(const QString&)));
     connect(element, SIGNAL(askForGradientDefinition(const QString&)), this, SLOT(getGradientDefinition(const QString&)));
     connect(element, SIGNAL(askForDisplayFeatureMenu(QWidget*)), this, SIGNAL(askForDisplayFeatureMenu(QWidget*)));
+    connect(element, SIGNAL(isUpdated()), this, SIGNAL(documentIsModified()));
     
     element->updateGraphicsItem();
     emit askForAddGraphicsItem(element->graphicsItem());

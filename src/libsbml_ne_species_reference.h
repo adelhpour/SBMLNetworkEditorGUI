@@ -8,8 +8,6 @@ class MySpeciesReference : public MyNetworkElementBase {
 public:
     MySpeciesReference(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue);
     
-    void updateGraphicsItem() override;
-    
     void updateLineEndingsGraphicsItem();
     
     void addLineEndingGraphicsItem(const QString& lineEndingId, const QPointF& position, const qreal rotation);
@@ -21,6 +19,20 @@ public:
     const qreal getStartSlope();
     
     const qreal getEndSlope();
+    
+    const QString getType() override;
+    
+    const QString getId() override;
+    
+    const QString getSpeciesGlyphId();
+    
+    const QString getRole();
+    
+    QWidget* elementFeatureMenu() override;
+    
+public slots:
+        
+    void updateGraphicsItem() override;
 };
 
 #endif

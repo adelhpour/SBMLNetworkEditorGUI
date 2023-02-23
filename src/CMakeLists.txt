@@ -23,7 +23,8 @@ set(gui_sources
 	libsbml_ne_ellipse_graphics_item.cpp
 	libsbml_ne_polygon_graphics_item.cpp
 	libsbml_ne_text_graphics_item.cpp
-	libsbml_ne_feature_menu.cpp)
+	libsbml_ne_feature_menu.cpp
+	libsbml_ne_parameters.cpp)
 
 ## set the required headers
 set(gui_headers
@@ -46,7 +47,8 @@ set(gui_headers
 	libsbml_ne_ellipse_graphics_item.h
 	libsbml_ne_polygon_graphics_item.h
 	libsbml_ne_text_graphics_item.h
-	libsbml_ne_feature_menu.h)
+	libsbml_ne_feature_menu.h
+	libsbml_ne_parameters.h)
 
 ## build the bundle/executable
 add_executable(LIBSBML_NETWORKEDITOR_GUI WIN32 MACOSX_BUNDLE 

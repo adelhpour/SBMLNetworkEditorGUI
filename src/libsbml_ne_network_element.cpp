@@ -1,6 +1,7 @@
 #include "libsbml_ne_network_element.h"
 #include "libsbml_ne_element_graphics_item.h"
 #include "libsbml_ne_feature_menu.h"
+#include <QGridLayout>
 
 MyNetworkElementBase::MyNetworkElementBase(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) {
     _graphicalObject = graphicalObject;
@@ -19,6 +20,33 @@ const QRectF MyNetworkElementBase::getExtents() {
     return ((MyElementGraphicsItem*)graphicsItem())->boundingRect();
 }
 
+const QString MyNetworkElementBase::getGlyphId() {
+    return QString(_graphicalObject->getId().c_str());
+}
+
 QWidget* MyNetworkElementBase::getFeatureMenu() {
-    return new MyFeatureMenu();
+    return new MyFeatureMenu(elementFeatureMenu());
+}
+
+QWidget* MyNetworkElementBase::elementFeatureMenu() {
+    QWidget* elementFeatureMenu = new MyGroupBox();
+    QGridLayout* contentLayout = new QGridLayout();
+    elementFeatureMenu->setLayout(contentLayout);
+    
+    // title
+    contentLayout->addWidget(new MyTitleLabel(getType()), contentLayout->rowCount(), 0, 1, 2, Qt::AlignCenter);
+    
+    // spacer
+    QLayoutItem* spacerItem = new MySpacerItem(0, 10);
+    contentLayout->addItem(spacerItem, contentLayout->rowCount(), 0, 1, 2);
+    
+    // id
+    contentLayout->addWidget(new MyLabel("Id"), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(new MyReadOnlyLineEdit(getId()), contentLayout->rowCount() - 1, 1);
+    
+    // glyph id
+    contentLayout->addWidget(new MyLabel("Glyph Id"), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(new MyReadOnlyLineEdit(getGlyphId()), contentLayout->rowCount() - 1, 1);
+    
+    return elementFeatureMenu;
 }

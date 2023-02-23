@@ -5,6 +5,14 @@ MyText::MyText(GraphicalObject* graphicalObject, Style* style, const qreal& grap
     
 }
 
+const QString MyText::getType() {
+    return QString("Text");
+}
+
+const QString MyText::getId() {
+    return QString();
+}
+
 void MyText::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
     QString plaintText;

@@ -85,7 +85,7 @@ signals:
     
     void notSavedSuccessfully(const QString&);
     
-    void documentIsModified(const bool&);
+    void documentIsModified();
     
     void askForDisplayFeatureMenu(QWidget*);
     

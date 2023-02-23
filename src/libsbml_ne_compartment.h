@@ -8,6 +8,14 @@ class MyCompartment : public MyNetworkElementBase {
 public:
     MyCompartment(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue);
     
+    const QString getType() override;
+    
+    const QString getId() override;
+    
+    QWidget* elementFeatureMenu() override;
+    
+public slots:
+    
     void updateGraphicsItem() override;
     
 };

@@ -6,6 +6,7 @@
 #include "libsbml_ne_text_graphics_item.h"
 
 MyElementGraphicsItem::MyElementGraphicsItem(const qreal& zValue, QGraphicsItem* parent) : QGraphicsItemGroup(parent) {
+    setHandlesChildEvents(false);
     setZValue(zValue);
 }
 

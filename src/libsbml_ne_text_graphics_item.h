@@ -41,6 +41,9 @@ public:
     const qreal getTextVerticalPadding(Text* text, BoundingBox* boundingBox);
     
     const qreal getTextVerticalPadding(RenderGroup* group, BoundingBox* boundingBox);
+    
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif

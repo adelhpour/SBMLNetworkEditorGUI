@@ -1,6 +1,8 @@
 #include "libsbml_ne_species_reference.h"
 #include "libsbml_ne_element_graphics_item.h"
+#include "libsbml_ne_feature_menu.h"
 #include <QtMath>
+#include <QGridLayout>
 
 MySpeciesReference::MySpeciesReference(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
 }
@@ -70,6 +72,46 @@ const qreal MySpeciesReference::getEndSlope() {
     }
     
     return 0.0;
+}
+
+const QString MySpeciesReference::getType() {
+    return QString("Species Reference");
+}
+
+const QString MySpeciesReference::getId() {
+    if (!((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesReferenceId().empty())
+        return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesReferenceId().c_str());
+    else
+        return "N/A";
+}
+
+const QString MySpeciesReference::getSpeciesGlyphId() {
+    return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesGlyphId().c_str());
+}
+
+const QString MySpeciesReference::getRole() {
+    return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getRoleString().c_str());
+}
+
+QWidget* MySpeciesReference::elementFeatureMenu() {
+    QWidget* elementFeatureMenu = MyNetworkElementBase::elementFeatureMenu();
+    QGridLayout* contentLayout = (QGridLayout*)(elementFeatureMenu->layout());
+    
+    // species glyph
+    contentLayout->addWidget(new MyLabel("Species Glyph Id"), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(new MyReadOnlyLineEdit(getSpeciesGlyphId()), contentLayout->rowCount() - 1, 1);
+    
+    // role
+    contentLayout->addWidget(new MyLabel("Role"), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(new MyReadOnlyLineEdit(getRole()), contentLayout->rowCount() - 1, 1);
+    
+    // stroke
+    QWidget* _strokeMenu = new MyStrokeMenu(_graphicalObject, _style);
+    connect(_strokeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(_strokeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    contentLayout->addWidget(_strokeMenu, contentLayout->rowCount(), 0, 1, 2);
+    
+    return elementFeatureMenu;
 }
 
 

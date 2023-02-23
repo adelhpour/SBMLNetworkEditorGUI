@@ -14,19 +14,31 @@ public:
     
     QGraphicsItem* graphicsItem();
     
-    virtual void updateGraphicsItem() = 0;
-    
     const QRectF getExtents();
+    
+    virtual const QString getType() = 0;
+    
+    virtual const QString getId() = 0;
+    
+    const QString getGlyphId();
     
     QWidget* getFeatureMenu();
     
+    virtual QWidget* elementFeatureMenu();
+    
 signals:
+    void askForSetDocumentModified();
     SBase* askForModelEntity(const QString&);
     GraphicalObject* askForGraphicalObject(const QString&);
     ColorDefinition* askForColorDefinition(const QString&);
     GradientBase* askForGradientDefinition(const QString&);
     LineEnding* askForLineEnding(const QString&);
     void askForDisplayFeatureMenu(QWidget*);
+    void isUpdated();
+    
+public slots:
+    
+    virtual void updateGraphicsItem() = 0;
     
 protected:
     GraphicalObject* _graphicalObject;

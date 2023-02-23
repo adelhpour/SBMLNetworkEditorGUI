@@ -190,3 +190,7 @@ const qreal MyTextGraphicsItem::getTextVerticalPadding(Text* text, BoundingBox* 
     
     return 0.000;
 }
+
+void MyTextGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsItem::mouseDoubleClickEvent(event);
+}

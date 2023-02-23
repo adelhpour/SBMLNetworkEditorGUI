@@ -8,8 +8,17 @@ class MySpecies : public MyNetworkElementBase {
 public:
     MySpecies(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue);
     
-    void updateGraphicsItem() override;
+    const QString getType() override;
     
+    const QString getId() override;
+    
+    const QString getCompartmentId();
+    
+    QWidget* elementFeatureMenu() override;
+    
+public slots:
+        
+    void updateGraphicsItem() override;
 };
 
 #endif
