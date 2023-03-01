@@ -54,7 +54,7 @@ void MyLineEdit::setText(const QString &contents) {
     setCursorPosition(0);
 }
 
-
+// MyReadOnlyLineEdit
 
 MyReadOnlyLineEdit::MyReadOnlyLineEdit(const QString &contents, QWidget* parent) : MyLineEdit(contents, parent) {
     setReadOnly(true);
@@ -110,906 +110,6 @@ MyStandardItem::MyStandardItem(const QString& text, const qreal& fontsize, const
     setForeground(color);
     setFont(font);
     setText(text);
-}
-
-// MyTreeView
-
-MyTreeView::MyTreeView(QWidget* parent) : QTreeView(parent) {
-    setHeaderHidden(true);
-    setStyleSheet("QTreeView { background-color: white; border: no-border;}" "QTreeView::item:selected { background-color: white; border: no-border;}" "QTreeView::item:hover { background-color: white; border: no-border;}");
-    setContentsMargins(0, 0, 0, 0);
-    
-    treeModel = new QStandardItemModel(this);
-    setModel(treeModel);
-    
-    connect(this, QOverload<const QModelIndex&>::of(&QTreeView::expanded), this, [this] (const QModelIndex& index) {
-        QList<QStandardItem*> familyItems;
-        QList<QStandardItem*> items;
-        QStandardItem* root = treeModel->invisibleRootItem();;
-        QStandardItem* item = treeModel->itemFromIndex(index);
-        int n = 0;
-        int m = 0;
-        
-        familyItems.push_back(item);
-        while (item->parent()) {
-            item = item->parent();
-            familyItems.push_back(item);
-        }
-        
-        for (unsigned int i = 0; i < root->rowCount(); ++i) {
-            items.push_back(root->child(i));
-            
-            while (!items.empty()) {
-                n = items.size();
-                
-                while (n > 0) {
-                    item = items.front();
-                    items.pop_front();
-                    
-                    m = 0;
-                    for (m = 0; m < familyItems.size(); ++m) {
-                        if (item->text() == familyItems.at(m)->text())
-                            break;
-                    }
-                    
-                    if (m == familyItems.size())
-                        this->collapse(treeModel->indexFromItem(item));
-                    
-                    //if (!item->hasChildren())
-                        //break;
-                    
-                    for (int j = 0; j < item->rowCount(); ++j)
-                        items.push_back(item->child(j));
-                    
-                    n--;
-                }
-            }
-        }
-        
-        this->scrollTo(index, QAbstractItemView::PositionAtTop);
-    });
-}
-
-void MyTreeView::addBranchWidget(QWidget* branchWidget, const QString& branchTitle, const QString& rootTitle) {
-    MyStandardItem* branch = new MyStandardItem(branchTitle, 12.0, true);
-    if (treeModel->findItems(rootTitle).empty())
-        treeModel->invisibleRootItem()->appendRow(branch);
-    else
-        treeModel->findItems(rootTitle).first()->appendRow(branch);
-    
-    if (branchWidget) {
-        MyStandardItem* branchContent = new MyStandardItem();
-        branch->appendRow(branchContent);
-        setIndexWidget(branchContent->index(), branchWidget);
-        _branches.push_back(std::pair<MyStandardItem*, MyStandardItem*>(branch, branchContent));
-    }
-    else
-        _branches.push_back(std::pair<MyStandardItem*, MyStandardItem*>(branch, NULL));
-}
-
-void MyTreeView::clearModel() {
-    for (constBranchIt bIt = BranchesBegin(); bIt != BranchesEnd(); ++bIt) {
-        if ((*bIt).second) {
-            (*bIt).second->removeRows(0, (*bIt).second->rowCount());
-            delete (*bIt).second;
-        }
-        delete (*bIt).first;
-    }
-    _branches.clear();
-    treeModel->clear();
-}
-
-void MyTreeView::removeBranches(const QString& rootTitle, const unsigned int& staticbranches) {
-    QList<QStandardItem *> roots;
-    if (!rootTitle.isEmpty())
-        roots = treeModel->findItems(rootTitle);
-    else
-        roots.push_back(treeModel->invisibleRootItem());
-    for (int i = 0; i < roots.size(); ++i) {
-        while (roots.at(i)->rowCount() > staticbranches) {
-            for (constBranchIt bIt = BranchesBegin(); bIt != BranchesEnd(); ++bIt) {
-                if ((*bIt).first->text() == roots.at(i)->child(staticbranches)->text()) {
-                    if ((*bIt).second) {
-                        (*bIt).second->clearData();
-                        (*bIt).second->removeRows(0, (*bIt).second->rowCount());
-                        delete (*bIt).second;
-                    }
-                    (*bIt).first->clearData();
-                    (*bIt).first->removeRows(0, (*bIt).first->rowCount());
-                    delete (*bIt).first;
-                    _branches.erase(bIt);
-                    roots.at(i)->removeRow(staticbranches);
-                    break;
-                }
-            }
-        }
-    }
-}
-
-// MyParameterBase
-
-MyParameterBase::MyParameterBase(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) {
-    _name = name;
-    _graphicalObject = graphicalObject;
-    _styleFeatures = styleFeatures;
-    _inputWidget = NULL;
-}
-
-const QString& MyParameterBase::name() {
-    return _name;
-}
-
-// MyDoubleParameter
-
-MyDoubleParameter::MyDoubleParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyDoubleSpinBox();
-    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyDoubleParameter::type() {
-    return DOUBLE_PARAMETER_TYPE;
-}
-
-void MyDoubleParameter::setDefaultValue(const qreal& value) {
-    if (value >= min() && value <= max()) {
-        _defaultValue = value;
-        _isSetDefaultValue = true;
-    }
-}
-
-void MyDoubleParameter::setDefaultValue() {
-    setDefaultValue(((MyDoubleSpinBox*)_inputWidget)->value());
-}
-
-const qreal& MyDoubleParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-void MyDoubleParameter::setMin(const qreal& min) {
-    _min = min;
-    _isSetMin = true;
-}
-
-const qreal& MyDoubleParameter::min() const {
-    return _min;
-}
-
-void MyDoubleParameter::setMax(const qreal& max) {
-    _max = max;
-    _isSetMax = true;
-}
-
-const qreal& MyDoubleParameter::max() const {
-    return _max;
-}
-
-void MyDoubleParameter::setStep(const qreal& step) {
-    _step = step;
-    _isSetStep = true;
-}
-
-const qreal& MyDoubleParameter::step() const {
-    return _step;
-}
-
-QWidget* MyDoubleParameter::inputWidget() {
-    ((MyDoubleSpinBox*)_inputWidget)->setMinimum(min());
-    ((MyDoubleSpinBox*)_inputWidget)->setMaximum(max());
-    ((MyDoubleSpinBox*)_inputWidget)->setSingleStep(step());
-    ((MyDoubleSpinBox*)_inputWidget)->setValue(defaultValue());
-    QStringList stepNumbers = QString::number(step()).split('.');
-    if (stepNumbers.size() == 2)
-        ((MyDoubleSpinBox*)_inputWidget)->setDecimals(stepNumbers.at(1).size());
-    
-    return _inputWidget;
-}
-
-void MyDoubleParameter::reset() {
-    _defaultValue = 0.0;
-    _min = 0.0;
-    _max = 1.0;
-    _step = 1.0;
-    _isSetDefaultValue = false;
-    _isSetMin = false;
-    _isSetMax = false;
-    _isSetStep = false;
-}
-
-// MyIntegerParameter
-
-MyIntegerParameter::MyIntegerParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MySpinBox();
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyIntegerParameter::type() {
-    return INTEGER_PARAMETER_TYPE;
-}
-
-void MyIntegerParameter::setDefaultValue(const qint32& value) {
-    if (value >= min() && value <= max()) {
-        _defaultValue = value;
-        _isSetDefaultValue = true;
-    }
-}
-
-void MyIntegerParameter::setDefaultValue() {
-    setDefaultValue(((MySpinBox*)_inputWidget)->value());
-}
-
-const qint32& MyIntegerParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-void MyIntegerParameter::setMin(const qint32& min) {
-    _min = min;
-    _isSetMin = true;
-}
-
-const qint32& MyIntegerParameter::min() const {
-    return _min;
-}
-
-void MyIntegerParameter::setMax(const qint32& max) {
-    _max = max;
-    _isSetMax = true;
-}
-
-const qint32& MyIntegerParameter::max() const {
-    return _max;
-}
-
-void MyIntegerParameter::setStep(const qint32& step) {
-    _step = step;
-    _isSetStep = true;
-}
-
-const qint32& MyIntegerParameter::step() const {
-    return _step;
-}
-
-QWidget* MyIntegerParameter::inputWidget() {
-    ((MySpinBox*)_inputWidget)->setMinimum(min());
-    ((MySpinBox*)_inputWidget)->setMaximum(max());
-    ((MySpinBox*)_inputWidget)->setSingleStep(step());
-    ((MySpinBox*)_inputWidget)->setValue(defaultValue());
-    
-    return _inputWidget;
-}
-
-void MyIntegerParameter::reset() {
-    _defaultValue = 0;
-    _min = 0;
-    _max = 1;
-    _step = 1;
-    _isSetDefaultValue = false;
-    _isSetMin = false;
-    _isSetMax = false;
-    _isSetStep = false;
-}
-
-// MyBooleanParameter
-
-MyBooleanParameter::MyBooleanParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyComboBox();
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyBooleanParameter::type() {
-    return BOOLEAN_PARAMETER_TYPE;
-}
-
-void MyBooleanParameter::setDefaultValue(const bool& value) {
-    _defaultValue = value;
-    _isSetDefaultValue = true;
-}
-
-void MyBooleanParameter::setDefaultValue() {
-    if (((MyComboBox*)_inputWidget)->currentText() == "true")
-        setDefaultValue(true);
-    else
-        setDefaultValue(false);
-}
-
-const bool& MyBooleanParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-QWidget* MyBooleanParameter::inputWidget() {
-    ((MyComboBox*)_inputWidget)->clear();
-    ((MyComboBox*)_inputWidget)->addItem("true");
-    ((MyComboBox*)_inputWidget)->addItem("false");
-    if (defaultValue())
-        ((MyComboBox*)_inputWidget)->setCurrentText("true");
-    else
-        ((MyComboBox*)_inputWidget)->setCurrentText("false");
-    
-    return _inputWidget;
-}
-
-void MyBooleanParameter::reset() {
-    _defaultValue = true;
-    _isSetDefaultValue = false;
-}
-
-// MyStringParameter
-
-MyStringParameter::MyStringParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyLineEdit();
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyStringParameter::type() {
-    return STRING_PARAMETER_TYPE;
-}
-
-void MyStringParameter::setDefaultValue(const QString& value) {
-    _defaultValue = value;
-    _isSetDefaultValue = true;
-}
-
-void MyStringParameter::setDefaultValue() {
-    setDefaultValue(((MyLineEdit*)_inputWidget)->text());
-}
-
-const QString& MyStringParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-QWidget* MyStringParameter::inputWidget() {
-    ((MyLineEdit*)_inputWidget)->setText(defaultValue());
-
-    return _inputWidget;
-}
-
-void MyStringParameter::reset() {
-    _defaultValue = "";
-    _isSetDefaultValue = false;
-}
-
-// MyNominalParameter
-
-MyNominalParameter::MyNominalParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyComboBox();
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyNominalParameter::type() {
-    return NOMINAL_PARAMETER_TYPE;
-}
-
-void MyNominalParameter::setDefaultValue(const QString& value) {
-    for (QString item : qAsConst(items())) {
-        if (value == item) {
-            _defaultValue = value;
-            _isSetDefaultValue = true;
-            break;
-        }
-    }
-}
-
-void MyNominalParameter::setDefaultValue() {
-    setDefaultValue(((MyComboBox*)_inputWidget)->currentText());
-}
-
-const QString& MyNominalParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-const QStringList& MyNominalParameter::items() const {
-    return _items;
-}
-
-QWidget* MyNominalParameter::inputWidget() {
-    ((MyComboBox*)_inputWidget)->clear();
-    ((MyComboBox*)_inputWidget)->addItems(items());
-    ((MyComboBox*)_inputWidget)->setCurrentText(defaultValue());
-    
-    return _inputWidget;
-}
-
-void MyNominalParameter::reset() {
-    _defaultValue = "";
-    _isSetDefaultValue = false;
-    _items.clear();
-}
-
-// MyDashArrayParameter
-
-MyDashArrayParameter::MyDashArrayParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyDashArrayItemsBox();
-    connect((MyDashArrayItemsBox*)_inputWidget, &MyDashArrayItemsBox::dashArrayChosen, this, [this] (const QList<unsigned int>& dashArray) {this->write(); });
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyDashArrayParameter::type() {
-    return DASH_ARRAY_PARAMETER_TYPE;
-}
-
-void MyDashArrayParameter::setDefaultValue(const QList<unsigned int>& dashArray) {
-    _defaultValue = dashArray;
-}
-
-void MyDashArrayParameter::setDefaultValue() {
-    setDefaultValue(((MyDashArrayItemsBox*)_inputWidget)->currentDashArray());
-}
-
-const QList<unsigned int>& MyDashArrayParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-QWidget* MyDashArrayParameter::inputWidget() {
-    ((MyDashArrayItemsBox*)_inputWidget)->setCurrentDashArray(defaultValue());
-    
-    return _inputWidget;
-}
-
-void MyDashArrayParameter::reset() {
-    ((MyDashArrayItemsBox*)_inputWidget)->reset();
-}
-
-// MyColorParameter
-
-MyColorParameter::MyColorParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyParameterBase(name, graphicalObject, styleFeatures) {
-    _inputWidget = new MyColorPickerButton();
-    connect(((MyColorPickerMenu*)((MyColorPickerButton*)_inputWidget)->menu()), &MyColorPickerMenu::colorChosen, this, [this] (const QString& color) {this->write(); });
-    reset();
-}
-
-MyParameterBase::PARAMETER_TYPE MyColorParameter::type() {
-    return COLOR_PARAMETER_TYPE;
-}
-
-void MyColorParameter::setDefaultValue(const QString& value) {
-    _defaultValue = value;
-}
-
-void MyColorParameter::setDefaultValue() {
-    setDefaultValue(((MyColorPickerButton*)_inputWidget)->currentColor());
-}
-
-const QString& MyColorParameter::defaultValue() const {
-    return _defaultValue;
-}
-
-QWidget* MyColorParameter::inputWidget() {
-    ((MyColorPickerButton*)_inputWidget)->setCurrentColor(defaultValue());
-    
-    return _inputWidget;
-}
-
-void MyColorParameter::reset() {
-    setDefaultValue("black");
-}
-
-// MyPositionalParameter
-
-MyPositionalParameter::MyPositionalParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDoubleParameter(name, graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyPositionalParameter::reset() {
-    setDefaultValue(0.0);
-    setMin(-1000.0);
-    setMax(1000.0);
-    setStep(1.0);
-}
-
-// MyDimensionalParameter
-
-MyDimensionalParameter::MyDimensionalParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDoubleParameter(name, graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyDimensionalParameter::reset() {
-    setDefaultValue(20.0);
-    setMin(0.0);
-    setMax(2000.0);
-    setStep(1.0);
-}
-
-// MyRelativePositionalParameter
-
-MyRelativePositionalParameter::MyRelativePositionalParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyPositionalParameter(name, graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyRelativePositionalParameter::reset() {
-    setDefaultValue(0);
-    setMin(-100);
-    setMax(100);
-    setStep(1.0);
-}
-
-// MyRelativeDimensionalParameter
-
-MyRelativeDimensionalParameter::MyRelativeDimensionalParameter(const QString& name, GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDimensionalParameter(name, graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyRelativeDimensionalParameter::reset() {
-    setDefaultValue(0);
-    setMin(0);
-    setMax(100);
-    setStep(1.0);
-}
-
-// MyRelAbsAbsolutePositionalParameter
-
-MyRelAbsAbsolutePositionalParameter::MyRelAbsAbsolutePositionalParameter(const QString& name, RelAbsVector* relAbsVector) : MyPositionalParameter(name, NULL, NULL) {
-    _relAbsVector = relAbsVector;
-}
-
-void MyRelAbsAbsolutePositionalParameter::read() {
-    setDefaultValue(_relAbsVector->getAbsoluteValue());
-}
-
-void MyRelAbsAbsolutePositionalParameter::write() {
-    _relAbsVector->setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyRelAbsAbsoluteDimensionalParameter
-
-MyRelAbsAbsoluteDimensionalParameter::MyRelAbsAbsoluteDimensionalParameter(const QString& name, RelAbsVector* relAbsVector) : MyDimensionalParameter(name, NULL, NULL) {
-    _relAbsVector = relAbsVector;
-}
-
-void MyRelAbsAbsoluteDimensionalParameter::read() {
-    setDefaultValue(_relAbsVector->getAbsoluteValue());
-}
-
-void MyRelAbsAbsoluteDimensionalParameter::write() {
-    _relAbsVector->setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-}
-
-// MyRelAbsRelativePositionalParameter
-
-MyRelAbsRelativePositionalParameter::MyRelAbsRelativePositionalParameter(const QString& name, RelAbsVector* relAbsVector) : MyRelativePositionalParameter(name, NULL, NULL) {
-    _relAbsVector = relAbsVector;
-}
-
-void MyRelAbsRelativePositionalParameter::read() {
-    setDefaultValue(_relAbsVector->getRelativeValue());
-}
-
-void MyRelAbsRelativePositionalParameter::write() {
-    _relAbsVector->setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyRelAbsRelativeDimensionalParameter
-
-MyRelAbsRelativeDimensionalParameter::MyRelAbsRelativeDimensionalParameter(const QString& name, RelAbsVector* relAbsVector) : MyRelativeDimensionalParameter(name, NULL, NULL) {
-    _relAbsVector = relAbsVector;
-}
-
-void MyRelAbsRelativeDimensionalParameter::read() {
-    setDefaultValue(_relAbsVector->getAbsoluteValue());
-}
-
-void MyRelAbsRelativeDimensionalParameter::write() {
-    _relAbsVector->setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyBoundingBoxXParameter
-
-MyBoundingBoxXParameter::MyBoundingBoxXParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyPositionalParameter("X", graphicalObject, styleFeatures) {
-    
-}
-
-void MyBoundingBoxXParameter::read() {
-    setDefaultValue(getPositionX(_graphicalObject));
-}
-
-void MyBoundingBoxXParameter::write() {
-    setPositionX(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyBoundingBoxYParameter
-
-MyBoundingBoxYParameter::MyBoundingBoxYParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyPositionalParameter("Y", graphicalObject, styleFeatures) {
-    
-}
-
-void MyBoundingBoxYParameter::read() {
-    setDefaultValue(getPositionY(_graphicalObject));
-}
-
-void MyBoundingBoxYParameter::write() {
-    setPositionY(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyBoundingBoxWidthParameter
-
-MyBoundingBoxWidthParameter::MyBoundingBoxWidthParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDimensionalParameter("Width", graphicalObject, styleFeatures) {
-    
-}
-
-void MyBoundingBoxWidthParameter::read() {
-    setDefaultValue(getDimensionWidth(_graphicalObject));
-}
-
-void MyBoundingBoxWidthParameter::write() {
-    setDimensionWidth(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyBoundingBoxHeightParameter
-
-MyBoundingBoxHeightParameter::MyBoundingBoxHeightParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDimensionalParameter("Height", graphicalObject, styleFeatures) {
-    
-}
-
-void MyBoundingBoxHeightParameter::read() {
-    setDefaultValue(getDimensionHeight(_graphicalObject));
-}
-
-void MyBoundingBoxHeightParameter::write() {
-    setDimensionHeight(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyStrokeWidthParameter
-
-MyStrokeWidthParameter::MyStrokeWidthParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDoubleParameter("stroke-width", graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyStrokeWidthParameter::reset() {
-    setDefaultValue(2.0);
-    setMin(1.0);
-    setMax(20.0);
-    setStep(1.0);
-}
-
-void MyStrokeWidthParameter::read() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setDefaultValue(getStrokeWidth((GraphicalPrimitive1D*)_styleFeatures));
-}
-
-void MyStrokeWidthParameter::write() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setStrokeWidth((GraphicalPrimitive1D*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
-    emit isUpdated();
-}
-
-// MyStrokeColorParameter
-
-MyStrokeColorParameter::MyStrokeColorParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyColorParameter("stroke", graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyStrokeColorParameter::reset() {
-    setDefaultValue("black");
-}
-
-void MyStrokeColorParameter::read() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setDefaultValue(QString(getStrokeColor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
-}
-
-void MyStrokeColorParameter::write() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setStrokeColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
-    emit isUpdated();
-}
-
-// MyStrokeDashArrayParameter
-
-MyStrokeDashArrayParameter::MyStrokeDashArrayParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyDashArrayParameter("stroke-dasharray", graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyStrokeDashArrayParameter::read() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setDefaultValue(QList<unsigned int>::fromVector(QVector<unsigned int>::fromStdVector(getStrokeDashArray((GraphicalPrimitive1D*)_styleFeatures))));
-}
-
-void MyStrokeDashArrayParameter::write() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive1D*>(_styleFeatures))
-        setStrokeDashArray((GraphicalPrimitive1D*)_styleFeatures, ((MyDashArrayItemsBox*)_inputWidget)->currentDashArray().toVector().toStdVector());
-    emit isUpdated();
-}
-
-// MyFillParameter
-
-MyFillParameter::MyFillParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyColorParameter("fill", graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyFillParameter::reset() {
-    setDefaultValue("white");
-}
-
-void MyFillParameter::read() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive2D*>(_styleFeatures))
-        setDefaultValue(QString(getFillColor((GraphicalPrimitive2D*)_styleFeatures).c_str()));
-}
-
-void MyFillParameter::write() {
-    if (_styleFeatures && dynamic_cast<GraphicalPrimitive2D*>(_styleFeatures))
-        setFillColor((GraphicalPrimitive2D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
-    emit isUpdated();
-}
-
-// MyFontFamilyParameter
-
-MyFontFamilyParameter::MyFontFamilyParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyStringParameter("font-family", graphicalObject, styleFeatures) {
-    reset();
-}
-
-void MyFontFamilyParameter::reset() {
-    setDefaultValue("monospace");
-}
-
-void MyFontFamilyParameter::read() {
-    
-}
-
-void MyFontFamilyParameter::write() {
-    
-}
-
-// MyFontSizeParameter
-
-MyFontSizeParameter::MyFontSizeParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyNominalParameter("font-size", graphicalObject, styleFeatures) {
-    int i = 5;
-    while (i <= 72) {
-        _items.push_back(QString::number(i));
-    
-        if (i < 12)
-            ++i;
-        else if (i < 28)
-            i += 2;
-        else if (i < 36)
-            i += 8;
-        else if (i < 48)
-            i += 12;
-        else
-            i += 24;
-    }
-}
-
-void MyFontSizeParameter::reset() {
-    setDefaultValue("10");
-}
-
-const qint32 MyFontSizeParameter::defaultSize() const {
-    return defaultValue().toDouble();
-}
-
-void MyFontSizeParameter::read() {
-    
-}
-
-void MyFontSizeParameter::write() {
-    
-}
-
-// MyFontWeightParameter
-
-MyFontWeightParameter::MyFontWeightParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyNominalParameter("font-weight", graphicalObject, styleFeatures) {
-    _items.push_back("normal");
-    _items.push_back("bold");
-    reset();
-}
-
-const bool MyFontWeightParameter::defaultWeight() const {
-    if (defaultValue() == "bold")
-        return true;
-    
-    return false;
-}
-
-void MyFontWeightParameter::reset() {
-    setDefaultValue("normal");
-}
-
-void MyFontWeightParameter::read() {
-    
-}
-
-void MyFontWeightParameter::write() {
-    
-}
-
-// MyFontStyleParameter
-
-MyFontStyleParameter::MyFontStyleParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyNominalParameter("font-style", graphicalObject, styleFeatures) {
-    _items.push_back("normal");
-    _items.push_back("italic");
-    reset();
-}
-
-const bool MyFontStyleParameter::defaultStyle() const {
-    if (defaultValue() == "italic")
-        return true;
-    
-    return false;
-}
-
-void MyFontStyleParameter::reset() {
-    setDefaultValue("normal");
-}
-
-void MyFontStyleParameter::read() {
-    
-}
-
-void MyFontStyleParameter::write() {
-    
-}
-
-// MyTextAnchorParameter
-
-MyTextAnchorParameter::MyTextAnchorParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyNominalParameter("text-anchor", graphicalObject, styleFeatures) {
-    _items.push_back("start");
-    _items.push_back("middle");
-    _items.push_back("end");
-    reset();
-}
-
-const Qt::Alignment MyTextAnchorParameter::defaultAlignment() const {
-    if (defaultValue() == "start")
-        return Qt::AlignLeft;
-    else if (defaultValue() == "middle")
-        return Qt::AlignHCenter;
-    else if (defaultValue() == "end")
-        return Qt::AlignRight;
-    
-    return Qt::AlignHCenter;
-}
-
-void MyTextAnchorParameter::reset() {
-    setDefaultValue("middle");
-}
-
-void MyTextAnchorParameter::read() {
-    
-}
-
-void MyTextAnchorParameter::write() {
-    
-}
-
-// MyVTextAnchorParameter
-
-MyVTextAnchorParameter::MyVTextAnchorParameter(GraphicalObject* graphicalObject, Transformation2D* styleFeatures) : MyNominalParameter("vtext-anchor", graphicalObject, styleFeatures) {
-    _items.push_back("top");
-    _items.push_back("middle");
-    _items.push_back("baseline");
-    _items.push_back("bottom");
-    reset();
-}
-
-const Qt::Alignment MyVTextAnchorParameter::defaultAlignment() const {
-    if (defaultValue() == "top")
-        return Qt::AlignTop;
-    else if (defaultValue() == "middle")
-        return Qt::AlignVCenter;
-    else if (defaultValue() == "baseline")
-        return Qt::AlignBaseline;
-    else if (defaultValue() == "bottom")
-        return Qt::AlignBottom;
-    
-    return Qt::AlignVCenter;
-}
-
-void MyVTextAnchorParameter::reset() {
-    setDefaultValue("middle");
-}
-
-void MyVTextAnchorParameter::read() {
-    
-}
-
-void MyVTextAnchorParameter::write() {
-    
 }
 
 // MyDashArrayItemsBox
@@ -2028,4 +1128,1325 @@ const QString& MyColorTileButton::color() const {
 
 const QString& MyColorTileButton::value() const {
     return _value;
+}
+
+// MyTreeView
+
+MyTreeView::MyTreeView(QWidget* parent) : QTreeView(parent) {
+    setHeaderHidden(true);
+    setStyleSheet("QTreeView { background-color: white; border: no-border;}" "QTreeView::item:selected { background-color: white; border: no-border;}" "QTreeView::item:hover { background-color: white; border: no-border;}");
+    setContentsMargins(0, 0, 0, 0);
+    
+    treeModel = new QStandardItemModel(this);
+    setModel(treeModel);
+    
+    connect(this, QOverload<const QModelIndex&>::of(&QTreeView::expanded), this, [this] (const QModelIndex& index) {
+        QList<QStandardItem*> familyItems;
+        QList<QStandardItem*> items;
+        QStandardItem* root = treeModel->invisibleRootItem();;
+        QStandardItem* item = treeModel->itemFromIndex(index);
+        int n = 0;
+        int m = 0;
+        
+        familyItems.push_back(item);
+        while (item->parent()) {
+            item = item->parent();
+            familyItems.push_back(item);
+        }
+        
+        for (unsigned int i = 0; i < root->rowCount(); ++i) {
+            items.push_back(root->child(i));
+            
+            while (!items.empty()) {
+                n = items.size();
+                
+                while (n > 0) {
+                    item = items.front();
+                    items.pop_front();
+                    
+                    m = 0;
+                    for (m = 0; m < familyItems.size(); ++m) {
+                        if (item->text() == familyItems.at(m)->text())
+                            break;
+                    }
+                    
+                    if (m == familyItems.size())
+                        this->collapse(treeModel->indexFromItem(item));
+                    
+                    //if (!item->hasChildren())
+                        //break;
+                    
+                    for (int j = 0; j < item->rowCount(); ++j)
+                        items.push_back(item->child(j));
+                    
+                    n--;
+                }
+            }
+        }
+        
+        this->scrollTo(index, QAbstractItemView::PositionAtTop);
+    });
+}
+
+void MyTreeView::addBranchWidget(QWidget* branchWidget, const QString& branchTitle, const QString& rootTitle) {
+    MyStandardItem* branch = new MyStandardItem(branchTitle, 12.0, true);
+    if (treeModel->findItems(rootTitle).empty())
+        treeModel->invisibleRootItem()->appendRow(branch);
+    else
+        treeModel->findItems(rootTitle).first()->appendRow(branch);
+    
+    if (branchWidget) {
+        MyStandardItem* branchContent = new MyStandardItem();
+        branch->appendRow(branchContent);
+        setIndexWidget(branchContent->index(), branchWidget);
+        _branches.push_back(std::pair<MyStandardItem*, MyStandardItem*>(branch, branchContent));
+    }
+    else
+        _branches.push_back(std::pair<MyStandardItem*, MyStandardItem*>(branch, NULL));
+}
+
+void MyTreeView::clearModel() {
+    for (constBranchIt bIt = BranchesBegin(); bIt != BranchesEnd(); ++bIt) {
+        if ((*bIt).second) {
+            (*bIt).second->removeRows(0, (*bIt).second->rowCount());
+            delete (*bIt).second;
+        }
+        delete (*bIt).first;
+    }
+    _branches.clear();
+    treeModel->clear();
+}
+
+void MyTreeView::removeBranches(const QString& rootTitle, const unsigned int& staticbranches) {
+    QList<QStandardItem *> roots;
+    if (!rootTitle.isEmpty())
+        roots = treeModel->findItems(rootTitle);
+    else
+        roots.push_back(treeModel->invisibleRootItem());
+    for (int i = 0; i < roots.size(); ++i) {
+        while (roots.at(i)->rowCount() > staticbranches) {
+            for (constBranchIt bIt = BranchesBegin(); bIt != BranchesEnd(); ++bIt) {
+                if ((*bIt).first->text() == roots.at(i)->child(staticbranches)->text()) {
+                    if ((*bIt).second) {
+                        (*bIt).second->clearData();
+                        (*bIt).second->removeRows(0, (*bIt).second->rowCount());
+                        delete (*bIt).second;
+                    }
+                    (*bIt).first->clearData();
+                    (*bIt).first->removeRows(0, (*bIt).first->rowCount());
+                    delete (*bIt).first;
+                    _branches.erase(bIt);
+                    roots.at(i)->removeRow(staticbranches);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// MyParameterBase
+
+MyParameterBase::MyParameterBase(const QString& name) {
+    _name = name;
+    _graphicalObject = NULL;
+    _styleFeatures = NULL;
+    _inputWidget = NULL;
+}
+
+const QString& MyParameterBase::name() {
+    return _name;
+}
+
+void MyParameterBase::setGraphicalObject(GraphicalObject* graphicalObject) {
+    _graphicalObject = graphicalObject;
+}
+
+GraphicalObject* MyParameterBase::graphicalObject() {
+    return _graphicalObject;
+}
+
+void MyParameterBase::setStyleFeatures(Transformation2D* styleFeatures) {
+    _styleFeatures = styleFeatures;
+}
+
+Transformation2D* MyParameterBase::styleFeatures() {
+    return _styleFeatures;
+}
+
+// MyDoubleParameter
+
+MyDoubleParameter::MyDoubleParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MyDoubleSpinBox();
+    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    reset();
+}
+
+MyDoubleParameter::MyDoubleParameter(const QString& name, GraphicalObject* graphicalObject) : MyDoubleParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyDoubleParameter::MyDoubleParameter(const QString& name, Transformation2D* styleFeatures) : MyDoubleParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyParameterBase::PARAMETER_TYPE MyDoubleParameter::type() {
+    return DOUBLE_PARAMETER_TYPE;
+}
+
+void MyDoubleParameter::setDefaultValue(const qreal& value) {
+    if (value >= min() && value <= max()) {
+        _defaultValue = value;
+        _isSetDefaultValue = true;
+    }
+}
+
+void MyDoubleParameter::setDefaultValue() {
+    setDefaultValue(((MyDoubleSpinBox*)_inputWidget)->value());
+}
+
+const qreal& MyDoubleParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+void MyDoubleParameter::setMin(const qreal& min) {
+    _min = min;
+    _isSetMin = true;
+}
+
+const qreal& MyDoubleParameter::min() const {
+    return _min;
+}
+
+void MyDoubleParameter::setMax(const qreal& max) {
+    _max = max;
+    _isSetMax = true;
+}
+
+const qreal& MyDoubleParameter::max() const {
+    return _max;
+}
+
+void MyDoubleParameter::setStep(const qreal& step) {
+    _step = step;
+    _isSetStep = true;
+}
+
+const qreal& MyDoubleParameter::step() const {
+    return _step;
+}
+
+QWidget* MyDoubleParameter::inputWidget() {
+    ((MyDoubleSpinBox*)_inputWidget)->setMinimum(min());
+    ((MyDoubleSpinBox*)_inputWidget)->setMaximum(max());
+    ((MyDoubleSpinBox*)_inputWidget)->setSingleStep(step());
+    ((MyDoubleSpinBox*)_inputWidget)->setValue(defaultValue());
+    QStringList stepNumbers = QString::number(step()).split('.');
+    if (stepNumbers.size() == 2)
+        ((MyDoubleSpinBox*)_inputWidget)->setDecimals(stepNumbers.at(1).size());
+    
+    return _inputWidget;
+}
+
+void MyDoubleParameter::reset() {
+    _defaultValue = 0.0;
+    _min = 0.0;
+    _max = 1.0;
+    _step = 1.0;
+    _isSetDefaultValue = false;
+    _isSetMin = false;
+    _isSetMax = false;
+    _isSetStep = false;
+}
+
+// MyIntegerParameter
+
+MyIntegerParameter::MyIntegerParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MySpinBox();
+    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    reset();
+}
+
+MyIntegerParameter::MyIntegerParameter(const QString& name, GraphicalObject* graphicalObject) : MyIntegerParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyIntegerParameter::MyIntegerParameter(const QString& name, Transformation2D* styleFeatures) : MyIntegerParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyParameterBase::PARAMETER_TYPE MyIntegerParameter::type() {
+    return INTEGER_PARAMETER_TYPE;
+}
+
+void MyIntegerParameter::setDefaultValue(const qint32& value) {
+    if (value >= min() && value <= max()) {
+        _defaultValue = value;
+        _isSetDefaultValue = true;
+    }
+}
+
+void MyIntegerParameter::setDefaultValue() {
+    setDefaultValue(((MySpinBox*)_inputWidget)->value());
+}
+
+const qint32& MyIntegerParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+void MyIntegerParameter::setMin(const qint32& min) {
+    _min = min;
+    _isSetMin = true;
+}
+
+const qint32& MyIntegerParameter::min() const {
+    return _min;
+}
+
+void MyIntegerParameter::setMax(const qint32& max) {
+    _max = max;
+    _isSetMax = true;
+}
+
+const qint32& MyIntegerParameter::max() const {
+    return _max;
+}
+
+void MyIntegerParameter::setStep(const qint32& step) {
+    _step = step;
+    _isSetStep = true;
+}
+
+const qint32& MyIntegerParameter::step() const {
+    return _step;
+}
+
+QWidget* MyIntegerParameter::inputWidget() {
+    ((MySpinBox*)_inputWidget)->setMinimum(min());
+    ((MySpinBox*)_inputWidget)->setMaximum(max());
+    ((MySpinBox*)_inputWidget)->setSingleStep(step());
+    ((MySpinBox*)_inputWidget)->setValue(defaultValue());
+    
+    return _inputWidget;
+}
+
+void MyIntegerParameter::reset() {
+    _defaultValue = 0;
+    _min = 0;
+    _max = 1;
+    _step = 1;
+    _isSetDefaultValue = false;
+    _isSetMin = false;
+    _isSetMax = false;
+    _isSetStep = false;
+}
+
+// MyBooleanParameter
+
+MyBooleanParameter::MyBooleanParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MyComboBox();
+    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    reset();
+}
+
+MyBooleanParameter::MyBooleanParameter(const QString& name, GraphicalObject* graphicalObject) : MyBooleanParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyBooleanParameter::MyBooleanParameter(const QString& name, Transformation2D* styleFeatures) : MyBooleanParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyParameterBase::PARAMETER_TYPE MyBooleanParameter::type() {
+    return BOOLEAN_PARAMETER_TYPE;
+}
+
+void MyBooleanParameter::setDefaultValue(const bool& value) {
+    _defaultValue = value;
+    _isSetDefaultValue = true;
+}
+
+void MyBooleanParameter::setDefaultValue() {
+    if (((MyComboBox*)_inputWidget)->currentText() == "true")
+        setDefaultValue(true);
+    else
+        setDefaultValue(false);
+}
+
+const bool& MyBooleanParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+QWidget* MyBooleanParameter::inputWidget() {
+    ((MyComboBox*)_inputWidget)->clear();
+    ((MyComboBox*)_inputWidget)->addItem("true");
+    ((MyComboBox*)_inputWidget)->addItem("false");
+    if (defaultValue())
+        ((MyComboBox*)_inputWidget)->setCurrentText("true");
+    else
+        ((MyComboBox*)_inputWidget)->setCurrentText("false");
+    
+    return _inputWidget;
+}
+
+void MyBooleanParameter::reset() {
+    _defaultValue = true;
+    _isSetDefaultValue = false;
+}
+
+// MyStringParameter
+
+MyStringParameter::MyStringParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MyLineEdit();
+    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    reset();
+}
+
+MyStringParameter::MyStringParameter(const QString& name, GraphicalObject* graphicalObject) : MyStringParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyStringParameter::MyStringParameter(const QString& name, Transformation2D* styleFeatures) : MyStringParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyParameterBase::PARAMETER_TYPE MyStringParameter::type() {
+    return STRING_PARAMETER_TYPE;
+}
+
+void MyStringParameter::setDefaultValue(const QString& value) {
+    _defaultValue = value;
+    _isSetDefaultValue = true;
+}
+
+void MyStringParameter::setDefaultValue() {
+    setDefaultValue(((MyLineEdit*)_inputWidget)->text());
+}
+
+const QString& MyStringParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+QWidget* MyStringParameter::inputWidget() {
+    ((MyLineEdit*)_inputWidget)->setText(defaultValue());
+
+    return _inputWidget;
+}
+
+void MyStringParameter::reset() {
+    _defaultValue = "";
+    _isSetDefaultValue = false;
+}
+
+// MyNominalParameter
+
+MyNominalParameter::MyNominalParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MyComboBox();
+    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    reset();
+}
+
+MyNominalParameter::MyNominalParameter(const QString& name, GraphicalObject* graphicalObject) : MyNominalParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyNominalParameter::MyNominalParameter(const QString& name, Transformation2D* styleFeatures) : MyNominalParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyParameterBase::PARAMETER_TYPE MyNominalParameter::type() {
+    return NOMINAL_PARAMETER_TYPE;
+}
+
+void MyNominalParameter::setDefaultValue(const QString& value) {
+    for (QString item : qAsConst(items())) {
+        if (value == item) {
+            _defaultValue = value;
+            _isSetDefaultValue = true;
+            break;
+        }
+    }
+}
+
+void MyNominalParameter::setDefaultValue() {
+    setDefaultValue(((MyComboBox*)_inputWidget)->currentText());
+}
+
+const QString& MyNominalParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+const QStringList& MyNominalParameter::items() const {
+    return _items;
+}
+
+QWidget* MyNominalParameter::inputWidget() {
+    ((MyComboBox*)_inputWidget)->clear();
+    ((MyComboBox*)_inputWidget)->addItems(items());
+    ((MyComboBox*)_inputWidget)->setCurrentText(defaultValue());
+    
+    return _inputWidget;
+}
+
+void MyNominalParameter::reset() {
+    _defaultValue = "";
+    _isSetDefaultValue = false;
+    _items.clear();
+}
+
+// MyPositionalParameter
+
+MyPositionalParameter::MyPositionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyDoubleParameter(name, graphicalObject) {
+    reset();
+}
+
+MyPositionalParameter::MyPositionalParameter(const QString& name, Transformation2D* styleFeatures) : MyDoubleParameter(name, styleFeatures) {
+    reset();
+}
+
+void MyPositionalParameter::reset() {
+    setDefaultValue(0.0);
+    setMin(-1000.0);
+    setMax(1000.0);
+    setStep(1.0);
+}
+
+// MyDimensionalParameter
+
+MyDimensionalParameter::MyDimensionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyDoubleParameter(name, graphicalObject) {
+    reset();
+}
+
+MyDimensionalParameter::MyDimensionalParameter(const QString& name, Transformation2D* styleFeatures) : MyDoubleParameter(name, styleFeatures) {
+    reset();
+}
+
+void MyDimensionalParameter::reset() {
+    setDefaultValue(20.0);
+    setMin(0.0);
+    setMax(2000.0);
+    setStep(1.0);
+}
+
+// MyRelativePositionalParameter
+
+MyRelativePositionalParameter::MyRelativePositionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyPositionalParameter(name, graphicalObject) {
+    reset();
+}
+
+MyRelativePositionalParameter::MyRelativePositionalParameter(const QString& name, Transformation2D* styleFeatures) : MyPositionalParameter(name, styleFeatures) {
+    reset();
+}
+
+void MyRelativePositionalParameter::reset() {
+    setDefaultValue(0);
+    setMin(-100);
+    setMax(100);
+    setStep(1.0);
+}
+
+// MyRelativeDimensionalParameter
+
+MyRelativeDimensionalParameter::MyRelativeDimensionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyDimensionalParameter(name, graphicalObject) {
+    reset();
+}
+
+MyRelativeDimensionalParameter::MyRelativeDimensionalParameter(const QString& name, Transformation2D* styleFeatures) : MyDimensionalParameter(name, styleFeatures) {
+    reset();
+}
+
+void MyRelativeDimensionalParameter::reset() {
+    setDefaultValue(0);
+    setMin(0);
+    setMax(100);
+    setStep(1.0);
+}
+
+// MyDashArrayParameter
+
+MyDashArrayParameter::MyDashArrayParameter(const QString& name, Transformation2D* styleFeatures) : MyParameterBase(name) {
+    setStyleFeatures(styleFeatures);
+    _inputWidget = new MyDashArrayItemsBox();
+    connect((MyDashArrayItemsBox*)_inputWidget, &MyDashArrayItemsBox::dashArrayChosen, this, [this] (const QList<unsigned int>& dashArray) {this->write(); });
+    reset();
+}
+
+MyParameterBase::PARAMETER_TYPE MyDashArrayParameter::type() {
+    return DASH_ARRAY_PARAMETER_TYPE;
+}
+
+void MyDashArrayParameter::setDefaultValue(const QList<unsigned int>& dashArray) {
+    _defaultValue = dashArray;
+}
+
+void MyDashArrayParameter::setDefaultValue() {
+    setDefaultValue(((MyDashArrayItemsBox*)_inputWidget)->currentDashArray());
+}
+
+const QList<unsigned int>& MyDashArrayParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+QWidget* MyDashArrayParameter::inputWidget() {
+    ((MyDashArrayItemsBox*)_inputWidget)->setCurrentDashArray(defaultValue());
+    
+    return _inputWidget;
+}
+
+void MyDashArrayParameter::reset() {
+    ((MyDashArrayItemsBox*)_inputWidget)->reset();
+}
+
+// MyColorParameter
+
+MyColorParameter::MyColorParameter(const QString& name, Transformation2D* styleFeatures) : MyParameterBase(name) {
+    setStyleFeatures(styleFeatures);
+    _inputWidget = new MyColorPickerButton();
+    connect(((MyColorPickerMenu*)((MyColorPickerButton*)_inputWidget)->menu()), &MyColorPickerMenu::colorChosen, this, [this] (const QString& color) {this->write(); });
+    reset();
+}
+
+MyParameterBase::PARAMETER_TYPE MyColorParameter::type() {
+    return COLOR_PARAMETER_TYPE;
+}
+
+void MyColorParameter::setDefaultValue(const QString& value) {
+    _defaultValue = value;
+}
+
+void MyColorParameter::setDefaultValue() {
+    setDefaultValue(((MyColorPickerButton*)_inputWidget)->currentColor());
+}
+
+const QString& MyColorParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+QWidget* MyColorParameter::inputWidget() {
+    ((MyColorPickerButton*)_inputWidget)->setCurrentColor(defaultValue());
+    
+    return _inputWidget;
+}
+
+void MyColorParameter::reset() {
+    setDefaultValue("black");
+}
+
+// MyBoundingBoxXParameter
+
+MyBoundingBoxXParameter::MyBoundingBoxXParameter(GraphicalObject* graphicalObject) : MyPositionalParameter("X", graphicalObject) {
+    
+}
+
+void MyBoundingBoxXParameter::read() {
+    setDefaultValue(getPositionX(_graphicalObject));
+}
+
+void MyBoundingBoxXParameter::write() {
+    setPositionX(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyBoundingBoxYParameter
+
+MyBoundingBoxYParameter::MyBoundingBoxYParameter(GraphicalObject* graphicalObject) : MyPositionalParameter("Y", graphicalObject) {
+    
+}
+
+void MyBoundingBoxYParameter::read() {
+    setDefaultValue(getPositionY(_graphicalObject));
+}
+
+void MyBoundingBoxYParameter::write() {
+    setPositionY(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyBoundingBoxWidthParameter
+
+MyBoundingBoxWidthParameter::MyBoundingBoxWidthParameter(GraphicalObject* graphicalObject) : MyDimensionalParameter("Width", graphicalObject) {
+    
+}
+
+void MyBoundingBoxWidthParameter::read() {
+    setDefaultValue(getDimensionWidth(_graphicalObject));
+}
+
+void MyBoundingBoxWidthParameter::write() {
+    setDimensionWidth(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyBoundingBoxHeightParameter
+
+MyBoundingBoxHeightParameter::MyBoundingBoxHeightParameter(GraphicalObject* graphicalObject) : MyDimensionalParameter("Height", graphicalObject) {
+    
+}
+
+void MyBoundingBoxHeightParameter::read() {
+    setDefaultValue(getDimensionHeight(_graphicalObject));
+}
+
+void MyBoundingBoxHeightParameter::write() {
+    setDimensionHeight(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyStrokeWidthParameter
+
+MyStrokeWidthParameter::MyStrokeWidthParameter(Transformation2D* styleFeatures) : MyDoubleParameter("stroke-width", styleFeatures) {
+    reset();
+}
+
+void MyStrokeWidthParameter::reset() {
+    setDefaultValue(2.0);
+    setMin(1.0);
+    setMax(20.0);
+    setStep(1.0);
+}
+
+void MyStrokeWidthParameter::read() {
+    setDefaultValue(getStrokeWidth((GraphicalPrimitive1D*)_styleFeatures));
+}
+
+void MyStrokeWidthParameter::write() {
+    setStrokeWidth((GraphicalPrimitive1D*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyStrokeColorParameter
+
+MyStrokeColorParameter::MyStrokeColorParameter(Transformation2D* styleFeatures) : MyColorParameter("stroke", styleFeatures) {
+    reset();
+}
+
+void MyStrokeColorParameter::reset() {
+    setDefaultValue("black");
+}
+
+void MyStrokeColorParameter::read() {
+    setDefaultValue(QString(getStrokeColor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyStrokeColorParameter::write() {
+    setStrokeColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
+    emit isUpdated();
+}
+
+// MyStrokeDashArrayParameter
+
+MyStrokeDashArrayParameter::MyStrokeDashArrayParameter(Transformation2D* styleFeatures) : MyDashArrayParameter("stroke-dasharray", styleFeatures) {
+    reset();
+}
+
+void MyStrokeDashArrayParameter::read() {
+    setDefaultValue(QList<unsigned int>::fromVector(QVector<unsigned int>::fromStdVector(getStrokeDashArray((GraphicalPrimitive1D*)_styleFeatures))));
+}
+
+void MyStrokeDashArrayParameter::write() {
+    setStrokeDashArray((GraphicalPrimitive1D*)_styleFeatures, ((MyDashArrayItemsBox*)_inputWidget)->currentDashArray().toVector().toStdVector());
+    emit isUpdated();
+}
+
+// MyFillParameter
+
+MyFillParameter::MyFillParameter(Transformation2D* styleFeatures) : MyColorParameter("fill", styleFeatures) {
+    reset();
+}
+
+void MyFillParameter::reset() {
+    setDefaultValue("white");
+}
+
+void MyFillParameter::read() {
+    setDefaultValue(QString(getFillColor((GraphicalPrimitive2D*)_styleFeatures).c_str()));
+}
+
+void MyFillParameter::write() {
+    setFillColor((GraphicalPrimitive2D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
+    emit isUpdated();
+}
+
+// MyFontFamilyParameter
+
+MyFontFamilyParameter::MyFontFamilyParameter(Transformation2D* styleFeatures) : MyStringParameter("font-family", styleFeatures) {
+    reset();
+}
+
+void MyFontFamilyParameter::reset() {
+    setDefaultValue("monospace");
+}
+
+void MyFontFamilyParameter::read() {
+    
+}
+
+void MyFontFamilyParameter::write() {
+    
+}
+
+// MyFontSizeParameter
+
+MyFontSizeParameter::MyFontSizeParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-size", styleFeatures) {
+    int i = 5;
+    while (i <= 72) {
+        _items.push_back(QString::number(i));
+    
+        if (i < 12)
+            ++i;
+        else if (i < 28)
+            i += 2;
+        else if (i < 36)
+            i += 8;
+        else if (i < 48)
+            i += 12;
+        else
+            i += 24;
+    }
+}
+
+void MyFontSizeParameter::reset() {
+    setDefaultValue("10");
+}
+
+const qint32 MyFontSizeParameter::defaultSize() const {
+    return defaultValue().toDouble();
+}
+
+void MyFontSizeParameter::read() {
+    
+}
+
+void MyFontSizeParameter::write() {
+    
+}
+
+// MyFontWeightParameter
+
+MyFontWeightParameter::MyFontWeightParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-weight", styleFeatures) {
+    _items.push_back("normal");
+    _items.push_back("bold");
+    reset();
+}
+
+const bool MyFontWeightParameter::defaultWeight() const {
+    if (defaultValue() == "bold")
+        return true;
+    
+    return false;
+}
+
+void MyFontWeightParameter::reset() {
+    setDefaultValue("normal");
+}
+
+void MyFontWeightParameter::read() {
+    
+}
+
+void MyFontWeightParameter::write() {
+    
+}
+
+// MyFontStyleParameter
+
+MyFontStyleParameter::MyFontStyleParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-style", styleFeatures) {
+    _items.push_back("normal");
+    _items.push_back("italic");
+    reset();
+}
+
+const bool MyFontStyleParameter::defaultStyle() const {
+    if (defaultValue() == "italic")
+        return true;
+    
+    return false;
+}
+
+void MyFontStyleParameter::reset() {
+    setDefaultValue("normal");
+}
+
+void MyFontStyleParameter::read() {
+    
+}
+
+void MyFontStyleParameter::write() {
+    
+}
+
+// MyTextAnchorParameter
+
+MyTextAnchorParameter::MyTextAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("text-anchor", styleFeatures) {
+    _items.push_back("start");
+    _items.push_back("middle");
+    _items.push_back("end");
+    reset();
+}
+
+const Qt::Alignment MyTextAnchorParameter::defaultAlignment() const {
+    if (defaultValue() == "start")
+        return Qt::AlignLeft;
+    else if (defaultValue() == "middle")
+        return Qt::AlignHCenter;
+    else if (defaultValue() == "end")
+        return Qt::AlignRight;
+    
+    return Qt::AlignHCenter;
+}
+
+void MyTextAnchorParameter::reset() {
+    setDefaultValue("middle");
+}
+
+void MyTextAnchorParameter::read() {
+    
+}
+
+void MyTextAnchorParameter::write() {
+    
+}
+
+// MyVTextAnchorParameter
+
+MyVTextAnchorParameter::MyVTextAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("vtext-anchor", styleFeatures) {
+    _items.push_back("top");
+    _items.push_back("middle");
+    _items.push_back("baseline");
+    _items.push_back("bottom");
+    reset();
+}
+
+const Qt::Alignment MyVTextAnchorParameter::defaultAlignment() const {
+    if (defaultValue() == "top")
+        return Qt::AlignTop;
+    else if (defaultValue() == "middle")
+        return Qt::AlignVCenter;
+    else if (defaultValue() == "baseline")
+        return Qt::AlignBaseline;
+    else if (defaultValue() == "bottom")
+        return Qt::AlignBottom;
+    
+    return Qt::AlignVCenter;
+}
+
+void MyVTextAnchorParameter::reset() {
+    setDefaultValue("middle");
+}
+
+void MyVTextAnchorParameter::read() {
+    
+}
+
+void MyVTextAnchorParameter::write() {
+    
+}
+
+// MyRectangleShapeXAbsoluteParameter
+
+MyRectangleShapeXAbsoluteParameter::MyRectangleShapeXAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("X (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeXAbsoluteParameter::read() {
+    if (isSetRectangleShapeX((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeX((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeXAbsoluteParameter::write() {
+    RelAbsVector x = getRectangleShapeX((Rectangle*)_styleFeatures);
+    x.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeX((Rectangle*)_styleFeatures, x);
+    emit isUpdated();
+}
+
+// MyRectangleShapeXRelativeParameter
+
+MyRectangleShapeXRelativeParameter::MyRectangleShapeXRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("X (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeXRelativeParameter::read() {
+    if (isSetRectangleShapeX((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeX((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeXRelativeParameter::write() {
+    RelAbsVector x = getRectangleShapeX((Rectangle*)_styleFeatures);
+    x.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeX((Rectangle*)_styleFeatures, x);
+    emit isUpdated();
+}
+
+// MyRectangleShapeYAbsoluteParameter
+
+MyRectangleShapeYAbsoluteParameter::MyRectangleShapeYAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("Y (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeYAbsoluteParameter::read() {
+    if (isSetRectangleShapeY((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeY((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeYAbsoluteParameter::write() {
+    RelAbsVector y = getRectangleShapeY((Rectangle*)_styleFeatures);
+    y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeY((Rectangle*)_styleFeatures, y);
+    emit isUpdated();
+}
+
+// MyRectangleShapeYRelativeParameter
+
+MyRectangleShapeYRelativeParameter::MyRectangleShapeYRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("Y (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeYRelativeParameter::read() {
+    if (isSetRectangleShapeY((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeY((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeYRelativeParameter::write() {
+    RelAbsVector y = getRectangleShapeY((Rectangle*)_styleFeatures);
+    y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeY((Rectangle*)_styleFeatures, y);
+    emit isUpdated();
+}
+
+// MyRectangleShapeWidthAbsoluteParameter
+
+MyRectangleShapeWidthAbsoluteParameter::MyRectangleShapeWidthAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("Width (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeWidthAbsoluteParameter::read() {
+    if (isSetRectangleShapeWidth((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeWidth((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeWidthAbsoluteParameter::write() {
+    RelAbsVector width = getRectangleShapeWidth((Rectangle*)_styleFeatures);
+    width.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeWidth((Rectangle*)_styleFeatures, width);
+    emit isUpdated();
+}
+
+// MyRectangleShapeWidthRelativeParameter
+
+MyRectangleShapeWidthRelativeParameter::MyRectangleShapeWidthRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("Width (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeWidthRelativeParameter::read() {
+    if (isSetRectangleShapeWidth((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeWidth((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeWidthRelativeParameter::write() {
+    RelAbsVector width = getRectangleShapeWidth((Rectangle*)_styleFeatures);
+    width.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeWidth((Rectangle*)_styleFeatures, width);
+    emit isUpdated();
+}
+
+// MyRectangleShapeHeightAbsoluteParameter
+
+MyRectangleShapeHeightAbsoluteParameter::MyRectangleShapeHeightAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("Height (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeHeightAbsoluteParameter::read() {
+    if (isSetRectangleShapeHeight((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeHeight((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeHeightAbsoluteParameter::write() {
+    RelAbsVector height = getRectangleShapeHeight((Rectangle*)_styleFeatures);
+    height.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeHeight((Rectangle*)_styleFeatures, height);
+    emit isUpdated();
+}
+
+// MyRectangleShapeHeightRelativeParameter
+
+MyRectangleShapeHeightRelativeParameter::MyRectangleShapeHeightRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("Height (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeHeightRelativeParameter::read() {
+    if (isSetRectangleShapeHeight((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeHeight((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeHeightRelativeParameter::write() {
+    RelAbsVector height = getRectangleShapeHeight((Rectangle*)_styleFeatures);
+    height.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeHeight((Rectangle*)_styleFeatures, height);
+    emit isUpdated();
+}
+
+// MyRectangleShapeRatioParameter
+
+MyRectangleShapeRatioParameter::MyRectangleShapeRatioParameter(Transformation2D* styleFeatures) : MyDoubleParameter("Ratio", styleFeatures) {
+    reset();
+}
+
+void MyRectangleShapeRatioParameter::read() {
+    if (isSetRectangleShapeRatio((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeRatio((Rectangle*)_styleFeatures));
+}
+
+void MyRectangleShapeRatioParameter::write() {
+    if (((MyDoubleSpinBox*)_inputWidget)->value() > 0.0) {
+        setRectangleShapeRatio((Rectangle*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
+        emit isUpdated();
+    }
+}
+
+void MyRectangleShapeRatioParameter::reset() {
+    setDefaultValue(0.0);
+    setMin(0.0);
+    setMax(5.0);
+    setStep(0.1);
+}
+
+// MyRectangleShapeRXAbsoluteParameter
+
+MyRectangleShapeRXAbsoluteParameter::MyRectangleShapeRXAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("RX (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeRXAbsoluteParameter::read() {
+    if (isSetRectangleShapeRX((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeRX((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeRXAbsoluteParameter::write() {
+    RelAbsVector rx = getRectangleShapeRX((Rectangle*)_styleFeatures);
+    rx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeRX((Rectangle*)_styleFeatures, rx);
+    emit isUpdated();
+}
+
+// MyRectangleShapeRXRelativeParameter
+
+MyRectangleShapeRXRelativeParameter::MyRectangleShapeRXRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("RX (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeRXRelativeParameter::read() {
+    if (isSetRectangleShapeRX((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeRX((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeRXRelativeParameter::write() {
+    RelAbsVector rx = getRectangleShapeRX((Rectangle*)_styleFeatures);
+    rx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeRX((Rectangle*)_styleFeatures, rx);
+    emit isUpdated();
+}
+
+// MyRectangleShapeRYAbsoluteParameter
+
+MyRectangleShapeRYAbsoluteParameter::MyRectangleShapeRYAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("RY (abs)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeRYAbsoluteParameter::read() {
+    if (isSetRectangleShapeRY((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeRY((Rectangle*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyRectangleShapeRYAbsoluteParameter::write() {
+    RelAbsVector ry = getRectangleShapeRY((Rectangle*)_styleFeatures);
+    ry.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeRY((Rectangle*)_styleFeatures, ry);
+    emit isUpdated();
+}
+
+// MyRectangleShapeRYRelativeParameter
+
+MyRectangleShapeRYRelativeParameter::MyRectangleShapeRYRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("RY (rel %)", styleFeatures) {
+    
+}
+
+void MyRectangleShapeRYRelativeParameter::read() {
+    if (isSetRectangleShapeRY((Rectangle*)_styleFeatures))
+        setDefaultValue(getRectangleShapeRY((Rectangle*)_styleFeatures).getRelativeValue());
+}
+
+void MyRectangleShapeRYRelativeParameter::write() {
+    RelAbsVector ry = getRectangleShapeRY((Rectangle*)_styleFeatures);
+    ry.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setRectangleShapeRY((Rectangle*)_styleFeatures, ry);
+    emit isUpdated();
+}
+
+// MyEllipseShapeCXAbsoluteParameter
+
+MyEllipseShapeCXAbsoluteParameter::MyEllipseShapeCXAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("CX (abs)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeCXAbsoluteParameter::read() {
+    if (isSetEllipseShapeCX((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeCX((Ellipse*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyEllipseShapeCXAbsoluteParameter::write() {
+    RelAbsVector cx = getEllipseShapeCX((Ellipse*)_styleFeatures);
+    cx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeCX((Ellipse*)_styleFeatures, cx);
+    emit isUpdated();
+}
+
+// MyEllipseShapeCXRelativeParameter
+
+MyEllipseShapeCXRelativeParameter::MyEllipseShapeCXRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("CX (rel %)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeCXRelativeParameter::read() {
+    if (isSetEllipseShapeCX((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeCX((Ellipse*)_styleFeatures).getRelativeValue());
+}
+
+void MyEllipseShapeCXRelativeParameter::write() {
+    RelAbsVector cx = getEllipseShapeCX((Ellipse*)_styleFeatures);
+    cx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeCX((Ellipse*)_styleFeatures, cx);
+    emit isUpdated();
+}
+
+// MyEllipseShapeCYAbsoluteParameter
+
+MyEllipseShapeCYAbsoluteParameter::MyEllipseShapeCYAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("CY (abs)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeCYAbsoluteParameter::read() {
+    if (isSetEllipseShapeCY((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeCY((Ellipse*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyEllipseShapeCYAbsoluteParameter::write() {
+    RelAbsVector cy = getEllipseShapeCY((Ellipse*)_styleFeatures);
+    cy.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeCY((Ellipse*)_styleFeatures, cy);
+    emit isUpdated();
+}
+
+// MyEllipseShapeCYRelativeParameter
+
+MyEllipseShapeCYRelativeParameter::MyEllipseShapeCYRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("CY (rel %)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeCYRelativeParameter::read() {
+    if (isSetEllipseShapeCY((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeCY((Ellipse*)_styleFeatures).getRelativeValue());
+}
+
+void MyEllipseShapeCYRelativeParameter::write() {
+    RelAbsVector cy = getEllipseShapeCY((Ellipse*)_styleFeatures);
+    cy.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeCY((Ellipse*)_styleFeatures, cy);
+    emit isUpdated();
+}
+
+// MyEllipseShapeRXAbsoluteParameter
+
+MyEllipseShapeRXAbsoluteParameter::MyEllipseShapeRXAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("RX (abs)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeRXAbsoluteParameter::read() {
+    if (isSetEllipseShapeRX((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeRX((Ellipse*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyEllipseShapeRXAbsoluteParameter::write() {
+    RelAbsVector rx = getEllipseShapeRX((Ellipse*)_styleFeatures);
+    rx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeRX((Ellipse*)_styleFeatures, rx);
+    emit isUpdated();
+}
+
+// MyEllipseShapeRXRelativeParameter
+
+MyEllipseShapeRXRelativeParameter::MyEllipseShapeRXRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("RX (rel %)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeRXRelativeParameter::read() {
+    if (isSetEllipseShapeRX((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeRX((Ellipse*)_styleFeatures).getRelativeValue());
+}
+
+void MyEllipseShapeRXRelativeParameter::write() {
+    RelAbsVector rx = getEllipseShapeRX((Ellipse*)_styleFeatures);
+    rx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeRX((Ellipse*)_styleFeatures, rx);
+    emit isUpdated();
+}
+
+// MyEllipseShapeRYAbsoluteParameter
+
+MyEllipseShapeRYAbsoluteParameter::MyEllipseShapeRYAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("RY (abs)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeRYAbsoluteParameter::read() {
+    if (isSetEllipseShapeRY((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeRY((Ellipse*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyEllipseShapeRYAbsoluteParameter::write() {
+    RelAbsVector ry = getEllipseShapeRY((Ellipse*)_styleFeatures);
+    ry.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeRY((Ellipse*)_styleFeatures, ry);
+    emit isUpdated();
+}
+
+// MyEllipseShapeRYRelativeParameter
+
+MyEllipseShapeRYRelativeParameter::MyEllipseShapeRYRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("RY (rel %)", styleFeatures) {
+    
+}
+
+void MyEllipseShapeRYRelativeParameter::read() {
+    if (isSetEllipseShapeRY((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeRY((Ellipse*)_styleFeatures).getRelativeValue());
+}
+
+void MyEllipseShapeRYRelativeParameter::write() {
+    RelAbsVector ry = getEllipseShapeRY((Ellipse*)_styleFeatures);
+    ry.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setEllipseShapeRY((Ellipse*)_styleFeatures, ry);
+    emit isUpdated();
+}
+
+// MyEllipseShapeRatioParameter
+
+MyEllipseShapeRatioParameter::MyEllipseShapeRatioParameter(Transformation2D* styleFeatures) : MyDoubleParameter("Ratio", styleFeatures) {
+    reset();
+}
+
+void MyEllipseShapeRatioParameter::read() {
+    if (isSetEllipseShapeRatio((Ellipse*)_styleFeatures))
+        setDefaultValue(getEllipseShapeRatio((Ellipse*)_styleFeatures));
+}
+
+void MyEllipseShapeRatioParameter::write() {
+    if (((MyDoubleSpinBox*)_inputWidget)->value() > 0.0) {
+        setEllipseShapeRatio((Ellipse*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
+        emit isUpdated();
+    }
+}
+
+void MyEllipseShapeRatioParameter::reset() {
+    setDefaultValue(0.0);
+    setMin(0.0);
+    setMax(5.0);
+    setStep(0.1);
 }

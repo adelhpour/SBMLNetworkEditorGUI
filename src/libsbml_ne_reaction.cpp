@@ -39,11 +39,23 @@ QWidget* MyReaction::elementFeatureMenu() {
     contentLayout->addWidget(new MyLabel("Compartment Id"), contentLayout->rowCount(), 0);
     contentLayout->addWidget(new MyReadOnlyLineEdit(getCompartmentId()), contentLayout->rowCount() - 1, 1);
     
+    contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
+    
+    MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+    
     // bounding box
     QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject, _style);
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    contentLayout->addWidget(_boundingBoxMenu, contentLayout->rowCount(), 0, 1, 2);
+    featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
+    
+    // geometric shape
+    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_graphicalObject, _style);
+    connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
+    
+    contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
     
     return elementFeatureMenu;
 }

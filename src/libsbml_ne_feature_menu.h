@@ -47,9 +47,9 @@ signals:
     void isUpdated();
     
 protected:
-    MyParameterBase* _widthParameter;
-    MyParameterBase* _colorParameter;
-    MyParameterBase* _dashArrayParameter;
+    MyParameterBase* _strokeWidthParameter;
+    MyParameterBase* _strokeColorParameter;
+    MyParameterBase* _strokeDashArrayParameter;
 };
 
 class My2DGeometricShapeMenu : public My1DGeometricShapeMenu {
@@ -81,6 +81,7 @@ protected:
     MyParameterBase* _rXRelParameter;
     MyParameterBase* _rYAbsParameter;
     MyParameterBase* _rYRelParameter;
+    MyParameterBase* _ratioParameter;
 };
 
 class MyEllipseShapeMenu : public My2DGeometricShapeMenu {
@@ -88,6 +89,17 @@ class MyEllipseShapeMenu : public My2DGeometricShapeMenu {
     
 public:
     MyEllipseShapeMenu(BoundingBox* boundingBox, Ellipse* ellipse, QWidget* parent = nullptr);
+    
+protected:
+    MyParameterBase* _cXAbsParameter;
+    MyParameterBase* _cXRelParameter;
+    MyParameterBase* _cYAbsParameter;
+    MyParameterBase* _cYRelParameter;
+    MyParameterBase* _rXAbsParameter;
+    MyParameterBase* _rXRelParameter;
+    MyParameterBase* _rYAbsParameter;
+    MyParameterBase* _rYRelParameter;
+    MyParameterBase* _ratioParameter;
 };
 
 class MyPolygonShapeMenu : public My2DGeometricShapeMenu {

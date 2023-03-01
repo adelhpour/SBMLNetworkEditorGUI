@@ -39,17 +39,18 @@ QWidget* MySpecies::elementFeatureMenu() {
     contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
     
     MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+    
     // bounding box
     QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject, _style);
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
     
-    // stroke
-    QWidget* _strokeMenu = new MyStrokeMenu(_graphicalObject, _style);
-    connect(_strokeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    connect(_strokeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    featureMenuTree->addBranchWidget(_strokeMenu, "Stroke");
+    // geometric shape
+    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_graphicalObject, _style);
+    connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
     
     contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
     
