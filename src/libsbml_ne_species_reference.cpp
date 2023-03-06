@@ -106,11 +106,11 @@ QWidget* MySpeciesReference::elementFeatureMenu() {
     contentLayout->addWidget(new MyReadOnlyLineEdit(getRole()), contentLayout->rowCount() - 1, 1);
     
     // stroke
-    QWidget* _strokeMenu = new MyStrokeMenu(_graphicalObject, _style);
+    QWidget* _strokeMenu = new MyStrokeMenu(_style->getGroup());
     connect(_strokeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_strokeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     contentLayout->addWidget(_strokeMenu, contentLayout->rowCount(), 0, 1, 2);
-    
+
     return elementFeatureMenu;
 }
 

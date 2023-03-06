@@ -27,13 +27,13 @@ QWidget* MyCompartment::elementFeatureMenu() {
     MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
     
     // bounding box
-    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject, _style);
+    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
     
     // geometric shape
-    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_graphicalObject, _style);
+    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_style->getGroup());
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
