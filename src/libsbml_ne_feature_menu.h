@@ -2,6 +2,8 @@
 #define __LIBSBML_NE_FEATURE_MENU_H
 #include "libsbml_ne_parameters.h"
 
+#include <QDialogButtonBox>
+
 class MyFeatureMenu : public MyGroupBox {
     
 public:
@@ -13,7 +15,7 @@ class MyBoundingBoxMenu : public MyGroupBox {
     Q_OBJECT
     
 public:
-    MyBoundingBoxMenu(GraphicalObject* graphicalObject, Style* style, QWidget* parent = nullptr);
+    MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
     
 signals:
     void isUpdated();
@@ -29,9 +31,9 @@ class MyGeometricShapesMenu : public MyGroupBox {
     Q_OBJECT
     
 public:
-    MyGeometricShapesMenu(GraphicalObject* graphicalObject, Style* style, QWidget* parent = nullptr);
+    MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* parent = nullptr);
     
-    QWidget* createGeometricShapesMenu(GraphicalObject* graphicalObject, Style* style);
+    QWidget* createGeometricShapesMenu(RenderGroup* renderGroup);
     
 signals:
     void isUpdated();
@@ -41,7 +43,7 @@ class My1DGeometricShapeMenu : public MyGroupBox {
     Q_OBJECT
     
 public:
-    My1DGeometricShapeMenu(BoundingBox* boundingBox, GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
+    My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
     
 signals:
     void isUpdated();
@@ -56,7 +58,7 @@ class My2DGeometricShapeMenu : public My1DGeometricShapeMenu {
     Q_OBJECT
     
 public:
-    My2DGeometricShapeMenu(BoundingBox* boundingBox, GraphicalPrimitive2D* graphicalPrimitive2D, QWidget* parent = nullptr);
+    My2DGeometricShapeMenu(GraphicalPrimitive2D* graphicalPrimitive2D, QWidget* parent = nullptr);
     
 protected:
     MyParameterBase* _fillParameter;
@@ -66,7 +68,7 @@ class MyRectangleShapeMenu : public My2DGeometricShapeMenu {
     Q_OBJECT
     
 public:
-    MyRectangleShapeMenu(BoundingBox* boundingBox, Rectangle* rectangle, QWidget* parent = nullptr);
+    MyRectangleShapeMenu(Rectangle* rectangle, QWidget* parent = nullptr);
     
 protected:
     MyParameterBase* _xAbsParameter;
@@ -88,7 +90,7 @@ class MyEllipseShapeMenu : public My2DGeometricShapeMenu {
     Q_OBJECT
     
 public:
-    MyEllipseShapeMenu(BoundingBox* boundingBox, Ellipse* ellipse, QWidget* parent = nullptr);
+    MyEllipseShapeMenu(Ellipse* ellipse, QWidget* parent = nullptr);
     
 protected:
     MyParameterBase* _cXAbsParameter;
@@ -106,22 +108,40 @@ class MyPolygonShapeMenu : public My2DGeometricShapeMenu {
     Q_OBJECT
     
 public:
-    MyPolygonShapeMenu(BoundingBox* boundingBox, Polygon* polygon, QWidget* parent = nullptr);
+    MyPolygonShapeMenu(Polygon* polygon, QWidget* parent = nullptr);
 };
 
 class MyStrokeMenu : public MyGroupBox {
     Q_OBJECT
-    
+
 public:
-    MyStrokeMenu(GraphicalObject* graphicalObject, Style* style, QWidget* parent = nullptr);
-    
-signals:
-    void isUpdated();
-    
+    MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
+
+    signals:
+            void isUpdated();
+
 protected:
     MyParameterBase* _widthParameter;
     MyParameterBase* _colorParameter;
     MyParameterBase* _dashArrayParameter;
+};
+
+class MyAddRemoveGeometricShapesButtons : public QDialogButtonBox {
+    Q_OBJECT
+
+public:
+    MyAddRemoveGeometricShapesButtons(QWidget* parent = nullptr);
+
+    void setAddingMenu();
+
+signals:
+    void shapeIsChosen(const QString&);
+
+protected:
+    QPushButton* _addPushButton;
+    QPushButton* _removePushButton;
+    QMenu* _addingMenu;
+    QMenu* _removingMenu;
 };
 
 #endif
