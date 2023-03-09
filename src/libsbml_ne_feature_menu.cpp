@@ -1,6 +1,8 @@
 #include "libsbml_ne_feature_menu.h"
 #include <QGridLayout>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 // MyFeatureMenu
 
 MyFeatureMenu::MyFeatureMenu(QWidget* elementFeatureMenu, QWidget* parent) : MyGroupBox(parent) {
@@ -54,10 +56,26 @@ MyBoundingBoxMenu::MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* 
 // MyGeometricShapesMenu
 
 MyGeometricShapesMenu::MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* parent) : MyGroupBox(parent) {
+    _geometricShapesMenuTree = NULL;
     QGridLayout* contentLayout = new QGridLayout(this);
     contentLayout->setAlignment(Qt::AlignTop);
-    contentLayout->addWidget(createGeometricShapesMenu(renderGroup), contentLayout->rowCount(), 0);
+    _addRemoveGeometricShapesButtons = new MyAddRemoveGeometricShapesButtons(renderGroup, this);
+    connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect((MyAddRemoveGeometricShapesButtons*)_addRemoveGeometricShapesButtons, &MyAddRemoveGeometricShapesButtons::isUpdated, this, [this, renderGroup] () { setGeometricShapesMenuTree(renderGroup); });
+    contentLayout->addWidget(_addRemoveGeometricShapesButtons, contentLayout->rowCount(), 1);
+    setGeometricShapesMenuTree(renderGroup);
     setLayout(contentLayout);
+}
+
+void MyGeometricShapesMenu::setGeometricShapesMenuTree(RenderGroup* renderGroup) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_geometricShapesMenuTree != NULL) {
+        contentLayout->removeWidget(_geometricShapesMenuTree);
+        _geometricShapesMenuTree->deleteLater();
+    }
+    _geometricShapesMenuTree = createGeometricShapesMenu(renderGroup);
+    contentLayout->addWidget(_geometricShapesMenuTree, contentLayout->rowCount(), 0);
 }
 
 QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGroup) {
@@ -67,15 +85,15 @@ QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGro
         QWidget* geometricShapeMenu = NULL;
         if (shape->isRectangle()) {
             geometricShapeMenu = new MyRectangleShapeMenu((Rectangle*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, "Rectangle");
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Rectangle");
         }
         else if (shape->isEllipse()) {
             geometricShapeMenu = new MyEllipseShapeMenu((Ellipse*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, "Ellipse");
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Ellipse");
         }
         else if (shape->isPolygon()) {
             geometricShapeMenu = new MyPolygonShapeMenu((Polygon*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, "Polygon");
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Polygon");
         }
         connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     }
@@ -319,91 +337,67 @@ MyStrokeMenu::MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* 
 
 // MyAddRemoveGeometricShapesButtons
 
-MyAddRemoveGeometricShapesButtons::MyAddRemoveGeometricShapesButtons(QWidget* parent) : QDialogButtonBox(parent) {
+MyAddRemoveGeometricShapesButtons::MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent) : QDialogButtonBox(parent) {
     setContentsMargins(0, 0, 0, 0);
     setOrientation(Qt::Horizontal);
     setFixedSize(150.0, 50.0);
-
+    _renderGroup = renderGroup;
     // add button
     _addPushButton = addButton(QString("+"), QDialogButtonBox::YesRole);
     _addingMenu = new QMenu(_addPushButton);
     _addPushButton->setMenu(_addingMenu);
     setAddingMenu();
-
     // remove button
     _removePushButton = addButton(QString("-"), QDialogButtonBox::NoRole);
     _removingMenu = new QMenu(_removePushButton);
     _removePushButton->setMenu(_removingMenu);
+    setRemovingMenu();
+
+    connect(this, SIGNAL(isUpdated()), this, SLOT(setRemovingMenu()));
 }
 
 void MyAddRemoveGeometricShapesButtons::setAddingMenu() {
-    connect(_addingMenu->addAction("Rectangle"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Rectangle"); });
-    connect(_addingMenu->addAction("Ellipse"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Ellipse"); });
-    connect(_addingMenu->addAction("Image"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Image"); });
-
+    _addPushButton->setEnabled(true);
+    connect(_addingMenu->addAction("Rectangle"), &QAction::triggered, this, [this] () { addShape("Rectangle"); });
+    connect(_addingMenu->addAction("Ellipse"), &QAction::triggered, this, [this] () { addShape("Ellipse"); });
+    connect(_addingMenu->addAction("Image"), &QAction::triggered, this, [this] () { addShape("Image"); });
     QMenu* polygonsMenu = _addingMenu->addMenu("Polygons");
-    connect(polygonsMenu->addAction("Triangle"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Triangle"); });
-    connect(polygonsMenu->addAction("Diamond"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Diamond"); });
-    connect(polygonsMenu->addAction("Pentagon"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Pentagon"); });
-    connect(polygonsMenu->addAction("Hexagon"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Hexagon"); });
-    connect(polygonsMenu->addAction("Octagon"), &QAction::triggered, this, [this] () { emit shapeIsChosen("Octagon"); });
-
-    connect(_addingMenu->addAction("RenderCurve"), &QAction::triggered, this, [this] () { emit shapeIsChosen("RenderCurve"); });
+    connect(polygonsMenu->addAction("Triangle"), &QAction::triggered, this, [this] () { addShape("Triangle"); });
+    connect(polygonsMenu->addAction("Diamond"), &QAction::triggered, this, [this] () { addShape("Diamond"); });
+    connect(polygonsMenu->addAction("Pentagon"), &QAction::triggered, this, [this] () { addShape("Pentagon"); });
+    connect(polygonsMenu->addAction("Hexagon"), &QAction::triggered, this, [this] () { addShape("Hexagon"); });
+    connect(polygonsMenu->addAction("Octagon"), &QAction::triggered, this, [this] () { addShape("Octagon"); });
+    connect(_addingMenu->addAction("RenderCurve"), &QAction::triggered, this, [this] () { addShape("RenderCurve"); });
 }
 
-/*
-void MyAddRemoveGeometricShapeButtons::enableRemoveButton(VRenderGroup* group) {
-    if (group && removePushButton) {
-        removePushButton->setEnabled(true);
-        QString shape;
-        for (int i = 0; i < ne_grp_getNumGeometricShapes(group); ++i) {
-            switch (ne_gs_getShape(ne_grp_getGeometricShape(group, i))) {
-                case 0:
-                    shape = "Image";
-                    break;
-
-                case 1:
-                    shape = "RenderCurve";
-                    break;
-
-                    //case 2:
-                    //gSFMenuElement = new TextGeometricShapeFeatureMenu(this, _mw);
-                    //break;
-
-                case 3:
-                    shape = "Rectangle";
-                    break;
-
-                case 4:
-                    shape = "Ellipse";
-                    break;
-
-                case 5:
-                    shape = "Polygon";
-                    break;
-
-                default:
-                    break;
-            }
-
-            connect(removingMenu->addAction(QString::number(i + 1) + ": " + shape), &QAction::triggered, this, [this, i] () { emit removeItemFeaturesChosen(i); });
+void MyAddRemoveGeometricShapesButtons::setRemovingMenu() {
+    _removingMenu->clear();
+    _removePushButton->setEnabled(false);
+    if (_renderGroup->getNumElements() > 1) {
+        _removePushButton->setEnabled(true);
+        for (unsigned int i = 0; i < _renderGroup->getNumElements(); i++) {
+            if (_renderGroup->getElement(i)->isImage())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Image"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isRenderCurve())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "RenderCurve"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isText())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Text"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isRectangle())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Rectangle"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isEllipse())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Ellipse"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isPolygon())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Polygon"), &QAction::triggered, this, [this, i] () { removeShape(i); });
         }
     }
 }
 
-void MyAddRemoveGeometricShapeButtons::enableAddButton() {
-    if (addPushButton)
-        addPushButton->setEnabled(true);
+void MyAddRemoveGeometricShapesButtons::addShape(const QString& shape) {
+    addGeometricShape(_renderGroup, shape.toStdString());
+    emit isUpdated();
 }
 
-void MyAddRemoveGeometricShapeButtons::resetValues(const bool& disableAddButton) {
-    if (removePushButton)
-        removePushButton->setEnabled(false);
-
-    if (disableAddButton && addPushButton)
-        addPushButton->setEnabled(false);
-
-    if (removingMenu)
-        removingMenu->clear();
+void MyAddRemoveGeometricShapesButtons::removeShape(const qint32 index) {
+    _renderGroup->removeElement(index);
+    emit isUpdated();
 }
-*/

@@ -32,11 +32,17 @@ class MyGeometricShapesMenu : public MyGroupBox {
     
 public:
     MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* parent = nullptr);
+
+    void setGeometricShapesMenuTree(RenderGroup* renderGroup);
     
     QWidget* createGeometricShapesMenu(RenderGroup* renderGroup);
     
 signals:
     void isUpdated();
+
+protected:
+    QDialogButtonBox* _addRemoveGeometricShapesButtons;
+    QWidget* _geometricShapesMenuTree;
 };
 
 class My1DGeometricShapeMenu : public MyGroupBox {
@@ -130,18 +136,27 @@ class MyAddRemoveGeometricShapesButtons : public QDialogButtonBox {
     Q_OBJECT
 
 public:
-    MyAddRemoveGeometricShapesButtons(QWidget* parent = nullptr);
+    MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent = nullptr);
 
     void setAddingMenu();
 
+    void addShape(const QString& shape);
+
+    void removeShape(const qint32 index);
+
 signals:
-    void shapeIsChosen(const QString&);
+    void isUpdated();
+
+private slots:
+
+    void setRemovingMenu();
 
 protected:
     QPushButton* _addPushButton;
     QPushButton* _removePushButton;
     QMenu* _addingMenu;
     QMenu* _removingMenu;
+    RenderGroup* _renderGroup;
 };
 
 #endif
