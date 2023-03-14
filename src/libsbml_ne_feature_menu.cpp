@@ -302,7 +302,39 @@ MyEllipseShapeMenu::MyEllipseShapeMenu(Ellipse* ellipse, QWidget* parent) : My2D
 // MyPolygonShapeMenu
 
 MyPolygonShapeMenu::MyPolygonShapeMenu(Polygon* polygon, QWidget* parent) : My2DGeometricShapeMenu(polygon, parent) {
-    
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
+    MyParameterBase* _vertexXAbsParameter = NULL;
+    MyParameterBase* _vertexXRelParameter = NULL;
+    MyParameterBase* _vertexYAbsParameter = NULL;
+    MyParameterBase* _vertexYRelParameter = NULL;
+
+    for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
+        // x
+        _vertexXAbsParameter = new MyPolygonShapeVertexXAbsoluteParameter(polygon, i);
+        _vertexXAbsParameter->read();
+        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        contentLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), contentLayout->rowCount(), 0);
+        contentLayout->addWidget(_vertexXAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+        _vertexXRelParameter = new MyPolygonShapeVertexXRelativeParameter(polygon, i);
+        _vertexXRelParameter->read();
+        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        contentLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), contentLayout->rowCount(), 0);
+        contentLayout->addWidget(_vertexXRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+        // y
+        _vertexYAbsParameter = new MyPolygonShapeVertexYAbsoluteParameter(polygon, i);
+        _vertexYAbsParameter->read();
+        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        contentLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), contentLayout->rowCount(), 0);
+        contentLayout->addWidget(_vertexYAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+        _vertexYRelParameter = new MyPolygonShapeVertexYRelativeParameter(polygon, i);
+        _vertexYRelParameter->read();
+        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        contentLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), contentLayout->rowCount(), 0);
+        contentLayout->addWidget(_vertexYRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+    }
 }
 
 // MyStrokeMenu

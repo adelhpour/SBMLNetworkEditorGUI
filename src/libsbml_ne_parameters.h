@@ -1222,4 +1222,79 @@ protected slots:
     // set the value of parameter info to the graphical object and style
     void write() override;
 };
+
+class MyPolygonShapeVertexParameterBase {
+
+public:
+
+    MyPolygonShapeVertexParameterBase(const unsigned int& elementIndex);
+
+protected:
+    unsigned  int _elementIndex;
+};
+
+class MyPolygonShapeVertexXAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyPolygonShapeVertexXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+            // set the value of parameter info to the graphical object and style
+            void write() override;
+};
+
+class MyPolygonShapeVertexXRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyPolygonShapeVertexXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeVertexYAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyPolygonShapeVertexYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeVertexYRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyPolygonShapeVertexYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 #endif
