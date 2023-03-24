@@ -111,10 +111,18 @@ protected:
 };
 
 class MyPolygonShapeMenu : public My2DGeometricShapeMenu {
-    Q_OBJECT
-    
+Q_OBJECT
+
 public:
     MyPolygonShapeMenu(Polygon* polygon, QWidget* parent = nullptr);
+
+    void setElementsMenuTree(Polygon* polygon);
+
+    QWidget* createElementsMenuTree(Polygon* polygon);
+
+protected:
+    QDialogButtonBox* _addRemovePolygonElementButtons;
+    QWidget* _elementsMenuTree;
 };
 
 class MyStrokeMenu : public MyGroupBox {
@@ -132,31 +140,99 @@ protected:
     MyParameterBase* _dashArrayParameter;
 };
 
-class MyAddRemoveGeometricShapesButtons : public QDialogButtonBox {
-    Q_OBJECT
+class MyAddRemoveButtonsBase : public QDialogButtonBox {
+Q_OBJECT
 
 public:
-    MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent = nullptr);
+    MyAddRemoveButtonsBase(QWidget* parent = nullptr);
 
-    void setAddingMenu();
+    void setMenus() ;
 
-    void addShape(const QString& shape);
-
-    void removeShape(const qint32 index);
-
-signals:
-    void isUpdated();
+    virtual void setAddingMenu() = 0;
 
 private slots:
 
-    void setRemovingMenu();
+    virtual void setRemovingMenu() = 0;
+
+signals:
+
+    void isUpdated();
 
 protected:
     QPushButton* _addPushButton;
     QPushButton* _removePushButton;
     QMenu* _addingMenu;
     QMenu* _removingMenu;
+};
+
+class MyAddRemoveGeometricShapesButtons : public MyAddRemoveButtonsBase {
+Q_OBJECT
+
+public:
+    MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent = nullptr);
+
+    void setAddingMenu() override;
+
+    void addShape(const QString& shape);
+
+    void removeShape(const qint32 index);
+
+private slots:
+
+    void setRemovingMenu() override;
+
+protected:
     RenderGroup* _renderGroup;
+};
+
+class MyAddRemoveShapeElementButtonsBase : public MyAddRemoveButtonsBase {
+Q_OBJECT
+
+public:
+    MyAddRemoveShapeElementButtonsBase(Transformation2D* shape, QWidget* parent = nullptr);
+
+    void setAddingMenu() override;
+
+    void addRenderPoint();
+
+    void removeElement(const qint32 index);
+
+    virtual const bool hasEnoughElementsLeft() = 0;
+
+    virtual unsigned int numberOfShapeElements() = 0;
+
+private slots:
+
+    void setRemovingMenu() override;
+
+protected:
+    Transformation2D* _shape;
+};
+
+class MyAddRemovePolygonElementButtons : public MyAddRemoveShapeElementButtonsBase {
+Q_OBJECT
+
+public:
+    MyAddRemovePolygonElementButtons(Polygon* polygon, QWidget* parent = nullptr);
+
+    const bool hasEnoughElementsLeft() override;
+
+    unsigned int numberOfShapeElements() override;
+};
+
+class MyAddRemoveRenderCurveElementButtons : public MyAddRemoveShapeElementButtonsBase {
+Q_OBJECT
+
+public:
+    MyAddRemoveRenderCurveElementButtons(RenderCurve* renderCurve, QWidget* parent = nullptr);
+
+    void setAddingMenu() override;
+
+    void addRenderCubicBezier();
+
+    const bool hasEnoughElementsLeft() override;
+
+    unsigned int numberOfShapeElements() override;
 };
 
 #endif

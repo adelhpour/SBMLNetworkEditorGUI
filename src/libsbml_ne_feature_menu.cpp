@@ -60,6 +60,7 @@ MyGeometricShapesMenu::MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* 
     QGridLayout* contentLayout = new QGridLayout(this);
     contentLayout->setAlignment(Qt::AlignTop);
     _addRemoveGeometricShapesButtons = new MyAddRemoveGeometricShapesButtons(renderGroup, this);
+    ((MyAddRemoveGeometricShapesButtons*)_addRemoveGeometricShapesButtons)->setMenus();
     connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect((MyAddRemoveGeometricShapesButtons*)_addRemoveGeometricShapesButtons, &MyAddRemoveGeometricShapesButtons::isUpdated, this, [this, renderGroup] () { setGeometricShapesMenuTree(renderGroup); });
@@ -303,38 +304,76 @@ MyEllipseShapeMenu::MyEllipseShapeMenu(Ellipse* ellipse, QWidget* parent) : My2D
 
 MyPolygonShapeMenu::MyPolygonShapeMenu(Polygon* polygon, QWidget* parent) : My2DGeometricShapeMenu(polygon, parent) {
     QGridLayout* contentLayout = (QGridLayout*)(layout());
+    _elementsMenuTree = NULL;
+
+    _addRemovePolygonElementButtons = new MyAddRemovePolygonElementButtons(polygon, this);
+    ((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons)->setMenus();
+    connect(_addRemovePolygonElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(_addRemovePolygonElementButtons, contentLayout->rowCount(), 1);
+    connect((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons, &MyAddRemovePolygonElementButtons::isUpdated, this, [this, polygon] () { setElementsMenuTree(polygon); });
+    setElementsMenuTree(polygon);
+}
+
+void MyPolygonShapeMenu::setElementsMenuTree(Polygon* polygon) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_elementsMenuTree != NULL) {
+        contentLayout->removeWidget(_elementsMenuTree);
+        _elementsMenuTree->deleteLater();
+    }
+    _elementsMenuTree = createElementsMenuTree(polygon);
+    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
+    MyTreeView* elementsMenuTree = new MyTreeView(this);
     MyParameterBase* _vertexXAbsParameter = NULL;
     MyParameterBase* _vertexXRelParameter = NULL;
     MyParameterBase* _vertexYAbsParameter = NULL;
     MyParameterBase* _vertexYRelParameter = NULL;
-
+    MyParameterBase* _vertexBasePoint1AbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1RelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2AbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2RelParameter = NULL;
+    QWidget* elementMenu = NULL;
+    QGridLayout* elementMenuLayout = NULL;
     for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
+        elementMenu = new QWidget(elementsMenuTree);
+        elementMenuLayout = new QGridLayout(elementMenu);
         // x
         _vertexXAbsParameter = new MyPolygonShapeVertexXAbsoluteParameter(polygon, i);
         _vertexXAbsParameter->read();
         connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        contentLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), contentLayout->rowCount(), 0);
-        contentLayout->addWidget(_vertexXAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
         _vertexXRelParameter = new MyPolygonShapeVertexXRelativeParameter(polygon, i);
         _vertexXRelParameter->read();
         connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        contentLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), contentLayout->rowCount(), 0);
-        contentLayout->addWidget(_vertexXRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
         // y
         _vertexYAbsParameter = new MyPolygonShapeVertexYAbsoluteParameter(polygon, i);
         _vertexYAbsParameter->read();
         connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        contentLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), contentLayout->rowCount(), 0);
-        contentLayout->addWidget(_vertexYAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
         _vertexYRelParameter = new MyPolygonShapeVertexYRelativeParameter(polygon, i);
         _vertexYRelParameter->read();
         connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        contentLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), contentLayout->rowCount(), 0);
-        contentLayout->addWidget(_vertexYRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        if (polygon->getElement(i)->isRenderCubicBezier()) {
+
+        }
+
+        elementMenu->setLayout(elementMenuLayout);
+        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
     }
+
+    return elementsMenuTree;
 }
 
 // MyStrokeMenu
@@ -367,25 +406,33 @@ MyStrokeMenu::MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* 
     setLayout(contentLayout);
 }
 
-// MyAddRemoveGeometricShapesButtons
+// MyAddRemoveButtonsBase
 
-MyAddRemoveGeometricShapesButtons::MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent) : QDialogButtonBox(parent) {
+MyAddRemoveButtonsBase::MyAddRemoveButtonsBase(QWidget* parent) : QDialogButtonBox(parent) {
     setContentsMargins(0, 0, 0, 0);
     setOrientation(Qt::Horizontal);
     setFixedSize(150.0, 50.0);
-    _renderGroup = renderGroup;
+
     // add button
     _addPushButton = addButton(QString("+"), QDialogButtonBox::YesRole);
     _addingMenu = new QMenu(_addPushButton);
     _addPushButton->setMenu(_addingMenu);
-    setAddingMenu();
     // remove button
     _removePushButton = addButton(QString("-"), QDialogButtonBox::NoRole);
     _removingMenu = new QMenu(_removePushButton);
     _removePushButton->setMenu(_removingMenu);
-    setRemovingMenu();
-
     connect(this, SIGNAL(isUpdated()), this, SLOT(setRemovingMenu()));
+}
+
+void MyAddRemoveButtonsBase::setMenus() {
+    setAddingMenu();
+    setRemovingMenu();
+}
+
+// MyAddRemoveGeometricShapesButtons
+
+MyAddRemoveGeometricShapesButtons::MyAddRemoveGeometricShapesButtons(RenderGroup* renderGroup, QWidget* parent) : MyAddRemoveButtonsBase(parent) {
+    _renderGroup = renderGroup;
 }
 
 void MyAddRemoveGeometricShapesButtons::setAddingMenu() {
@@ -431,5 +478,80 @@ void MyAddRemoveGeometricShapesButtons::addShape(const QString& shape) {
 
 void MyAddRemoveGeometricShapesButtons::removeShape(const qint32 index) {
     _renderGroup->removeElement(index);
+    emit isUpdated();
+}
+
+// MyAddRemoveShapeElementButtonsBase
+
+MyAddRemoveShapeElementButtonsBase::MyAddRemoveShapeElementButtonsBase(Transformation2D* shape, QWidget* parent) : MyAddRemoveButtonsBase(parent) {
+    _shape = shape;
+}
+
+void MyAddRemoveShapeElementButtonsBase::setAddingMenu() {
+    _addPushButton->setEnabled(true);
+    connect(_addingMenu->addAction("RenderPoint"), &QAction::triggered, this, [this] () { addRenderPoint(); });
+}
+
+void MyAddRemoveShapeElementButtonsBase::setRemovingMenu() {
+    _removingMenu->clear();
+    _removePushButton->setEnabled(false);
+    if (hasEnoughElementsLeft()) {
+        _removePushButton->setEnabled(true);
+        for (unsigned int i = 0; i < numberOfShapeElements(); i++)
+            connect(_removingMenu->addAction("Element " + QString::number(i + 1)), &QAction::triggered, this, [this, i] () { removeElement(i); });
+    }
+}
+
+void MyAddRemoveShapeElementButtonsBase::addRenderPoint() {
+    addShapeRenderPoint(_shape);
+    emit isUpdated();
+}
+
+void MyAddRemoveShapeElementButtonsBase::removeElement(const qint32 index) {
+    removeShapeElement(_shape, index);
+    emit isUpdated();
+}
+
+// MyAddRemovePolygonElementButtons
+
+MyAddRemovePolygonElementButtons::MyAddRemovePolygonElementButtons(Polygon* polygon, QWidget* parent) : MyAddRemoveShapeElementButtonsBase(polygon, parent) {
+
+}
+
+const bool MyAddRemovePolygonElementButtons::hasEnoughElementsLeft() {
+    if (((Polygon*)_shape)->getNumElements() > 3)
+        return true;
+
+    return false;
+}
+
+unsigned int MyAddRemovePolygonElementButtons::numberOfShapeElements() {
+    return ((Polygon*)_shape)->getNumElements();
+}
+
+// MyAddRemoveRenderCurveElementButtons
+
+MyAddRemoveRenderCurveElementButtons::MyAddRemoveRenderCurveElementButtons(RenderCurve* renderCurve, QWidget* parent) : MyAddRemoveShapeElementButtonsBase(renderCurve, parent) {
+
+}
+
+void MyAddRemoveRenderCurveElementButtons::setAddingMenu() {
+    MyAddRemoveShapeElementButtonsBase::setAddingMenu();
+    connect(_addingMenu->addAction("RenderCubicBezier"), &QAction::triggered, this, [this] () { addRenderCubicBezier(); });
+}
+
+const bool MyAddRemoveRenderCurveElementButtons::hasEnoughElementsLeft() {
+    if (((RenderCurve*)_shape)->getNumElements() > 2)
+        return true;
+
+    return false;
+}
+
+unsigned int MyAddRemoveRenderCurveElementButtons::numberOfShapeElements() {
+    return ((RenderCurve*)_shape)->getNumElements();
+}
+
+void MyAddRemoveRenderCurveElementButtons::addRenderCubicBezier() {
+    addShapeRenderCubicBezier(_shape);
     emit isUpdated();
 }

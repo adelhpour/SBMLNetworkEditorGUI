@@ -34,7 +34,7 @@ MyTitleLabel::MyTitleLabel(const QString& text, QWidget* parent) : MyLabel(text,
     QFont _font = font();
     _font.setPointSize(18);
     setFont(_font);
-    setFixedSize(400, 25);
+    setFixedSize(800, 25);
     setAlignment(Qt::AlignCenter);
 }
 
@@ -2513,7 +2513,8 @@ void MyPolygonShapeVertexYAbsoluteParameter::write() {
 
 // MyPolygonShapeVertexYRelativeParameter
 
-MyPolygonShapeVertexYRelativeParameter::MyPolygonShapeVertexYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeVertexYRelativeParameter::MyPolygonShapeVertexYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex)
+{
 
 }
 
