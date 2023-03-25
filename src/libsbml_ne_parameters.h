@@ -1297,4 +1297,132 @@ protected slots:
     void write() override;
 };
 
+class MyPolygonShapeBasePoint1XAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint1XRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint1YAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint1YRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint2XAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint2XRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint2YAbsoluteParameter : public MyPositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyPolygonShapeBasePoint2YRelativeParameter : public MyRelativePositionalParameter, public  MyPolygonShapeVertexParameterBase {
+Q_OBJECT
+
+public:
+
+    MyPolygonShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 #endif
