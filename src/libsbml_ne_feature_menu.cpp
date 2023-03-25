@@ -330,10 +330,14 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
     MyParameterBase* _vertexXRelParameter = NULL;
     MyParameterBase* _vertexYAbsParameter = NULL;
     MyParameterBase* _vertexYRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint1AbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint1RelParameter = NULL;
-    MyParameterBase* _vertexBasePoint2AbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint2RelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
     QWidget* elementMenu = NULL;
     QGridLayout* elementMenuLayout = NULL;
     for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
@@ -366,7 +370,57 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
         elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
         if (polygon->getElement(i)->isRenderCubicBezier()) {
+            // base point 1 x
+            _vertexBasePoint1XAbsParameter = new MyPolygonShapeVertexBasePoint1XAbsoluteParameter(polygon, i);
+            _vertexBasePoint1XAbsParameter->read();
+            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
+            _vertexBasePoint1XRelParameter = new MyPolygonShapeVertexBasePoint1XRelativeParameter(polygon, i);
+            _vertexBasePoint1XRelParameter->read();
+            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 1 y
+            _vertexBasePoint1YAbsParameter = new MyPolygonShapeVertexBasePoint1YAbsoluteParameter(polygon, i);
+            _vertexBasePoint1YAbsParameter->read();
+            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1YRelParameter = new MyPolygonShapeVertexBasePoint1YRelativeParameter(polygon, i);
+            _vertexBasePoint1YRelParameter->read();
+            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 x
+            _vertexBasePoint2XAbsParameter = new MyPolygonShapeVertexBasePoint2XAbsoluteParameter(polygon, i);
+            _vertexBasePoint2XAbsParameter->read();
+            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2XRelParameter = new MyPolygonShapeVertexBasePoint2XRelativeParameter(polygon, i);
+            _vertexBasePoint2XRelParameter->read();
+            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 y
+            _vertexBasePoint2YAbsParameter = new MyPolygonShapeVertexBasePoint2YAbsoluteParameter(polygon, i);
+            _vertexBasePoint2YAbsParameter->read();
+            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2YRelParameter = new MyPolygonShapeVertexBasePoint2YRelativeParameter(polygon, i);
+            _vertexBasePoint2YRelParameter->read();
+            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
         }
 
         elementMenu->setLayout(elementMenuLayout);
