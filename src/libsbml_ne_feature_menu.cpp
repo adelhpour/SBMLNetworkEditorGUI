@@ -467,6 +467,8 @@ void MyAddRemoveGeometricShapesButtons::setRemovingMenu() {
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Ellipse"), &QAction::triggered, this, [this, i] () { removeShape(i); });
             else if (_renderGroup->getElement(i)->isPolygon())
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Polygon"), &QAction::triggered, this, [this, i] () { removeShape(i); });
+            else if (_renderGroup->getElement(i)->isRenderCurve())
+                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "RenderCurve"), &QAction::triggered, this, [this, i] () { removeShape(i); });
         }
     }
 }
