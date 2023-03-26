@@ -2530,6 +2530,8 @@ void MyPolygonShapeVertexYRelativeParameter::write() {
     emit isUpdated();
 }
 
+// MyPolygonShapeBasePoint1XAbsoluteParameter
+
 MyPolygonShapeBasePoint1XAbsoluteParameter::MyPolygonShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
@@ -2546,18 +2548,128 @@ void MyPolygonShapeBasePoint1XAbsoluteParameter::write() {
     emit isUpdated();
 }
 
+// MyPolygonShapeBasePoint1XRelativeParameter
+
 MyPolygonShapeBasePoint1XRelativeParameter::MyPolygonShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
-void MyPolygonShapeBasePoint1XAbsoluteParameter::read() {
+void MyPolygonShapeBasePoint1XRelativeParameter::read() {
     RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1X.getRelativeValue());
 }
 
-void MyPolygonShapeBasePoint1XAbsoluteParameter::write() {
+void MyPolygonShapeBasePoint1XRelativeParameter::write() {
     RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
     basePoint1X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
     setPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex, basePoint1X);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint1YAbsoluteParameter
+
+MyPolygonShapeBasePoint1YAbsoluteParameter::MyPolygonShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint1YAbsoluteParameter::read() {
+    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    setDefaultValue(basePoint1Y.getAbsoluteValue());
+}
+
+void MyPolygonShapeBasePoint1YAbsoluteParameter::write() {
+    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    basePoint1Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex, basePoint1Y);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint1YRelativeParameter
+
+MyPolygonShapeBasePoint1YRelativeParameter::MyPolygonShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint1YRelativeParameter::read() {
+    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    setDefaultValue(basePoint1Y.getRelativeValue());
+}
+
+void MyPolygonShapeBasePoint1YRelativeParameter::write() {
+    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    basePoint1Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex, basePoint1Y);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint2XAbsoluteParameter
+
+MyPolygonShapeBasePoint2XAbsoluteParameter::MyPolygonShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint2XAbsoluteParameter::read() {
+    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    setDefaultValue(basePoint2X.getAbsoluteValue());
+}
+
+void MyPolygonShapeBasePoint2XAbsoluteParameter::write() {
+    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    basePoint2X.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex, basePoint2X);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint2XRelativeParameter
+
+MyPolygonShapeBasePoint2XRelativeParameter::MyPolygonShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint2XRelativeParameter::read() {
+    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    setDefaultValue(basePoint2X.getRelativeValue());
+}
+
+void MyPolygonShapeBasePoint2XRelativeParameter::write() {
+    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    basePoint2X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex, basePoint2X);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint2YAbsoluteParameter
+
+MyPolygonShapeBasePoint2YAbsoluteParameter::MyPolygonShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint2YAbsoluteParameter::read() {
+    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    (basePoint2Y.getAbsoluteValue());
+}
+
+void MyPolygonShapeBasePoint2YAbsoluteParameter::write() {
+    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    basePoint2Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex, basePoint2Y);
+    emit isUpdated();
+}
+
+// MyPolygonShapeBasePoint2YRelativeParameter
+
+MyPolygonShapeBasePoint2YRelativeParameter::MyPolygonShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+
+}
+
+void MyPolygonShapeBasePoint2YRelativeParameter::read() {
+    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    setDefaultValue(basePoint2Y.getRelativeValue());
+}
+
+void MyPolygonShapeBasePoint2YRelativeParameter::write() {
+    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    basePoint2Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
