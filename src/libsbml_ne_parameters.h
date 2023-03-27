@@ -1425,4 +1425,206 @@ protected slots:
     void write() override;
 };
 
+class MyRenderCurveShapePointParameterBase {
+
+public:
+
+    MyRenderCurveShapePointParameterBase(const unsigned int& elementIndex);
+
+protected:
+    unsigned  int _elementIndex;
+};
+
+class MyRenderCurveShapePointXAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapePointXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapePointXRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapePointXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapePointYAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapePointYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapePointYRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapePointYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint1XAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint1XRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint1YAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint1YRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint2XAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint2XRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint2YAbsoluteParameter : public MyPositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyRenderCurveShapeBasePoint2YRelativeParameter : public MyRelativePositionalParameter, public  MyRenderCurveShapePointParameterBase {
+Q_OBJECT
+
+public:
+
+    MyRenderCurveShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 #endif
