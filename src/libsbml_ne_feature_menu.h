@@ -125,6 +125,21 @@ protected:
     QWidget* _elementsMenuTree;
 };
 
+class MyRenderCurveShapeMenu : public My1DGeometricShapeMenu {
+    Q_OBJECT
+
+public:
+    MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent = nullptr);
+
+    void setElementsMenuTree(RenderCurve* renderCurve);
+
+    QWidget* createElementsMenuTree(RenderCurve* renderCurve);
+
+protected:
+    QDialogButtonBox* _addRemoveRenderCurveElementButtons;
+    QWidget* _elementsMenuTree;
+};
+
 class MyStrokeMenu : public MyGroupBox {
     Q_OBJECT
 

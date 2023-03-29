@@ -95,6 +95,10 @@ QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGro
             geometricShapeMenu = new MyPolygonShapeMenu((Polygon*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Polygon");
         }
+        else if (shape->isRenderCurve()) {
+            geometricShapeMenu = new MyRenderCurveShapeMenu((RenderCurve*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": RenderCurve");
+        }
         connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     }
 
@@ -429,6 +433,136 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
     return elementsMenuTree;
 }
 
+// MyRenderCurveShapeMenu
+
+MyRenderCurveShapeMenu::MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent) : My1DGeometricShapeMenu(renderCurve, parent) {
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
+    _elementsMenuTree = NULL;
+
+    _addRemoveRenderCurveElementButtons = new MyAddRemoveRenderCurveElementButtons(renderCurve, this);
+    ((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons)->setMenus();
+    connect(_addRemoveRenderCurveElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(_addRemoveRenderCurveElementButtons, contentLayout->rowCount(), 1);
+    connect((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons, &MyAddRemoveRenderCurveElementButtons::isUpdated, this, [this, renderCurve] () { setElementsMenuTree(renderCurve); });
+    setElementsMenuTree(renderCurve);
+}
+
+void MyRenderCurveShapeMenu::setElementsMenuTree(RenderCurve* renderCurve) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_elementsMenuTree != NULL) {
+        contentLayout->removeWidget(_elementsMenuTree);
+        _elementsMenuTree->deleteLater();
+    }
+    _elementsMenuTree = createElementsMenuTree(renderCurve);
+    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyRenderCurveShapeMenu::createElementsMenuTree(RenderCurve* renderCurve) {
+    MyTreeView* elementsMenuTree = new MyTreeView(this);
+    MyParameterBase* _vertexXAbsParameter = NULL;
+    MyParameterBase* _vertexXRelParameter = NULL;
+    MyParameterBase* _vertexYAbsParameter = NULL;
+    MyParameterBase* _vertexYRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
+    QWidget* elementMenu = NULL;
+    QGridLayout* elementMenuLayout = NULL;
+    for (unsigned int i = 0; i < renderCurve->getNumElements(); i++) {
+        elementMenu = new QWidget(elementsMenuTree);
+        elementMenuLayout = new QGridLayout(elementMenu);
+        // x
+        _vertexXAbsParameter = new MyRenderCurveShapePointXAbsoluteParameter(renderCurve, i);
+        _vertexXAbsParameter->read();
+        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexXRelParameter = new MyRenderCurveShapePointXRelativeParameter(renderCurve, i);
+        _vertexXRelParameter->read();
+        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        // y
+        _vertexYAbsParameter = new MyRenderCurveShapePointYAbsoluteParameter(renderCurve, i);
+        _vertexYAbsParameter->read();
+        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexYRelParameter = new MyRenderCurveShapePointYRelativeParameter(renderCurve, i);
+        _vertexYRelParameter->read();
+        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        if (renderCurve->getElement(i)->isRenderCubicBezier()) {
+            // base point 1 x
+            _vertexBasePoint1XAbsParameter = new MyRenderCurveShapeBasePoint1XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1XAbsParameter->read();
+            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1XRelParameter = new MyRenderCurveShapeBasePoint1XRelativeParameter(renderCurve, i);
+            _vertexBasePoint1XRelParameter->read();
+            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 1 y
+            _vertexBasePoint1YAbsParameter = new MyRenderCurveShapeBasePoint1YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1YAbsParameter->read();
+            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1YRelParameter = new MyRenderCurveShapeBasePoint1YRelativeParameter(renderCurve, i);
+            _vertexBasePoint1YRelParameter->read();
+            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 x
+            _vertexBasePoint2XAbsParameter = new MyRenderCurveShapeBasePoint2XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2XAbsParameter->read();
+            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2XRelParameter = new MyRenderCurveShapeBasePoint2XRelativeParameter(renderCurve, i);
+            _vertexBasePoint2XRelParameter->read();
+            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 y
+            _vertexBasePoint2YAbsParameter = new MyRenderCurveShapeBasePoint2YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2YAbsParameter->read();
+            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2YRelParameter = new MyRenderCurveShapeBasePoint2YRelativeParameter(renderCurve, i);
+            _vertexBasePoint2YRelParameter->read();
+            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+        }
+
+        elementMenu->setLayout(elementMenuLayout);
+        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
+    }
+
+    return elementsMenuTree;
+}
+
 // MyStrokeMenu
 
 MyStrokeMenu::MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGroupBox(parent) {
@@ -520,8 +654,6 @@ void MyAddRemoveGeometricShapesButtons::setRemovingMenu() {
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Ellipse"), &QAction::triggered, this, [this, i] () { removeShape(i); });
             else if (_renderGroup->getElement(i)->isPolygon())
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Polygon"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isRenderCurve())
-                connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "RenderCurve"), &QAction::triggered, this, [this, i] () { removeShape(i); });
         }
     }
 }
