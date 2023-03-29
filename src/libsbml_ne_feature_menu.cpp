@@ -62,7 +62,6 @@ MyGeometricShapesMenu::MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* 
     _addRemoveGeometricShapesButtons = new MyAddRemoveGeometricShapesButtons(renderGroup, this);
     ((MyAddRemoveGeometricShapesButtons*)_addRemoveGeometricShapesButtons)->setMenus();
     connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    connect(_addRemoveGeometricShapesButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect((MyAddRemoveGeometricShapesButtons*)_addRemoveGeometricShapesButtons, &MyAddRemoveGeometricShapesButtons::isUpdated, this, [this, renderGroup] () { setGeometricShapesMenuTree(renderGroup); });
     contentLayout->addWidget(_addRemoveGeometricShapesButtons, contentLayout->rowCount(), 1);
     setGeometricShapesMenuTree(renderGroup);
