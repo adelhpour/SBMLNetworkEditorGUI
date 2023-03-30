@@ -146,8 +146,8 @@ class MyStrokeMenu : public MyGroupBox {
 public:
     MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
 
-    signals:
-            void isUpdated();
+signals:
+    void isUpdated();
 
 protected:
     MyParameterBase* _widthParameter;
