@@ -24,7 +24,9 @@ public:
     void addEllipseGraphicsItem(RenderGroup* group, Ellipse* ellipse, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation);
     
     void addPolygonGraphicsItem(RenderGroup* group, Polygon* polygon, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation);
-    
+
+    void addRenderCurveGraphicsItem(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation);
+
     void addCurveGraphicsItem(RenderGroup* group, Curve* curve);
     
     void addTextGraphicsItem(RenderGroup* group, BoundingBox* boundingBox, const QString& plainText);

@@ -29,6 +29,8 @@ void MyElementGraphicsItem::addGeometricShape(RenderGroup* group, Transformation
         addEllipseGraphicsItem(group, (Ellipse*)geometricShape, boundingBox, position, rotation);
     else if (geometricShape->isPolygon())
         addPolygonGraphicsItem(group, (Polygon*)geometricShape, boundingBox, position, rotation);
+    else if (geometricShape->isRenderCurve())
+        addRenderCurveGraphicsItem(group, (RenderCurve*)geometricShape, boundingBox, position, rotation);
 }
 
 void MyElementGraphicsItem::addRectangleGraphicsItem(RenderGroup* group, Rectangle* rectangle, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
@@ -53,6 +55,14 @@ void MyElementGraphicsItem::addPolygonGraphicsItem(RenderGroup* group, Polygon* 
     connect(shape, SIGNAL(askForGradientDefinition(const QString&)), this, SIGNAL(askForGradientDefinition(const QString&)));
     shape->updateFeatures(group, polygon, boundingBox, position, rotation);
     addToGroup(shape);
+}
+
+void MyElementGraphicsItem::addRenderCurveGraphicsItem(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
+    //MyRenderCurveGraphicsItem* shape = new MyRenderCurveGraphicsItem(this);
+    //connect(shape, SIGNAL(askForColorDefinition(const QString&)), this, SIGNAL(askForColorDefinition(const QString&)));
+    //connect(shape, SIGNAL(askForGradientDefinition(const QString&)), this, SIGNAL(askForGradientDefinition(const QString&)));
+    //shape->updateFeatures(group, renderCurve, boundingBox, position, rotation);
+    //addToGroup(shape);
 }
 
 void MyElementGraphicsItem::addCurveGraphicsItem(RenderGroup* group, Curve* curve) {
