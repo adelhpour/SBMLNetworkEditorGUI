@@ -2459,7 +2459,7 @@ MyPolygonShapeVertexParameterBase::MyPolygonShapeVertexParameterBase(const unsig
 
 // MyPolygonShapeVertexXAbsoluteParameter
 
-MyPolygonShapeVertexXAbsoluteParameter::MyPolygonShapeVertexXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeVertexXAbsoluteParameter::MyPolygonShapeVertexXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2477,7 +2477,7 @@ void MyPolygonShapeVertexXAbsoluteParameter::write() {
 
 // MyPolygonShapeVertexXRelativeParameter
 
-MyPolygonShapeVertexXRelativeParameter::MyPolygonShapeVertexXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeVertexXRelativeParameter::MyPolygonShapeVertexXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2495,7 +2495,7 @@ void MyPolygonShapeVertexXRelativeParameter::write() {
 
 // MyPolygonShapeVertexYAbsoluteParameter
 
-MyPolygonShapeVertexYAbsoluteParameter::MyPolygonShapeVertexYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeVertexYAbsoluteParameter::MyPolygonShapeVertexYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Y (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2513,7 +2513,7 @@ void MyPolygonShapeVertexYAbsoluteParameter::write() {
 
 // MyPolygonShapeVertexYRelativeParameter
 
-MyPolygonShapeVertexYRelativeParameter::MyPolygonShapeVertexYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex)
+MyPolygonShapeVertexYRelativeParameter::MyPolygonShapeVertexYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex)
 {
 
 }
@@ -2532,7 +2532,7 @@ void MyPolygonShapeVertexYRelativeParameter::write() {
 
 // MyPolygonShapeBasePoint1XAbsoluteParameter
 
-MyPolygonShapeBasePoint1XAbsoluteParameter::MyPolygonShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint1XAbsoluteParameter::MyPolygonShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint1X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2550,7 +2550,7 @@ void MyPolygonShapeBasePoint1XAbsoluteParameter::write() {
 
 // MyPolygonShapeBasePoint1XRelativeParameter
 
-MyPolygonShapeBasePoint1XRelativeParameter::MyPolygonShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint1XRelativeParameter::MyPolygonShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint1X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2568,7 +2568,7 @@ void MyPolygonShapeBasePoint1XRelativeParameter::write() {
 
 // MyPolygonShapeBasePoint1YAbsoluteParameter
 
-MyPolygonShapeBasePoint1YAbsoluteParameter::MyPolygonShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint1YAbsoluteParameter::MyPolygonShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint1Y (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2586,7 +2586,7 @@ void MyPolygonShapeBasePoint1YAbsoluteParameter::write() {
 
 // MyPolygonShapeBasePoint1YRelativeParameter
 
-MyPolygonShapeBasePoint1YRelativeParameter::MyPolygonShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint1YRelativeParameter::MyPolygonShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint1 Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2604,7 +2604,7 @@ void MyPolygonShapeBasePoint1YRelativeParameter::write() {
 
 // MyPolygonShapeBasePoint2XAbsoluteParameter
 
-MyPolygonShapeBasePoint2XAbsoluteParameter::MyPolygonShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint2XAbsoluteParameter::MyPolygonShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint2X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2622,7 +2622,7 @@ void MyPolygonShapeBasePoint2XAbsoluteParameter::write() {
 
 // MyPolygonShapeBasePoint2XRelativeParameter
 
-MyPolygonShapeBasePoint2XRelativeParameter::MyPolygonShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint2XRelativeParameter::MyPolygonShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint2X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2640,7 +2640,7 @@ void MyPolygonShapeBasePoint2XRelativeParameter::write() {
 
 // MyPolygonShapeBasePoint2YAbsoluteParameter
 
-MyPolygonShapeBasePoint2YAbsoluteParameter::MyPolygonShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint2YAbsoluteParameter::MyPolygonShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint2Y (abs)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2658,7 +2658,7 @@ void MyPolygonShapeBasePoint2YAbsoluteParameter::write() {
 
 // MyPolygonShapeBasePoint2YRelativeParameter
 
-MyPolygonShapeBasePoint2YRelativeParameter::MyPolygonShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
+MyPolygonShapeBasePoint2YRelativeParameter::MyPolygonShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint2Y (rel %)", styleFeatures), MyPolygonShapeVertexParameterBase(elementIndex) {
 
 }
 
@@ -2682,7 +2682,7 @@ MyRenderCurveShapePointParameterBase::MyRenderCurveShapePointParameterBase(const
 
 // MyRenderCurveShapePointXAbsoluteParameter
 
-MyRenderCurveShapePointXAbsoluteParameter::MyRenderCurveShapePointXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapePointXAbsoluteParameter::MyRenderCurveShapePointXAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2700,7 +2700,7 @@ void MyRenderCurveShapePointXAbsoluteParameter::write() {
 
 // MyRenderCurveShapePointXRelativeParameter
 
-MyRenderCurveShapePointXRelativeParameter::MyRenderCurveShapePointXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapePointXRelativeParameter::MyRenderCurveShapePointXRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2718,12 +2718,12 @@ void MyRenderCurveShapePointXRelativeParameter::write() {
 
 // MyRenderCurveShapePointYAbsoluteParameter
 
-MyRenderCurveShapePointYAbsoluteParameter::MyRenderCurveShapePointYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapePointYAbsoluteParameter::MyRenderCurveShapePointYAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
 void MyRenderCurveShapePointYAbsoluteParameter::read() {
-    RelAbsVector elementY = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getAbsoluteValue());
 }
 
@@ -2736,12 +2736,12 @@ void MyRenderCurveShapePointYAbsoluteParameter::write() {
 
 // MyRenderCurveShapePointYRelativeParameter
 
-MyRenderCurveShapePointYRelativeParameter::MyRenderCurveShapePointYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapePointYRelativeParameter::MyRenderCurveShapePointYRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
 void MyRenderCurveShapePointYRelativeParameter::read() {
-    RelAbsVector elementY = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getRelativeValue());
 }
 
@@ -2754,7 +2754,7 @@ void MyRenderCurveShapePointYRelativeParameter::write() {
 
 // MyRenderCurveShapeBasePoint1XAbsoluteParameter
 
-MyRenderCurveShapeBasePoint1XAbsoluteParameter::MyRenderCurveShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint1XAbsoluteParameter::MyRenderCurveShapeBasePoint1XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint1X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2772,7 +2772,7 @@ void MyRenderCurveShapeBasePoint1XAbsoluteParameter::write() {
 
 // MyRenderCurveShapeBasePoint1XRelativeParameter
 
-MyRenderCurveShapeBasePoint1XRelativeParameter::MyRenderCurveShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint1XRelativeParameter::MyRenderCurveShapeBasePoint1XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint1X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2790,7 +2790,7 @@ void MyRenderCurveShapeBasePoint1XRelativeParameter::write() {
 
 // MyRenderCurveShapeBasePoint1YAbsoluteParameter
 
-MyRenderCurveShapeBasePoint1YAbsoluteParameter::MyRenderCurveShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint1YAbsoluteParameter::MyRenderCurveShapeBasePoint1YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint1Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2808,7 +2808,7 @@ void MyRenderCurveShapeBasePoint1YAbsoluteParameter::write() {
 
 // MyRenderCurveShapeBasePoint1YRelativeParameter
 
-MyRenderCurveShapeBasePoint1YRelativeParameter::MyRenderCurveShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint1YRelativeParameter::MyRenderCurveShapeBasePoint1YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint1Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2826,7 +2826,7 @@ void MyRenderCurveShapeBasePoint1YRelativeParameter::write() {
 
 // MyRenderCurveShapeBasePoint2XAbsoluteParameter
 
-MyRenderCurveShapeBasePoint2XAbsoluteParameter::MyRenderCurveShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint2XAbsoluteParameter::MyRenderCurveShapeBasePoint2XAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint2X (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2844,7 +2844,7 @@ void MyRenderCurveShapeBasePoint2XAbsoluteParameter::write() {
 
 // MyRenderCurveShapeBasePoint2XRelativeParameter
 
-MyRenderCurveShapeBasePoint2XRelativeParameter::MyRenderCurveShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint2XRelativeParameter::MyRenderCurveShapeBasePoint2XRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint2X (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2862,7 +2862,7 @@ void MyRenderCurveShapeBasePoint2XRelativeParameter::write() {
 
 // MyRenderCurveShapeBasePoint2YAbsoluteParameter
 
-MyRenderCurveShapeBasePoint2YAbsoluteParameter::MyRenderCurveShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint2YAbsoluteParameter::MyRenderCurveShapeBasePoint2YAbsoluteParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyPositionalParameter("BasePoint2Y (abs)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
@@ -2880,7 +2880,7 @@ void MyRenderCurveShapeBasePoint2YAbsoluteParameter::write() {
 
 // MyRenderCurveShapeBasePoint2YRelativeParameter
 
-MyRenderCurveShapeBasePoint2YRelativeParameter::MyRenderCurveShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("Element" + QString::number(elementIndex + 1) + ": Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
+MyRenderCurveShapeBasePoint2YRelativeParameter::MyRenderCurveShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex) : MyRelativePositionalParameter("BasePoint2Y (rel %)", styleFeatures), MyRenderCurveShapePointParameterBase(elementIndex) {
 
 }
 
