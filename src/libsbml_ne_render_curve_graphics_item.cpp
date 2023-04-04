@@ -4,39 +4,31 @@ MyRenderCurveGraphicsItem::MyRenderCurveGraphicsItem(QGraphicsItem* parent) : QG
 
 }
 
-void MyPolygonGraphicsItem::updateFeatures(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
+void MyRenderCurveGraphicsItem::updateFeatures(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
     setPen(getPen(group));
     setPen(getPen(renderCurve, pen()));
-    setBrush(getBrush(group, boundingBox));
-    setBrush(getBrush(renderCurve, boundingBox, brush()));
-    setPath(getRenderCurve(renerCurve, boundingBox));
+    setPath(getRenderCurve(renderCurve, boundingBox));
 }
 
-const QPolygonF MyPolygonGraphicsItem::getRenderCurve(RenderCurve* renderCurve, BoundingBox* boundingBox) {
+const QPainterPath MyRenderCurveGraphicsItem::getRenderCurve(RenderCurve* renderCurve, BoundingBox* boundingBox) {
     QPainterPath path;
     RenderPoint* renderPoint = NULL;
+    QPointF lastPoint;
     for (unsigned int i = 0; i < renderCurve->getNumElements(); i++) {
         renderPoint = renderCurve->getElement(i);
         QPointF point = QPointF(boundingBox->x() + renderPoint->getX().getAbsoluteValue() + 0.01 * renderPoint->getX().getRelativeValue() * boundingBox->width(), boundingBox->y() + renderPoint->getY().getAbsoluteValue() + 0.01 * renderPoint->getY().getRelativeValue() * boundingBox->height());
-        if (renderPoint->isRenderCubicBezier()) {
-
+        if (i == 0)
+            path.moveTo(point);
+        else {
+            QPointF controlPoint1 = lastPoint;
+            QPointF controlPoint2 = point;
+            if (renderPoint->isRenderCubicBezier()) {
+                controlPoint1 = QPointF(boundingBox->x() + ((RenderCubicBezier*)renderPoint)->getBasePoint1_x().getAbsoluteValue() + 0.01 * ((RenderCubicBezier*)renderPoint)->getBasePoint1_x().getRelativeValue() * boundingBox->width(), boundingBox->y() + ((RenderCubicBezier*)renderPoint)->getBasePoint1_y().getAbsoluteValue() + 0.01 * ((RenderCubicBezier*)renderPoint)->getBasePoint1_y().getRelativeValue() * boundingBox->height());
+                controlPoint2 = QPointF(boundingBox->x() + ((RenderCubicBezier*)renderPoint)->getBasePoint2_x().getAbsoluteValue() + 0.01 * ((RenderCubicBezier*)renderPoint)->getBasePoint2_x().getRelativeValue() * boundingBox->width(), boundingBox->y() + ((RenderCubicBezier*)renderPoint)->getBasePoint2_y().getAbsoluteValue() + 0.01 * ((RenderCubicBezier*)renderPoint)->getBasePoint2_y().getRelativeValue() * boundingBox->height());
+            }
+            path.cubicTo(controlPoint1, controlPoint2, point);
         }
-    }
-
-
-    for (unsigned int i = 0; i < curve->getNumCurveSegments(); i++) {
-        lineSegment = curve->getCurveSegment(i);
-        QPointF startPoint(lineSegment->getStart()->x(), lineSegment->getStart()->y());
-        QPointF endPoint(lineSegment->getEnd()->x(), lineSegment->getEnd()->y());
-        QPointF controlPoint1 = startPoint;
-        QPointF controlPoint2 = endPoint;
-        const CubicBezier* cubicBezier = dynamic_cast< const CubicBezier* >(lineSegment);
-        if (cubicBezier) {
-            controlPoint1 = QPointF(cubicBezier->getBasePoint1()->x(), cubicBezier->getBasePoint1()->y());
-            controlPoint2 = QPointF(cubicBezier->getBasePoint2()->x(), cubicBezier->getBasePoint2()->y());
-        }
-        path.moveTo(startPoint);
-        path.cubicTo(controlPoint1, controlPoint2, endPoint);
+        lastPoint = point;
     }
 
     return path;

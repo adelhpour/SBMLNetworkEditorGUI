@@ -22,6 +22,7 @@ set(gui_sources
 	libsbml_ne_rect_graphics_item.cpp
 	libsbml_ne_ellipse_graphics_item.cpp
 	libsbml_ne_polygon_graphics_item.cpp
+	libsbml_ne_render_curve_graphics_item.cpp
 	libsbml_ne_text_graphics_item.cpp
 	libsbml_ne_feature_menu.cpp
 	libsbml_ne_parameters.cpp)
@@ -46,6 +47,7 @@ set(gui_headers
 	libsbml_ne_rect_graphics_item.h
 	libsbml_ne_ellipse_graphics_item.h
 	libsbml_ne_polygon_graphics_item.h
+	libsbml_ne_render_curve_graphics_item.h
 	libsbml_ne_text_graphics_item.h
 	libsbml_ne_feature_menu.h
 	libsbml_ne_parameters.h)

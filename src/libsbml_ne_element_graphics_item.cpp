@@ -3,6 +3,7 @@
 #include "libsbml_ne_rect_graphics_item.h"
 #include "libsbml_ne_ellipse_graphics_item.h"
 #include "libsbml_ne_polygon_graphics_item.h"
+#include "libsbml_ne_render_curve_graphics_item.h"
 #include "libsbml_ne_text_graphics_item.h"
 
 MyElementGraphicsItem::MyElementGraphicsItem(const qreal& zValue, QGraphicsItem* parent) : QGraphicsItemGroup(parent) {
@@ -58,11 +59,11 @@ void MyElementGraphicsItem::addPolygonGraphicsItem(RenderGroup* group, Polygon* 
 }
 
 void MyElementGraphicsItem::addRenderCurveGraphicsItem(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
-    //MyRenderCurveGraphicsItem* shape = new MyRenderCurveGraphicsItem(this);
-    //connect(shape, SIGNAL(askForColorDefinition(const QString&)), this, SIGNAL(askForColorDefinition(const QString&)));
-    //connect(shape, SIGNAL(askForGradientDefinition(const QString&)), this, SIGNAL(askForGradientDefinition(const QString&)));
-    //shape->updateFeatures(group, renderCurve, boundingBox, position, rotation);
-    //addToGroup(shape);
+    MyRenderCurveGraphicsItem* shape = new MyRenderCurveGraphicsItem(this);
+    connect(shape, SIGNAL(askForColorDefinition(const QString&)), this, SIGNAL(askForColorDefinition(const QString&)));
+    connect(shape, SIGNAL(askForGradientDefinition(const QString&)), this, SIGNAL(askForGradientDefinition(const QString&)));
+    shape->updateFeatures(group, renderCurve, boundingBox, position, rotation);
+    addToGroup(shape);
 }
 
 void MyElementGraphicsItem::addCurveGraphicsItem(RenderGroup* group, Curve* curve) {
