@@ -45,14 +45,21 @@ protected:
     QWidget* _geometricShapesMenuTree;
 };
 
-class My1DGeometricShapeMenu : public MyGroupBox {
+class MyGeometricShapeMenuItemBase : public MyGroupBox {
+    Q_OBJECT
+
+public:
+    MyGeometricShapeMenuItemBase(QWidget* parent = nullptr);
+
+signals:
+    void isUpdated();
+};
+
+class My1DGeometricShapeMenu : public MyGeometricShapeMenuItemBase {
     Q_OBJECT
     
 public:
     My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
-    
-signals:
-    void isUpdated();
     
 protected:
     MyParameterBase* _strokeWidthParameter;
@@ -68,6 +75,43 @@ public:
     
 protected:
     MyParameterBase* _fillParameter;
+};
+
+class MyImageShapeMenu : public MyGeometricShapeMenuItemBase {
+    Q_OBJECT
+
+public:
+    MyImageShapeMenu(Image* image, QWidget* parent = nullptr);
+};
+
+class MyRenderCurveShapeMenu : public My1DGeometricShapeMenu {
+    Q_OBJECT
+
+public:
+    MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent = nullptr);
+
+    void setElementsMenuTree(RenderCurve* renderCurve);
+
+    QWidget* createElementsMenuTree(RenderCurve* renderCurve);
+
+protected:
+    QDialogButtonBox* _addRemoveRenderCurveElementButtons;
+    QWidget* _elementsMenuTree;
+};
+
+class MyPolygonShapeMenu : public My2DGeometricShapeMenu {
+    Q_OBJECT
+
+public:
+    MyPolygonShapeMenu(Polygon* polygon, QWidget* parent = nullptr);
+
+    void setElementsMenuTree(Polygon* polygon);
+
+    QWidget* createElementsMenuTree(Polygon* polygon);
+
+protected:
+    QDialogButtonBox* _addRemovePolygonElementButtons;
+    QWidget* _elementsMenuTree;
 };
 
 class MyRectangleShapeMenu : public My2DGeometricShapeMenu {
@@ -108,36 +152,6 @@ protected:
     MyParameterBase* _rYAbsParameter;
     MyParameterBase* _rYRelParameter;
     MyParameterBase* _ratioParameter;
-};
-
-class MyPolygonShapeMenu : public My2DGeometricShapeMenu {
-Q_OBJECT
-
-public:
-    MyPolygonShapeMenu(Polygon* polygon, QWidget* parent = nullptr);
-
-    void setElementsMenuTree(Polygon* polygon);
-
-    QWidget* createElementsMenuTree(Polygon* polygon);
-
-protected:
-    QDialogButtonBox* _addRemovePolygonElementButtons;
-    QWidget* _elementsMenuTree;
-};
-
-class MyRenderCurveShapeMenu : public My1DGeometricShapeMenu {
-    Q_OBJECT
-
-public:
-    MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent = nullptr);
-
-    void setElementsMenuTree(RenderCurve* renderCurve);
-
-    QWidget* createElementsMenuTree(RenderCurve* renderCurve);
-
-protected:
-    QDialogButtonBox* _addRemoveRenderCurveElementButtons;
-    QWidget* _elementsMenuTree;
 };
 
 class MyStrokeMenu : public MyGroupBox {

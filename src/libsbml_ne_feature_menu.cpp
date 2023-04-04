@@ -99,16 +99,27 @@ QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGro
             geometricShapeMenu = new MyRenderCurveShapeMenu((RenderCurve*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": RenderCurve");
         }
+        else if (shape->isImage()) {
+            geometricShapeMenu = new MyImageShapeMenu((Image*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Image");
+        }
         connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     }
 
     return geometricShapesMenuTree;
 }
 
+// MyGeometricShapeMenuItemBase
+
+MyGeometricShapeMenuItemBase::MyGeometricShapeMenuItemBase(QWidget* parent) : MyGroupBox(parent) {
+    setLayout(new QGridLayout(this));
+}
+
+
 // My1DGeometricShapeMenu
 
-My1DGeometricShapeMenu::My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGroupBox(parent) {
-    QGridLayout* contentLayout = new QGridLayout(this);
+My1DGeometricShapeMenu::My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGeometricShapeMenuItemBase(parent) {
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
     
     // stroke width
     _strokeWidthParameter = new MyStrokeWidthParameter(graphicalPrimitive1D);
@@ -130,8 +141,6 @@ My1DGeometricShapeMenu::My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPr
     connect(_strokeDashArrayParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_strokeDashArrayParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_strokeDashArrayParameter->inputWidget(), contentLayout->rowCount() - 1, 1, Qt::AlignLeft);
-    
-    setLayout(contentLayout);
 }
 
 // My2DGeometricShapeMenu
@@ -145,6 +154,272 @@ My2DGeometricShapeMenu::My2DGeometricShapeMenu(GraphicalPrimitive2D* graphicalPr
     connect(_fillParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_fillParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_fillParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+}
+
+// MyImageShapeMenu
+
+MyImageShapeMenu::MyImageShapeMenu(Image* image, QWidget* parent) : MyGeometricShapeMenuItemBase(parent) {
+
+}
+
+// MyRenderCurveShapeMenu
+
+MyRenderCurveShapeMenu::MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent) : My1DGeometricShapeMenu(renderCurve, parent) {
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
+    _elementsMenuTree = NULL;
+
+    _addRemoveRenderCurveElementButtons = new MyAddRemoveRenderCurveElementButtons(renderCurve, this);
+    ((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons)->setMenus();
+    connect(_addRemoveRenderCurveElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(_addRemoveRenderCurveElementButtons, contentLayout->rowCount(), 1);
+    connect((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons, &MyAddRemoveRenderCurveElementButtons::isUpdated, this, [this, renderCurve] () { setElementsMenuTree(renderCurve); });
+    setElementsMenuTree(renderCurve);
+}
+
+void MyRenderCurveShapeMenu::setElementsMenuTree(RenderCurve* renderCurve) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_elementsMenuTree != NULL) {
+        contentLayout->removeWidget(_elementsMenuTree);
+        _elementsMenuTree->deleteLater();
+    }
+    _elementsMenuTree = createElementsMenuTree(renderCurve);
+    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyRenderCurveShapeMenu::createElementsMenuTree(RenderCurve* renderCurve) {
+    MyTreeView* elementsMenuTree = new MyTreeView(this);
+    MyParameterBase* _vertexXAbsParameter = NULL;
+    MyParameterBase* _vertexXRelParameter = NULL;
+    MyParameterBase* _vertexYAbsParameter = NULL;
+    MyParameterBase* _vertexYRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
+    QWidget* elementMenu = NULL;
+    QGridLayout* elementMenuLayout = NULL;
+    for (unsigned int i = 0; i < renderCurve->getNumElements(); i++) {
+        elementMenu = new QWidget(elementsMenuTree);
+        elementMenuLayout = new QGridLayout(elementMenu);
+        // x
+        _vertexXAbsParameter = new MyRenderCurveShapePointXAbsoluteParameter(renderCurve, i);
+        _vertexXAbsParameter->read();
+        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexXRelParameter = new MyRenderCurveShapePointXRelativeParameter(renderCurve, i);
+        _vertexXRelParameter->read();
+        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        // y
+        _vertexYAbsParameter = new MyRenderCurveShapePointYAbsoluteParameter(renderCurve, i);
+        _vertexYAbsParameter->read();
+        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexYRelParameter = new MyRenderCurveShapePointYRelativeParameter(renderCurve, i);
+        _vertexYRelParameter->read();
+        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        if (renderCurve->getElement(i)->isRenderCubicBezier()) {
+            // base point 1 x
+            _vertexBasePoint1XAbsParameter = new MyRenderCurveShapeBasePoint1XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1XAbsParameter->read();
+            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1XRelParameter = new MyRenderCurveShapeBasePoint1XRelativeParameter(renderCurve, i);
+            _vertexBasePoint1XRelParameter->read();
+            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 1 y
+            _vertexBasePoint1YAbsParameter = new MyRenderCurveShapeBasePoint1YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1YAbsParameter->read();
+            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1YRelParameter = new MyRenderCurveShapeBasePoint1YRelativeParameter(renderCurve, i);
+            _vertexBasePoint1YRelParameter->read();
+            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 x
+            _vertexBasePoint2XAbsParameter = new MyRenderCurveShapeBasePoint2XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2XAbsParameter->read();
+            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2XRelParameter = new MyRenderCurveShapeBasePoint2XRelativeParameter(renderCurve, i);
+            _vertexBasePoint2XRelParameter->read();
+            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 y
+            _vertexBasePoint2YAbsParameter = new MyRenderCurveShapeBasePoint2YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2YAbsParameter->read();
+            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2YRelParameter = new MyRenderCurveShapeBasePoint2YRelativeParameter(renderCurve, i);
+            _vertexBasePoint2YRelParameter->read();
+            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+        }
+
+        elementMenu->setLayout(elementMenuLayout);
+        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
+    }
+
+    return elementsMenuTree;
+}
+
+// MyPolygonShapeMenu
+
+MyPolygonShapeMenu::MyPolygonShapeMenu(Polygon* polygon, QWidget* parent) : My2DGeometricShapeMenu(polygon, parent) {
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
+    _elementsMenuTree = NULL;
+
+    _addRemovePolygonElementButtons = new MyAddRemovePolygonElementButtons(polygon, this);
+    ((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons)->setMenus();
+    connect(_addRemovePolygonElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(_addRemovePolygonElementButtons, contentLayout->rowCount(), 1);
+    connect((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons, &MyAddRemovePolygonElementButtons::isUpdated, this, [this, polygon] () { setElementsMenuTree(polygon); });
+    setElementsMenuTree(polygon);
+}
+
+void MyPolygonShapeMenu::setElementsMenuTree(Polygon* polygon) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_elementsMenuTree != NULL) {
+        contentLayout->removeWidget(_elementsMenuTree);
+        _elementsMenuTree->deleteLater();
+    }
+    _elementsMenuTree = createElementsMenuTree(polygon);
+    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
+    MyTreeView* elementsMenuTree = new MyTreeView(this);
+    MyParameterBase* _vertexXAbsParameter = NULL;
+    MyParameterBase* _vertexXRelParameter = NULL;
+    MyParameterBase* _vertexYAbsParameter = NULL;
+    MyParameterBase* _vertexYRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
+    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
+    QWidget* elementMenu = NULL;
+    QGridLayout* elementMenuLayout = NULL;
+    for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
+        elementMenu = new QWidget(elementsMenuTree);
+        elementMenuLayout = new QGridLayout(elementMenu);
+        // x
+        _vertexXAbsParameter = new MyPolygonShapeVertexXAbsoluteParameter(polygon, i);
+        _vertexXAbsParameter->read();
+        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexXRelParameter = new MyPolygonShapeVertexXRelativeParameter(polygon, i);
+        _vertexXRelParameter->read();
+        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        // y
+        _vertexYAbsParameter = new MyPolygonShapeVertexYAbsoluteParameter(polygon, i);
+        _vertexYAbsParameter->read();
+        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        _vertexYRelParameter = new MyPolygonShapeVertexYRelativeParameter(polygon, i);
+        _vertexYRelParameter->read();
+        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
+        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+        if (polygon->getElement(i)->isRenderCubicBezier()) {
+            // base point 1 x
+            _vertexBasePoint1XAbsParameter = new MyPolygonShapeBasePoint1XAbsoluteParameter(polygon, i);
+            _vertexBasePoint1XAbsParameter->read();
+            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1XRelParameter = new MyPolygonShapeBasePoint1XRelativeParameter(polygon, i);
+            _vertexBasePoint1XRelParameter->read();
+            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 1 y
+            _vertexBasePoint1YAbsParameter = new MyPolygonShapeBasePoint1YAbsoluteParameter(polygon, i);
+            _vertexBasePoint1YAbsParameter->read();
+            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1YRelParameter = new MyPolygonShapeBasePoint1YRelativeParameter(polygon, i);
+            _vertexBasePoint1YRelParameter->read();
+            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 x
+            _vertexBasePoint2XAbsParameter = new MyPolygonShapeBasePoint2XAbsoluteParameter(polygon, i);
+            _vertexBasePoint2XAbsParameter->read();
+            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2XRelParameter = new MyPolygonShapeBasePoint2XRelativeParameter(polygon, i);
+            _vertexBasePoint2XRelParameter->read();
+            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 y
+            _vertexBasePoint2YAbsParameter = new MyPolygonShapeBasePoint2YAbsoluteParameter(polygon, i);
+            _vertexBasePoint2YAbsParameter->read();
+            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2YRelParameter = new MyPolygonShapeBasePoint2YRelativeParameter(polygon, i);
+            _vertexBasePoint2YRelParameter->read();
+            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+        }
+
+        elementMenu->setLayout(elementMenuLayout);
+        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
+    }
+
+    return elementsMenuTree;
 }
 
 // MyRectangleShapeMenu
@@ -301,266 +576,6 @@ MyEllipseShapeMenu::MyEllipseShapeMenu(Ellipse* ellipse, QWidget* parent) : My2D
     connect(_ratioParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_ratioParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_ratioParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
-}
-
-// MyPolygonShapeMenu
-
-MyPolygonShapeMenu::MyPolygonShapeMenu(Polygon* polygon, QWidget* parent) : My2DGeometricShapeMenu(polygon, parent) {
-    QGridLayout* contentLayout = (QGridLayout*)(layout());
-    _elementsMenuTree = NULL;
-
-    _addRemovePolygonElementButtons = new MyAddRemovePolygonElementButtons(polygon, this);
-    ((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons)->setMenus();
-    connect(_addRemovePolygonElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    contentLayout->addWidget(_addRemovePolygonElementButtons, contentLayout->rowCount(), 1);
-    connect((MyAddRemovePolygonElementButtons*)_addRemovePolygonElementButtons, &MyAddRemovePolygonElementButtons::isUpdated, this, [this, polygon] () { setElementsMenuTree(polygon); });
-    setElementsMenuTree(polygon);
-}
-
-void MyPolygonShapeMenu::setElementsMenuTree(Polygon* polygon) {
-    QGridLayout* contentLayout = (QGridLayout*)layout();
-    if (_elementsMenuTree != NULL) {
-        contentLayout->removeWidget(_elementsMenuTree);
-        _elementsMenuTree->deleteLater();
-    }
-    _elementsMenuTree = createElementsMenuTree(polygon);
-    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
-}
-
-QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
-    MyTreeView* elementsMenuTree = new MyTreeView(this);
-    MyParameterBase* _vertexXAbsParameter = NULL;
-    MyParameterBase* _vertexXRelParameter = NULL;
-    MyParameterBase* _vertexYAbsParameter = NULL;
-    MyParameterBase* _vertexYRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
-    QWidget* elementMenu = NULL;
-    QGridLayout* elementMenuLayout = NULL;
-    for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
-        elementMenu = new QWidget(elementsMenuTree);
-        elementMenuLayout = new QGridLayout(elementMenu);
-        // x
-        _vertexXAbsParameter = new MyPolygonShapeVertexXAbsoluteParameter(polygon, i);
-        _vertexXAbsParameter->read();
-        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        _vertexXRelParameter = new MyPolygonShapeVertexXRelativeParameter(polygon, i);
-        _vertexXRelParameter->read();
-        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        // y
-        _vertexYAbsParameter = new MyPolygonShapeVertexYAbsoluteParameter(polygon, i);
-        _vertexYAbsParameter->read();
-        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        _vertexYRelParameter = new MyPolygonShapeVertexYRelativeParameter(polygon, i);
-        _vertexYRelParameter->read();
-        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        if (polygon->getElement(i)->isRenderCubicBezier()) {
-            // base point 1 x
-            _vertexBasePoint1XAbsParameter = new MyPolygonShapeBasePoint1XAbsoluteParameter(polygon, i);
-            _vertexBasePoint1XAbsParameter->read();
-            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint1XRelParameter = new MyPolygonShapeBasePoint1XRelativeParameter(polygon, i);
-            _vertexBasePoint1XRelParameter->read();
-            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 1 y
-            _vertexBasePoint1YAbsParameter = new MyPolygonShapeBasePoint1YAbsoluteParameter(polygon, i);
-            _vertexBasePoint1YAbsParameter->read();
-            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint1YRelParameter = new MyPolygonShapeBasePoint1YRelativeParameter(polygon, i);
-            _vertexBasePoint1YRelParameter->read();
-            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 2 x
-            _vertexBasePoint2XAbsParameter = new MyPolygonShapeBasePoint2XAbsoluteParameter(polygon, i);
-            _vertexBasePoint2XAbsParameter->read();
-            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint2XRelParameter = new MyPolygonShapeBasePoint2XRelativeParameter(polygon, i);
-            _vertexBasePoint2XRelParameter->read();
-            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 2 y
-            _vertexBasePoint2YAbsParameter = new MyPolygonShapeBasePoint2YAbsoluteParameter(polygon, i);
-            _vertexBasePoint2YAbsParameter->read();
-            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint2YRelParameter = new MyPolygonShapeBasePoint2YRelativeParameter(polygon, i);
-            _vertexBasePoint2YRelParameter->read();
-            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-        }
-
-        elementMenu->setLayout(elementMenuLayout);
-        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
-    }
-
-    return elementsMenuTree;
-}
-
-// MyRenderCurveShapeMenu
-
-MyRenderCurveShapeMenu::MyRenderCurveShapeMenu(RenderCurve* renderCurve, QWidget* parent) : My1DGeometricShapeMenu(renderCurve, parent) {
-    QGridLayout* contentLayout = (QGridLayout*)(layout());
-    _elementsMenuTree = NULL;
-
-    _addRemoveRenderCurveElementButtons = new MyAddRemoveRenderCurveElementButtons(renderCurve, this);
-    ((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons)->setMenus();
-    connect(_addRemoveRenderCurveElementButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    contentLayout->addWidget(_addRemoveRenderCurveElementButtons, contentLayout->rowCount(), 1);
-    connect((MyAddRemoveRenderCurveElementButtons*)_addRemoveRenderCurveElementButtons, &MyAddRemoveRenderCurveElementButtons::isUpdated, this, [this, renderCurve] () { setElementsMenuTree(renderCurve); });
-    setElementsMenuTree(renderCurve);
-}
-
-void MyRenderCurveShapeMenu::setElementsMenuTree(RenderCurve* renderCurve) {
-    QGridLayout* contentLayout = (QGridLayout*)layout();
-    if (_elementsMenuTree != NULL) {
-        contentLayout->removeWidget(_elementsMenuTree);
-        _elementsMenuTree->deleteLater();
-    }
-    _elementsMenuTree = createElementsMenuTree(renderCurve);
-    contentLayout->addWidget(_elementsMenuTree, contentLayout->rowCount(), 0);
-}
-
-QWidget* MyRenderCurveShapeMenu::createElementsMenuTree(RenderCurve* renderCurve) {
-    MyTreeView* elementsMenuTree = new MyTreeView(this);
-    MyParameterBase* _vertexXAbsParameter = NULL;
-    MyParameterBase* _vertexXRelParameter = NULL;
-    MyParameterBase* _vertexYAbsParameter = NULL;
-    MyParameterBase* _vertexYRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint1XAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint1XRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint1YAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint1YRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint2XAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint2XRelParameter = NULL;
-    MyParameterBase* _vertexBasePoint2YAbsParameter = NULL;
-    MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
-    QWidget* elementMenu = NULL;
-    QGridLayout* elementMenuLayout = NULL;
-    for (unsigned int i = 0; i < renderCurve->getNumElements(); i++) {
-        elementMenu = new QWidget(elementsMenuTree);
-        elementMenuLayout = new QGridLayout(elementMenu);
-        // x
-        _vertexXAbsParameter = new MyRenderCurveShapePointXAbsoluteParameter(renderCurve, i);
-        _vertexXAbsParameter->read();
-        connect(_vertexXAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexXAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexXAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        _vertexXRelParameter = new MyRenderCurveShapePointXRelativeParameter(renderCurve, i);
-        _vertexXRelParameter->read();
-        connect(_vertexXRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexXRelParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexXRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        // y
-        _vertexYAbsParameter = new MyRenderCurveShapePointYAbsoluteParameter(renderCurve, i);
-        _vertexYAbsParameter->read();
-        connect(_vertexYAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexYAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexYAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        _vertexYRelParameter = new MyRenderCurveShapePointYRelativeParameter(renderCurve, i);
-        _vertexYRelParameter->read();
-        connect(_vertexYRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-        elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
-        elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-        if (renderCurve->getElement(i)->isRenderCubicBezier()) {
-            // base point 1 x
-            _vertexBasePoint1XAbsParameter = new MyRenderCurveShapeBasePoint1XAbsoluteParameter(renderCurve, i);
-            _vertexBasePoint1XAbsParameter->read();
-            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint1XRelParameter = new MyRenderCurveShapeBasePoint1XRelativeParameter(renderCurve, i);
-            _vertexBasePoint1XRelParameter->read();
-            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 1 y
-            _vertexBasePoint1YAbsParameter = new MyRenderCurveShapeBasePoint1YAbsoluteParameter(renderCurve, i);
-            _vertexBasePoint1YAbsParameter->read();
-            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint1YRelParameter = new MyRenderCurveShapeBasePoint1YRelativeParameter(renderCurve, i);
-            _vertexBasePoint1YRelParameter->read();
-            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 2 x
-            _vertexBasePoint2XAbsParameter = new MyRenderCurveShapeBasePoint2XAbsoluteParameter(renderCurve, i);
-            _vertexBasePoint2XAbsParameter->read();
-            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint2XRelParameter = new MyRenderCurveShapeBasePoint2XRelativeParameter(renderCurve, i);
-            _vertexBasePoint2XRelParameter->read();
-            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            // base point 2 y
-            _vertexBasePoint2YAbsParameter = new MyRenderCurveShapeBasePoint2YAbsoluteParameter(renderCurve, i);
-            _vertexBasePoint2YAbsParameter->read();
-            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-
-            _vertexBasePoint2YRelParameter = new MyRenderCurveShapeBasePoint2YRelativeParameter(renderCurve, i);
-            _vertexBasePoint2YRelParameter->read();
-            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
-            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
-        }
-
-        elementMenu->setLayout(elementMenuLayout);
-        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
-    }
-
-    return elementsMenuTree;
 }
 
 // MyStrokeMenu
