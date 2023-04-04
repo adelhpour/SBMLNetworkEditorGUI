@@ -115,7 +115,6 @@ MyGeometricShapeMenuItemBase::MyGeometricShapeMenuItemBase(QWidget* parent) : My
     setLayout(new QGridLayout(this));
 }
 
-
 // My1DGeometricShapeMenu
 
 My1DGeometricShapeMenu::My1DGeometricShapeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGeometricShapeMenuItemBase(parent) {
