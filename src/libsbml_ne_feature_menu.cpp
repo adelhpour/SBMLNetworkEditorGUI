@@ -159,7 +159,59 @@ My2DGeometricShapeMenu::My2DGeometricShapeMenu(GraphicalPrimitive2D* graphicalPr
 // MyImageShapeMenu
 
 MyImageShapeMenu::MyImageShapeMenu(Image* image, QWidget* parent) : MyGeometricShapeMenuItemBase(parent) {
+    QGridLayout* contentLayout = (QGridLayout*)(layout());
 
+    // x
+    _xAbsParameter = new MyImageShapeXAbsoluteParameter(rectangle);
+    _xAbsParameter->read();
+    connect(_xAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_xAbsParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_xAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    _xRelParameter = new MyImageShapeXRelativeParameter(rectangle);
+    _xRelParameter->read();
+    connect(_xRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_xRelParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_xRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // y
+    _yAbsParameter = new MyImageShapeYAbsoluteParameter(rectangle);
+    _yAbsParameter->read();
+    connect(_yAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_yAbsParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_yAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    _yRelParameter = new MyImageShapeYRelativeParameter(rectangle);
+    _yRelParameter->read();
+    connect(_yRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_yRelParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_yRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // width
+    _widthAbsParameter = new MyImageShapeWidthAbsoluteParameter(rectangle);
+    _widthAbsParameter->read();
+    connect(_widthAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_widthAbsParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_widthAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    _widthRelParameter = new MyImageShapeWidthRelativeParameter(rectangle);
+    _widthRelParameter->read();
+    connect(_widthRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_widthRelParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_widthRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // height
+    _heightAbsParameter = new MyImageShapeHeightAbsoluteParameter(rectangle);
+    _heightAbsParameter->read();
+    connect(_heightAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_heightAbsParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_heightAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    _heightRelParameter = new MyImageShapeHeightRelativeParameter(rectangle);
+    _heightRelParameter->read();
+    connect(_heightRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_heightRelParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_heightRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
 }
 
 // MyRenderCurveShapeMenu

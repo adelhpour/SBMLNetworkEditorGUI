@@ -82,6 +82,16 @@ class MyImageShapeMenu : public MyGeometricShapeMenuItemBase {
 
 public:
     MyImageShapeMenu(Image* image, QWidget* parent = nullptr);
+
+protected:
+    MyParameterBase* _xAbsParameter;
+    MyParameterBase* _xRelParameter;
+    MyParameterBase* _yAbsParameter;
+    MyParameterBase* _yRelParameter;
+    MyParameterBase* _widthAbsParameter;
+    MyParameterBase* _widthRelParameter;
+    MyParameterBase* _heightAbsParameter;
+    MyParameterBase* _heightRelParameter;
 };
 
 class MyRenderCurveShapeMenu : public My1DGeometricShapeMenu {
