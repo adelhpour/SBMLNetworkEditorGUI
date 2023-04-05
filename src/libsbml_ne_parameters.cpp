@@ -2895,3 +2895,147 @@ void MyRenderCurveShapeBasePoint2YRelativeParameter::write() {
     setRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
+
+// MyImageShapeXAbsoluteParameter
+
+MyImageShapeXAbsoluteParameter::MyImageShapeXAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("X (abs)", styleFeatures) {
+
+}
+
+void MyImageShapeXAbsoluteParameter::read() {
+    if (isSetImageShapeX((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeX((Image*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyImageShapeXAbsoluteParameter::write() {
+    RelAbsVector x = getImageShapeX((Image*)_styleFeatures);
+    x.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeX((Image*)_styleFeatures, x);
+    emit isUpdated();
+}
+
+// MyImageShapeXRelativeParameter
+
+MyImageShapeXRelativeParameter::MyImageShapeXRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("X (rel %)", styleFeatures) {
+
+}
+
+void MyImageShapeXRelativeParameter::read() {
+    if (isSetImageShapeX((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeX((Image*)_styleFeatures).getRelativeValue());
+}
+
+void MyImageShapeXRelativeParameter::write() {
+    RelAbsVector x = getImageShapeX((Image*)_styleFeatures);
+    x.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeX((Image*)_styleFeatures, x);
+    emit isUpdated();
+}
+
+// MyImageShapeYAbsoluteParameter
+
+MyImageShapeYAbsoluteParameter::MyImageShapeYAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("Y (abs)", styleFeatures) {
+
+}
+
+void MyImageShapeYAbsoluteParameter::read() {
+    if (isSetImageShapeY((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeY((Image*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyImageShapeYAbsoluteParameter::write() {
+    RelAbsVector y = getImageShapeY((Image*)_styleFeatures);
+    y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeY((Image*)_styleFeatures, y);
+    emit isUpdated();
+}
+
+// MyImageShapeYRelativeParameter
+
+MyImageShapeYRelativeParameter::MyImageShapeYRelativeParameter(Transformation2D* styleFeatures) : MyRelativePositionalParameter("Y (rel %)", styleFeatures) {
+
+}
+
+void MyImageShapeYRelativeParameter::read() {
+    if (isSetImageShapeY((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeY((Image*)_styleFeatures).getRelativeValue());
+}
+
+void MyImageShapeYRelativeParameter::write() {
+    RelAbsVector y = getImageShapeY((Image*)_styleFeatures);
+    y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeY((Image*)_styleFeatures, y);
+    emit isUpdated();
+}
+
+// MyImageShapeWidthAbsoluteParameter
+
+MyImageShapeWidthAbsoluteParameter::MyImageShapeWidthAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("Width (abs)", styleFeatures) {
+
+}
+
+void MyImageShapeWidthAbsoluteParameter::read() {
+    if (isSetImageShapeWidth((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeWidth((Image*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyImageShapeWidthAbsoluteParameter::write() {
+    RelAbsVector width = getImageShapeWidth((Image*)_styleFeatures);
+    width.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeWidth((Image*)_styleFeatures, width);
+    emit isUpdated();
+}
+
+// MyImageShapeWidthRelativeParameter
+
+MyImageShapeWidthRelativeParameter::MyImageShapeWidthRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("Width (rel %)", styleFeatures) {
+
+}
+
+void MyImageShapeWidthRelativeParameter::read() {
+    if (isSetImageShapeWidth((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeWidth((Image*)_styleFeatures).getRelativeValue());
+}
+
+void MyImageShapeWidthRelativeParameter::write() {
+    RelAbsVector width = getImageShapeWidth((Image*)_styleFeatures);
+    width.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeWidth((Image*)_styleFeatures, width);
+    emit isUpdated();
+}
+
+// MyImageShapeHeightAbsoluteParameter
+
+MyImageShapeHeightAbsoluteParameter::MyImageShapeHeightAbsoluteParameter(Transformation2D* styleFeatures) : MyDimensionalParameter("Height (abs)", styleFeatures) {
+
+}
+
+void MyImageShapeHeightAbsoluteParameter::read() {
+    if (isSetImageShapeHeight((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeHeight((Image*)_styleFeatures).getAbsoluteValue());
+}
+
+void MyImageShapeHeightAbsoluteParameter::write() {
+    RelAbsVector height = getImageShapeHeight((Image*)_styleFeatures);
+    height.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeHeight((Image*)_styleFeatures, height);
+    emit isUpdated();
+}
+
+// MyImageShapeHeightRelativeParameter
+
+MyImageShapeHeightRelativeParameter::MyImageShapeHeightRelativeParameter(Transformation2D* styleFeatures) : MyRelativeDimensionalParameter("Height (rel %)", styleFeatures) {
+
+}
+
+void MyImageShapeHeightRelativeParameter::read() {
+    if (isSetImageShapeHeight((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeHeight((Image*)_styleFeatures).getRelativeValue());
+}
+
+void MyImageShapeHeightRelativeParameter::write() {
+    RelAbsVector height = getImageShapeHeight((Image*)_styleFeatures);
+    height.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setImageShapeHeight((Image*)_styleFeatures, height);
+    emit isUpdated();
+}

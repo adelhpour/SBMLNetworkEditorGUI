@@ -1627,4 +1627,132 @@ protected slots:
     void write() override;
 };
 
+class MyImageShapeXAbsoluteParameter : public MyPositionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeXAbsoluteParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeXRelativeParameter : public MyRelativePositionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeXRelativeParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeYAbsoluteParameter : public MyPositionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeYAbsoluteParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeYRelativeParameter : public MyRelativePositionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeYRelativeParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeWidthAbsoluteParameter : public MyDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeWidthAbsoluteParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeWidthRelativeParameter : public MyRelativeDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeWidthRelativeParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeHeightAbsoluteParameter : public MyDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeHeightAbsoluteParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeHeightRelativeParameter : public MyRelativeDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeHeightRelativeParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 #endif
