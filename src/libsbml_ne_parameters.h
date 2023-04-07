@@ -154,6 +154,21 @@ protected:
     QString _value;
 };
 
+class MyFilePathButton : public QPushButton {
+    Q_OBJECT
+
+public:
+    MyFilePathButton(QWidget *parent = nullptr);
+
+signals:
+
+    void isUpdated();
+
+public slots:
+
+    void getFilePath();
+};
+
 class MyTreeView : public QTreeView {
     
 public:
@@ -203,6 +218,7 @@ public:
         NOMINAL_PARAMETER_TYPE,
         DASH_ARRAY_PARAMETER_TYPE,
         COLOR_PARAMETER_TYPE,
+        FILE_PATH_PARAMETER_TYPE,
         REL_ABS_PARAMETER_TYPE,
     } PARAMETER_TYPE;
     
@@ -593,6 +609,41 @@ public:
     // get the user input widget
     QWidget* inputWidget() override;
     
+    // reset the values of the parameter
+    void reset() override;
+
+protected:
+    QString _defaultValue;
+    bool _isSetDefaultValue;
+};
+
+class MyFilePathParameter : public MyParameterBase {
+public:
+
+    MyFilePathParameter(const QString& name);
+
+    MyFilePathParameter(const QString& name, GraphicalObject* graphicalObject);
+
+    MyFilePathParameter(const QString& name, Transformation2D* styleFeatures);
+
+    // get type of parameter
+    PARAMETER_TYPE type() override;
+
+    // set default value
+    void setDefaultValue(const QString& value);
+
+    // set the dafault value using the input widget value
+    void setDefaultValue() override;
+
+    // get default value
+    const QString& defaultValue() const;
+
+    // show whether the default value is set
+    const bool isSetDefaultValue() const { return _isSetDefaultValue; }
+
+    // get the user input widget
+    QWidget* inputWidget() override;
+
     // reset the values of the parameter
     void reset() override;
 
@@ -1617,6 +1668,24 @@ Q_OBJECT
 public:
 
     MyRenderCurveShapeBasePoint2YRelativeParameter(Transformation2D* styleFeatures, const unsigned int& elementIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyImageShapeHrefParameter : public MyFilePathParameter {
+    Q_OBJECT
+
+public:
+
+    MyImageShapeHrefParameter(Transformation2D* styleFeatures);
+
+    void getImagePath();
 
     // read the parameter info from the graphical object and style
     void read() override;

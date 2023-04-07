@@ -3,6 +3,7 @@
 #include <QtMath>
 #include <QPainter>
 #include <QGridLayout>
+#include <QFileDialog>
 
 using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
 
@@ -1130,6 +1131,22 @@ const QString& MyColorTileButton::value() const {
     return _value;
 }
 
+// MyFilePathButton
+
+MyFilePathButton::MyFilePathButton(QWidget *parent) : QPushButton(parent) {
+    connect(this, SIGNAL(clicked()), this, SLOT(getFilePath()));
+    setFixedSize(120, 30);
+}
+
+void MyFilePathButton::getFilePath() {
+    QString filePath = QFileDialog::getOpenFileName(this, "Select an image file", ".", tr("Image Files (*.png *.jpg *.jpeg)"));
+    if (!filePath.isEmpty()) {
+        setToolTip(filePath);
+        setText(filePath);
+        emit isUpdated();
+    }
+}
+
 // MyTreeView
 
 MyTreeView::MyTreeView(QWidget* parent) : QTreeView(parent) {
@@ -1729,6 +1746,50 @@ QWidget* MyColorParameter::inputWidget() {
 
 void MyColorParameter::reset() {
     setDefaultValue("black");
+}
+
+// MyFilePathParameter
+
+MyFilePathParameter::MyFilePathParameter(const QString& name) : MyParameterBase(name) {
+    _inputWidget = new MyFilePathButton();
+    connect(_inputWidget, SIGNAL(isUpdated()), SLOT(write()));
+    reset();
+}
+
+MyFilePathParameter::MyFilePathParameter(const QString& name, GraphicalObject* graphicalObject) : MyFilePathParameter(name) {
+    setGraphicalObject(graphicalObject);
+}
+
+MyFilePathParameter::MyFilePathParameter(const QString& name, Transformation2D* styleFeatures) : MyFilePathParameter(name) {
+    setStyleFeatures(styleFeatures);
+}
+
+MyFilePathParameter::PARAMETER_TYPE MyFilePathParameter::type() {
+    return FILE_PATH_PARAMETER_TYPE;
+}
+
+void MyFilePathParameter::setDefaultValue(const QString& value) {
+    _defaultValue = value;
+    _isSetDefaultValue = true;
+}
+
+void MyFilePathParameter::setDefaultValue() {
+    setDefaultValue(((MyFilePathButton*)_inputWidget)->text());
+}
+
+const QString& MyFilePathParameter::defaultValue() const {
+    return _defaultValue;
+}
+
+QWidget* MyFilePathParameter::inputWidget() {
+    ((MyFilePathButton*)_inputWidget)->setText(defaultValue());
+
+    return _inputWidget;
+}
+
+void MyFilePathParameter::reset() {
+    _defaultValue = "ImagePath";
+    _isSetDefaultValue = false;
 }
 
 // MyBoundingBoxXParameter
@@ -2893,6 +2954,26 @@ void MyRenderCurveShapeBasePoint2YRelativeParameter::write() {
     RelAbsVector basePoint2Y = getRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex);
     basePoint2Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
     setRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint2Y);
+    emit isUpdated();
+}
+
+// MyImageShapeHrefParameter
+
+MyImageShapeHrefParameter::MyImageShapeHrefParameter(Transformation2D* styleFeatures) : MyFilePathParameter("href", styleFeatures) {
+    reset();
+}
+
+void MyImageShapeHrefParameter::getImagePath() {
+    ((MyFilePathButton*)_inputWidget)->getFilePath();
+}
+
+void MyImageShapeHrefParameter::read() {
+    if (isSetImageShapeHref((Image*)_styleFeatures))
+        setDefaultValue(getImageShapeHref((Image*)_styleFeatures).c_str());
+}
+
+void MyImageShapeHrefParameter::write() {
+    setImageShapeHref((Image*)_styleFeatures, ((MyFilePathButton*)_inputWidget)->text().toStdString());
     emit isUpdated();
 }
 
