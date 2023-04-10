@@ -53,6 +53,13 @@ MyBoundingBoxMenu::MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* 
     setLayout(contentLayout);
 }
 
+MyCurveMenu::MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent) : MyGroupBox(parent) {
+    QGridLayout* contentLayout = new QGridLayout(this);
+    contentLayout->setAlignment(Qt::AlignTop);
+    // curve features are needed to be added here
+    setLayout(contentLayout);
+}
+
 // MyGeometricShapesMenu
 
 MyGeometricShapesMenu::MyGeometricShapesMenu(RenderGroup* renderGroup, QWidget* parent) : MyGroupBox(parent) {

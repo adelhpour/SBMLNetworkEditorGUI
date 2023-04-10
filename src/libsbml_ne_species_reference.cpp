@@ -104,12 +104,24 @@ QWidget* MySpeciesReference::elementFeatureMenu() {
     // role
     contentLayout->addWidget(new MyLabel("Role"), contentLayout->rowCount(), 0);
     contentLayout->addWidget(new MyReadOnlyLineEdit(getRole()), contentLayout->rowCount() - 1, 1);
-    
+
+    contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
+
+    MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+
     // stroke
     QWidget* _strokeMenu = new MyStrokeMenu(_style->getGroup());
     connect(_strokeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_strokeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    contentLayout->addWidget(_strokeMenu, contentLayout->rowCount(), 0, 1, 2);
+    featureMenuTree->addBranchWidget(_strokeMenu, "Stroke");
+
+    // curve
+    QWidget* _curveMenu = new MyCurveMenu(_graphicalObject);
+    connect(_curveMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(_curveMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    featureMenuTree->addBranchWidget(_curveMenu, "Curve");
+
+    contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
 
     return elementFeatureMenu;
 }

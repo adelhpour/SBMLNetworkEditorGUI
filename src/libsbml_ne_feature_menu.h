@@ -27,6 +27,19 @@ protected:
     MyParameterBase* _heightParameter;
 };
 
+class MyCurveMenu : public MyGroupBox {
+    Q_OBJECT
+
+public:
+    MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
+
+signals:
+        void isUpdated();
+
+protected:
+
+};
+
 class MyGeometricShapesMenu : public MyGroupBox {
     Q_OBJECT
     
