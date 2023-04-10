@@ -27,6 +27,8 @@ public:
 
     void addRenderCurveGraphicsItem(RenderGroup* group, RenderCurve* renderCurve, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation);
 
+    void addImageGraphicsItem(Image* image, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation);
+
     void addCurveGraphicsItem(RenderGroup* group, Curve* curve);
     
     void addTextGraphicsItem(RenderGroup* group, BoundingBox* boundingBox, const QString& plainText);

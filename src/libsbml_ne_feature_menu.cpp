@@ -101,7 +101,6 @@ QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGro
         }
         else if (shape->isImage()) {
             geometricShapeMenu = new MyImageShapeMenu((Image*)shape, this);
-            ((MyImageShapeMenu*)geometricShapeMenu)->askForImagePath();
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Image");
         }
         connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
@@ -218,10 +217,6 @@ MyImageShapeMenu::MyImageShapeMenu(Image* image, QWidget* parent) : MyGeometricS
     connect(_heightRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_heightRelParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_heightRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
-}
-
-void MyImageShapeMenu::askForImagePath() {
-    ((MyImageShapeHrefParameter*)_hrefParameter)->getImagePath();
 }
 
 // MyRenderCurveShapeMenu
