@@ -54,10 +54,59 @@ MyBoundingBoxMenu::MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* 
 }
 
 MyCurveMenu::MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent) : MyGroupBox(parent) {
+    _curveSegmentsMenuTree = NULL;
     QGridLayout* contentLayout = new QGridLayout(this);
     contentLayout->setAlignment(Qt::AlignTop);
-    // curve features are needed to be added here
+    _addRemoveCurveSegmentsButtons = new MyAddRemoveCurveSegmentsButtons(curve, this);
+    ((MyAddRemoveCurveSegmentsButtons*)_addRemoveCurveSegmentsButtons)->setMenus();
+    connect(_addRemoveCurveSegmentsButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect((MyAddRemoveCurveSegmentsButtons*)_addRemoveCurveSegmentsButtons, &MyAddRemoveCurveSegmentsButtons::isUpdated, this, [this, curve] () { setCurveSegmentsMenuTree(curve); });
+    contentLayout->addWidget(_addRemoveCurveSegmentsButtons, contentLayout->rowCount(), 1);
+    setCurveSegmentsMenuTree(curve);
     setLayout(contentLayout);
+}
+
+void MyCurveMenu::setCurveSegmentsMenuTree(Curve* curve) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_curveSegmentsMenuTree != NULL) {
+        contentLayout->removeWidget(_curveSegmentsMenuTree);
+        _curveSegmentsMenuTree->deleteLater();
+    }
+    _curveSegmentsMenuTree = createCurveSegmentsMenu(curve);
+    contentLayout->addWidget(_curveSegmentsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyCurveMenu::createCurveSegmentsMenu(Curve* curve) {
+    MyTreeView* curveSegmentsMenuTree = new MyTreeView(this);
+    /*
+    for (unsigned int i = 0; i < curve->getNumElements(); i++) {
+        Transformation2D* shape = renderGroup->getElement(i);
+        QWidget* geometricShapeMenu = NULL;
+        if (shape->isRectangle()) {
+            geometricShapeMenu = new MyRectangleShapeMenu((Rectangle*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Rectangle");
+        }
+        else if (shape->isEllipse()) {
+            geometricShapeMenu = new MyEllipseShapeMenu((Ellipse*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Ellipse");
+        }
+        else if (shape->isPolygon()) {
+            geometricShapeMenu = new MyPolygonShapeMenu((Polygon*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Polygon");
+        }
+        else if (shape->isRenderCurve()) {
+            geometricShapeMenu = new MyRenderCurveShapeMenu((RenderCurve*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": RenderCurve");
+        }
+        else if (shape->isImage()) {
+            geometricShapeMenu = new MyImageShapeMenu((Image*)shape, this);
+            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Image");
+        }
+        connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    }
+     */
+
+    return curveSegmentsMenuTree;
 }
 
 // MyGeometricShapesMenu
