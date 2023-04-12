@@ -33,11 +33,17 @@ class MyCurveMenu : public MyGroupBox {
 public:
     MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
 
+    void setCurveSegmentsMenuTree(Curve* curve);
+
+    QWidget* createCurveSegmentsMenu(Curve* curve);
+
 signals:
-        void isUpdated();
+
+    void isUpdated();
 
 protected:
-
+    QDialogButtonBox* _addRemoveCurveSegmentsButtons;
+    QWidget* _curveSegmentsMenuTree;
 };
 
 class MyGeometricShapesMenu : public MyGroupBox {
@@ -216,6 +222,32 @@ protected:
     QPushButton* _removePushButton;
     QMenu* _addingMenu;
     QMenu* _removingMenu;
+};
+
+class MyAddRemoveCurveSegmentsButtons : public MyAddRemoveButtonsBase {
+    Q_OBJECT
+
+public:
+    MyAddRemoveCurveSegmentsButtons(Curve* curve, QWidget* parent = nullptr);
+
+    void setAddingMenu() override;
+
+    void addPoint();
+
+    void addCubicBezier();
+
+    void removeCurveSegment(const qint32 index);
+
+    const bool hasEnoughCurveSegmentsLeft();
+
+    unsigned int numberOfCurveSegments();
+
+private slots:
+
+    void setRemovingMenu() override;
+
+protected:
+    Curve* _curve;
 };
 
 class MyAddRemoveGeometricShapesButtons : public MyAddRemoveButtonsBase {

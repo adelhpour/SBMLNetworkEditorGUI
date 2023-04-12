@@ -57,6 +57,7 @@ MyCurveMenu::MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent) : My
     _curveSegmentsMenuTree = NULL;
     QGridLayout* contentLayout = new QGridLayout(this);
     contentLayout->setAlignment(Qt::AlignTop);
+    Curve* curve = ((SpeciesReferenceGlyph*)graphicalObject)->getCurve();
     _addRemoveCurveSegmentsButtons = new MyAddRemoveCurveSegmentsButtons(curve, this);
     ((MyAddRemoveCurveSegmentsButtons*)_addRemoveCurveSegmentsButtons)->setMenus();
     connect(_addRemoveCurveSegmentsButtons, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
@@ -78,35 +79,90 @@ void MyCurveMenu::setCurveSegmentsMenuTree(Curve* curve) {
 
 QWidget* MyCurveMenu::createCurveSegmentsMenu(Curve* curve) {
     MyTreeView* curveSegmentsMenuTree = new MyTreeView(this);
-    /*
-    for (unsigned int i = 0; i < curve->getNumElements(); i++) {
-        Transformation2D* shape = renderGroup->getElement(i);
-        QWidget* geometricShapeMenu = NULL;
-        if (shape->isRectangle()) {
-            geometricShapeMenu = new MyRectangleShapeMenu((Rectangle*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Rectangle");
-        }
-        else if (shape->isEllipse()) {
-            geometricShapeMenu = new MyEllipseShapeMenu((Ellipse*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Ellipse");
-        }
-        else if (shape->isPolygon()) {
-            geometricShapeMenu = new MyPolygonShapeMenu((Polygon*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Polygon");
-        }
-        else if (shape->isRenderCurve()) {
-            geometricShapeMenu = new MyRenderCurveShapeMenu((RenderCurve*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": RenderCurve");
-        }
-        else if (shape->isImage()) {
-            geometricShapeMenu = new MyImageShapeMenu((Image*)shape, this);
-            geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Image");
-        }
-        connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    }
-     */
+    MyParameterBase* _pointXParameter = NULL;
+    MyParameterBase* _pointYParameter = NULL;
+    MyParameterBase* _basePoint1XParameter = NULL;
+    MyParameterBase* _basePoint1YParameter = NULL;
+    MyParameterBase* _basePoint2XParameter = NULL;
+    MyParameterBase* _basePoint2YParameter = NULL;
+    QWidget* curveSegmentMenu = NULL;
+    QGridLayout* curveSegmentMenuLayout = NULL;
+    for (unsigned int i = 0; i < curve->getNumCurveSegments(); i++) {
+        curveSegmentMenu = new QWidget(curveSegmentsMenuTree);
+        curveSegmentMenuLayout = new QGridLayout(curveSegmentMenu);
+        // x
+        _pointXParameter = new MyCurvePointXParameter(curve, i);
+        _pointXParameter->read();
+        connect(_pointXParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        curveSegmentMenuLayout->addWidget(new MyLabel(_pointXParameter->name()), curveSegmentMenuLayout->rowCount(), 0);
+        curveSegmentMenuLayout->addWidget(_pointXParameter->inputWidget(), curveSegmentMenuLayout->rowCount() - 1, 1);
 
-    return curveSegmentsMenuTree;
+        // y
+        _pointYParameter = new MyCurvePointYParameter(curve, i);
+        _pointYParameter->read();
+        connect(_pointYParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        curveSegmentMenuLayout->addWidget(new MyLabel(_pointYParameter->name()), curveSegmentMenuLayout->rowCount(), 0);
+        curveSegmentMenuLayout->addWidget(_pointYParameter->inputWidget(), curveSegmentMenuLayout->rowCount() - 1, 1);
+
+        if (renderCurve->getElement(i)->isRenderCubicBezier()) {
+            // base point 1 x
+            _vertexBasePoint1XAbsParameter = new MyRenderCurveShapeBasePoint1XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1XAbsParameter->read();
+            connect(_vertexBasePoint1XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1XRelParameter = new MyRenderCurveShapeBasePoint1XRelativeParameter(renderCurve, i);
+            _vertexBasePoint1XRelParameter->read();
+            connect(_vertexBasePoint1XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 1 y
+            _vertexBasePoint1YAbsParameter = new MyRenderCurveShapeBasePoint1YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint1YAbsParameter->read();
+            connect(_vertexBasePoint1YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint1YRelParameter = new MyRenderCurveShapeBasePoint1YRelativeParameter(renderCurve, i);
+            _vertexBasePoint1YRelParameter->read();
+            connect(_vertexBasePoint1YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint1YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint1YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 x
+            _vertexBasePoint2XAbsParameter = new MyRenderCurveShapeBasePoint2XAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2XAbsParameter->read();
+            connect(_vertexBasePoint2XAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2XRelParameter = new MyRenderCurveShapeBasePoint2XRelativeParameter(renderCurve, i);
+            _vertexBasePoint2XRelParameter->read();
+            connect(_vertexBasePoint2XRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2XRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2XRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            // base point 2 y
+            _vertexBasePoint2YAbsParameter = new MyRenderCurveShapeBasePoint2YAbsoluteParameter(renderCurve, i);
+            _vertexBasePoint2YAbsParameter->read();
+            connect(_vertexBasePoint2YAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YAbsParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YAbsParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+
+            _vertexBasePoint2YRelParameter = new MyRenderCurveShapeBasePoint2YRelativeParameter(renderCurve, i);
+            _vertexBasePoint2YRelParameter->read();
+            connect(_vertexBasePoint2YRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+            elementMenuLayout->addWidget(new MyLabel(_vertexBasePoint2YRelParameter->name()), elementMenuLayout->rowCount(), 0);
+            elementMenuLayout->addWidget(_vertexBasePoint2YRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
+        }
+
+        elementMenu->setLayout(elementMenuLayout);
+        elementsMenuTree->addBranchWidget(elementMenu, "Element " + QString::number(i + 1));
+    }
+
+    return elementsMenuTree;
 }
 
 // MyGeometricShapesMenu
@@ -742,6 +798,54 @@ MyAddRemoveButtonsBase::MyAddRemoveButtonsBase(QWidget* parent) : QDialogButtonB
 void MyAddRemoveButtonsBase::setMenus() {
     setAddingMenu();
     setRemovingMenu();
+}
+
+// MyAddRemoveCurveSegmentsButtons
+
+MyAddRemoveCurveSegmentsButtons::MyAddRemoveCurveSegmentsButtons(Curve* curve, QWidget* parent) : MyAddRemoveButtonsBase(parent) {
+    _curve = curve;
+}
+
+void MyAddRemoveCurveSegmentsButtons::setAddingMenu() {
+    _addPushButton->setEnabled(true);
+    connect(_addingMenu->addAction("Point"), &QAction::triggered, this, [this] () { addPoint(); });
+    connect(_addingMenu->addAction("CubicBezier"), &QAction::triggered, this, [this] () { addCubicBezier(); });
+}
+
+void MyAddRemoveCurveSegmentsButtons::setRemovingMenu() {
+    _removingMenu->clear();
+    _removePushButton->setEnabled(false);
+    if (hasEnoughCurveSegmentsLeft()) {
+        _removePushButton->setEnabled(true);
+        for (unsigned int i = 0; i < numberOfCurveSegments(); i++)
+            connect(_removingMenu->addAction("Element " + QString::number(i + 1)), &QAction::triggered, this, [this, i] () { removeCurveSegment(i); });
+    }
+}
+
+void MyAddRemoveCurveSegmentsButtons::addPoint() {
+    //addPointToCurve(_curve);
+    emit isUpdated();
+}
+
+void MyAddRemoveCurveSegmentsButtons::addCubicBezier() {
+    //addCubicBezierToCurve(_curve);
+    emit isUpdated();
+}
+
+void MyAddRemoveCurveSegmentsButtons::removeCurveSegment(const qint32 index) {
+    //removeCurveSegment(_curve, index);
+    emit isUpdated();
+}
+
+const bool MyAddRemoveCurveSegmentsButtons::hasEnoughCurveSegmentsLeft() {
+    if (_curve->getNumCurveSegments() > 2)
+        return true;
+
+    return false;
+}
+
+unsigned int MyAddRemoveCurveSegmentsButtons::numberOfCurveSegments() {
+    return _curve->getNumCurveSegments();
 }
 
 // MyAddRemoveGeometricShapesButtons
