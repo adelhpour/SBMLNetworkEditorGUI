@@ -18,7 +18,7 @@ const QPainterPath MyCurveGraphicsItem::getCurve(Curve* curve) {
         QPointF endPoint(lineSegment->getEnd()->x(), lineSegment->getEnd()->y());
         QPointF controlPoint1 = startPoint;
         QPointF controlPoint2 = endPoint;
-        const CubicBezier* cubicBezier = dynamic_cast< const CubicBezier* >(lineSegment);
+        CubicBezier* cubicBezier = dynamic_cast<CubicBezier*>(lineSegment);
         if (cubicBezier) {
             controlPoint1 = QPointF(cubicBezier->getBasePoint1()->x(), cubicBezier->getBasePoint1()->y());
             controlPoint2 = QPointF(cubicBezier->getBasePoint2()->x(), cubicBezier->getBasePoint2()->y());

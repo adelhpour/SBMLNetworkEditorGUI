@@ -716,6 +716,144 @@ protected slots:
     void write() override;
 };
 
+class MyCurvePointParameterBase {
+
+public:
+
+    MyCurvePointParameterBase(const unsigned int& segmentIndex);
+
+protected:
+    unsigned  int _segmentIndex;
+};
+
+class MyCurveStartPointXParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveStartPointXParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveStartPointYParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveStartPointYParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveEndPointXParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveEndPointXParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveEndPointYParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveEndPointYParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveBasePoint1XParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveBasePoint1XParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveBasePoint1YParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveBasePoint1YParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveBasePoint2XParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveBasePoint2XParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyCurveBasePoint2YParameter : public MyPositionalParameter, public MyCurvePointParameterBase {
+    Q_OBJECT
+
+public:
+
+    MyCurveBasePoint2YParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 class MyStrokeWidthParameter : public MyDoubleParameter {
     Q_OBJECT
     

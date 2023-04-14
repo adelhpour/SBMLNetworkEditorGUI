@@ -33,9 +33,9 @@ class MyCurveMenu : public MyGroupBox {
 public:
     MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
 
-    void setCurveSegmentsMenuTree(Curve* curve);
+    void setCurveSegmentsMenuTree(GraphicalObject* graphicalObject);
 
-    QWidget* createCurveSegmentsMenu(Curve* curve);
+    QWidget* createCurveSegmentsMenu(GraphicalObject* graphicalObject);
 
 signals:
 
@@ -228,15 +228,15 @@ class MyAddRemoveCurveSegmentsButtons : public MyAddRemoveButtonsBase {
     Q_OBJECT
 
 public:
-    MyAddRemoveCurveSegmentsButtons(Curve* curve, QWidget* parent = nullptr);
+    MyAddRemoveCurveSegmentsButtons(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
 
     void setAddingMenu() override;
 
-    void addPoint();
+    void addLineSegment();
 
     void addCubicBezier();
 
-    void removeCurveSegment(const qint32 index);
+    void removeSegment(const qint32 index);
 
     const bool hasEnoughCurveSegmentsLeft();
 
@@ -247,7 +247,7 @@ private slots:
     void setRemovingMenu() override;
 
 protected:
-    Curve* _curve;
+    GraphicalObject* _graphicalObject;
 };
 
 class MyAddRemoveGeometricShapesButtons : public MyAddRemoveButtonsBase {

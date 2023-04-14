@@ -1852,6 +1852,132 @@ void MyBoundingBoxHeightParameter::write() {
     emit isUpdated();
 }
 
+// MyCurvePointParameterBase
+
+MyCurvePointParameterBase::MyCurvePointParameterBase(const unsigned int& segmentIndex) {
+    _segmentIndex = segmentIndex;
+}
+
+// MyCurveStartPointXParameter
+
+MyCurveStartPointXParameter::MyCurveStartPointXParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("startX", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveStartPointXParameter::read() {
+    setDefaultValue(getCurveSegmentStartPointX(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveStartPointXParameter::write() {
+    setCurveSegmentStartPointX(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveStartPointYParameter
+
+MyCurveStartPointYParameter::MyCurveStartPointYParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("startY", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveStartPointYParameter::read() {
+    setDefaultValue(getCurveSegmentStartPointY(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveStartPointYParameter::write() {
+    setCurveSegmentStartPointY(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveEndPointXParameter
+
+MyCurveEndPointXParameter::MyCurveEndPointXParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("endX", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveEndPointXParameter::read() {
+    setDefaultValue(getCurveSegmentEndPointX(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveEndPointXParameter::write() {
+    setCurveSegmentEndPointX(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveEndPointYParameter
+
+MyCurveEndPointYParameter::MyCurveEndPointYParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("endY", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveEndPointYParameter::read() {
+    setDefaultValue(getCurveSegmentEndPointY(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveEndPointYParameter::write() {
+    setCurveSegmentEndPointY(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveBasePoint1XParameter
+
+MyCurveBasePoint1XParameter::MyCurveBasePoint1XParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("BasePoint1X", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveBasePoint1XParameter::read() {
+    setDefaultValue(getCurveSegmentBasePoint1X(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveBasePoint1XParameter::write() {
+    setCurveSegmentBasePoint1X(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveBasePoint1YParameter
+
+MyCurveBasePoint1YParameter::MyCurveBasePoint1YParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("BasePoint1Y", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveBasePoint1YParameter::read() {
+    setDefaultValue(getCurveSegmentBasePoint1Y(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveBasePoint1YParameter::write() {
+    setCurveSegmentBasePoint1Y(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveBasePoint2XParameter
+
+MyCurveBasePoint2XParameter::MyCurveBasePoint2XParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("BasePoint2X", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveBasePoint2XParameter::read() {
+    setDefaultValue(getCurveSegmentBasePoint2X(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveBasePoint2XParameter::write() {
+    setCurveSegmentBasePoint2X(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
+// MyCurveBasePoint2YParameter
+
+MyCurveBasePoint2YParameter::MyCurveBasePoint2YParameter(GraphicalObject* graphicalObject, const unsigned int& segmentIndex) : MyPositionalParameter("BasePoint2Y", graphicalObject), MyCurvePointParameterBase(segmentIndex) {
+
+}
+
+void MyCurveBasePoint2YParameter::read() {
+    setDefaultValue(getCurveSegmentBasePoint2Y(_graphicalObject, _segmentIndex));
+}
+
+void MyCurveBasePoint2YParameter::write() {
+    setCurveSegmentBasePoint2Y(_graphicalObject, _segmentIndex, ((MyDoubleSpinBox*)_inputWidget)->value());
+    emit isUpdated();
+}
+
 // MyStrokeWidthParameter
 
 MyStrokeWidthParameter::MyStrokeWidthParameter(Transformation2D* styleFeatures) : MyDoubleParameter("stroke-width", styleFeatures) {
