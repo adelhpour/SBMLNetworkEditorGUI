@@ -1,12 +1,11 @@
 #include "libsbml_ne_reaction.h"
 #include "libsbml_ne_element_graphics_item.h"
 #include "libsbml_ne_feature_menu.h"
-#include <QGridLayout>
 
 using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
 
 MyReaction::MyReaction(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
-    
+
 }
 
 void MyReaction::updateGraphicsItem() {
@@ -40,10 +39,30 @@ QWidget* MyReaction::elementFeatureMenu() {
     // compartment
     contentLayout->addWidget(new MyLabel("Compartment Id"), contentLayout->rowCount(), 0);
     contentLayout->addWidget(new MyReadOnlyLineEdit(getCompartmentId()), contentLayout->rowCount() - 1, 1);
-    
+
+    _reactionFeaturesMenu = NULL;
     contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
+    _reactionBoundingBoxCurveSwitch = new MyReactionBoundingBoxCurveSwitch(_graphicalObject, elementFeatureMenu);
+    connect(_reactionBoundingBoxCurveSwitch, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    connect((MyReactionBoundingBoxCurveSwitch*)_reactionBoundingBoxCurveSwitch, &MyReactionBoundingBoxCurveSwitch::isUpdated, this, [this, contentLayout] () { setReactionFeaturesMenu(contentLayout); });
+    contentLayout->addWidget(_reactionBoundingBoxCurveSwitch, contentLayout->rowCount(), 0, 1, 2);
+    contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
+    setReactionFeaturesMenu(contentLayout);
     
-    MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+    return elementFeatureMenu;
+}
+
+void MyReaction::setReactionFeaturesMenu(QGridLayout* contentLayout) {
+    if (_reactionFeaturesMenu != NULL) {
+        contentLayout->removeWidget(_reactionFeaturesMenu);
+        _reactionFeaturesMenu->deleteLater();
+    }
+    _reactionFeaturesMenu = createReactionFeaturesMenuTree();
+    contentLayout->addWidget(_reactionFeaturesMenu, contentLayout->rowCount(), 0, 1, 2);
+}
+
+QWidget* MyReaction::createReactionFeaturesMenuTree() {
+    MyTreeView* featureMenuTree = new MyTreeView(NULL);
 
     if (isSetCurve(_graphicalObject)) {
         // stroke
@@ -71,9 +90,58 @@ QWidget* MyReaction::elementFeatureMenu() {
         connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
         featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
     }
-    
-    contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
-    
-    return elementFeatureMenu;
+
+    return featureMenuTree;
 }
+
+MyReactionBoundingBoxCurveSwitch::MyReactionBoundingBoxCurveSwitch(GraphicalObject* graphicalObject, QWidget* parent) {
+    setContentsMargins(0.0, 0.0, 0.0, 0.0);
+    setFixedSize(250.0, 50.0);
+    _graphicalObject = graphicalObject;
+    QGridLayout* contentLayout = new QGridLayout(this);
+    _boundingBoxRadioButton = new QRadioButton("BoundingBox");
+    contentLayout->addWidget(_boundingBoxRadioButton, contentLayout->rowCount(), 0);
+    _curveRadioButton = new QRadioButton("Curve");
+    contentLayout->addWidget(_curveRadioButton, contentLayout->rowCount() - 1, 1);
+    initializeButtons();
+    connect(_boundingBoxRadioButton, SIGNAL(toggled(bool)), this, SLOT(enableBoundingBox(bool)));
+    connect(_curveRadioButton, SIGNAL(toggled(bool)), this, SLOT(enableCurve(bool)));
+    setLayout(contentLayout);
+}
+
+void MyReactionBoundingBoxCurveSwitch::initializeButtons() {
+    if (getNumCurveSegments(_graphicalObject))
+        _curveRadioButton->setChecked(true);
+    else
+        _boundingBoxRadioButton->setChecked(true);
+}
+
+void MyReactionBoundingBoxCurveSwitch::enableBoundingBox(bool checked) {
+    if (checked) {
+        _curveRadioButton->setChecked(false);
+        removeCurve();
+    }
+}
+
+void MyReactionBoundingBoxCurveSwitch::enableCurve(bool checked) {
+    if (checked) {
+        _boundingBoxRadioButton->setChecked(false);
+        addCurve();
+    }
+}
+
+void MyReactionBoundingBoxCurveSwitch::addCurve() {
+    std::cout << "enabling the curve" << std::endl;
+    if (!getNumCurveSegments(_graphicalObject))
+        createLineCurveSegment(_graphicalObject);
+    emit isUpdated();
+}
+
+void MyReactionBoundingBoxCurveSwitch::removeCurve() {
+    std::cout << "disabling the curve" << std::endl;
+    while(getNumCurveSegments(_graphicalObject))
+        removeCurveSegment(_graphicalObject, 0);
+    emit isUpdated();
+}
+
 
