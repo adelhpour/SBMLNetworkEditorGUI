@@ -53,6 +53,8 @@ MyBoundingBoxMenu::MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* 
     setLayout(contentLayout);
 }
 
+// MyCurveMenu
+
 MyCurveMenu::MyCurveMenu(GraphicalObject* graphicalObject, QWidget* parent) : MyGroupBox(parent) {
     _curveSegmentsMenuTree = NULL;
     QGridLayout* contentLayout = new QGridLayout(this);
