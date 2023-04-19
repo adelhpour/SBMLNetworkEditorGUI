@@ -3246,3 +3246,22 @@ void MyImageShapeHeightRelativeParameter::write() {
     setImageShapeHeight((Image*)_styleFeatures, height);
     emit isUpdated();
 }
+
+// MyTextFontColorParameter
+
+MyTextFontColorParameter::MyTextFontColorParameter(Transformation2D* styleFeatures) : MyColorParameter("font-color", styleFeatures) {
+    reset();
+}
+
+void MyTextFontColorParameter::reset() {
+    setDefaultValue("black");
+}
+
+void MyTextFontColorParameter::read() {
+    setDefaultValue(QString(getStrokeColor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextFontColorParameter::write() {
+    setStrokeColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
+    emit isUpdated();
+}

@@ -19,6 +19,10 @@ public:
     virtual const QString getType() = 0;
     
     virtual const QString getId() = 0;
+
+    GraphicalObject* getGraphicalObject();
+
+    Style* getStyle();
     
     const QString getGlyphId();
     
@@ -30,6 +34,7 @@ signals:
     void askForSetDocumentModified();
     SBase* askForModelEntity(const QString&);
     GraphicalObject* askForGraphicalObject(const QString&);
+    QList<QWidget*> askForAssociatedTextsMenu(const QString&);
     ColorDefinition* askForColorDefinition(const QString&);
     GradientBase* askForGradientDefinition(const QString&);
     LineEnding* askForLineEnding(const QString&);

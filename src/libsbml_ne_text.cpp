@@ -1,5 +1,7 @@
 #include "libsbml_ne_text.h"
 #include "libsbml_ne_element_graphics_item.h"
+#include "libsbml_ne_feature_menu.h"
+#include <QGridLayout>
 
 MyText::MyText(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
     
@@ -35,4 +37,31 @@ void MyText::updateGraphicsItem() {
        
     if (!plaintText.isEmpty())
         ((MyElementGraphicsItem*)_graphicsItem)->addTextGraphicsItem(_style->getGroup(), _graphicalObject->getBoundingBox(), plaintText);
+}
+
+QWidget* MyText::elementFeatureMenu() {
+    QWidget* elementFeatureMenu = MyNetworkElementBase::elementFeatureMenu();
+    QGridLayout* contentLayout = (QGridLayout*)(elementFeatureMenu->layout());
+
+    contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
+
+    MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+
+    // bounding box
+    QWidget* boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
+    connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    featureMenuTree->addBranchWidget(boundingBoxMenu, "BoundingBox");
+
+    // text features
+    QWidget* textFeaturesMenu = new MyTextFeatureMenu(_style->getGroup());
+    connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+    featureMenuTree->addBranchWidget(textFeaturesMenu, "Text Features");
+
+    contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
+
+    elementFeatureMenu->setFixedWidth(400);
+
+    return elementFeatureMenu;
 }

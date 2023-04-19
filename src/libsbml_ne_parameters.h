@@ -1962,4 +1962,23 @@ protected slots:
     void write() override;
 };
 
+class MyTextFontColorParameter : public MyColorParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontColorParameter(Transformation2D* styleFeatures);
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
 #endif

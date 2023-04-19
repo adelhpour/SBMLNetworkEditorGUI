@@ -199,6 +199,37 @@ protected:
     MyParameterBase* _dashArrayParameter;
 };
 
+class MyElementTextsMenu : public MyGroupBox {
+Q_OBJECT
+
+public:
+    MyElementTextsMenu(QList<QWidget*> textsMenu, QWidget* parent = nullptr);
+
+    void setElementTextsMenuTree(QList<QWidget*> textsMenu);
+
+    QWidget* createElementTextsMenu(QList<QWidget*> textsMenu);
+
+signals:
+    void isUpdated();
+
+protected:
+    QWidget* _elementTextsMenuTree;
+};
+
+class MyTextFeatureMenu : public MyGroupBox {
+Q_OBJECT
+
+public:
+    MyTextFeatureMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent = nullptr);
+
+signals:
+    void isUpdated();
+
+protected:
+
+    MyParameterBase* _fontColorParameter;
+};
+
 class MyAddRemoveButtonsBase : public QDialogButtonBox {
 Q_OBJECT
 

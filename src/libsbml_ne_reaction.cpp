@@ -91,6 +91,15 @@ QWidget* MyReaction::createReactionFeaturesMenuTree() {
         featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
     }
 
+    // texts
+    QList<QWidget*> textsMenu = askForAssociatedTextsMenu(getGlyphId());
+    if (textsMenu.size()) {
+        QWidget* elementTextsMenu = new MyElementTextsMenu(textsMenu);
+        connect(elementTextsMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(elementTextsMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(elementTextsMenu, "Texts");
+    }
+
     return featureMenuTree;
 }
 

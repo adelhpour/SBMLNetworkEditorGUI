@@ -24,6 +24,14 @@ const QString MyNetworkElementBase::getGlyphId() {
     return QString(_graphicalObject->getId().c_str());
 }
 
+GraphicalObject* MyNetworkElementBase::getGraphicalObject()  {
+    return _graphicalObject;
+}
+
+Style* MyNetworkElementBase::getStyle()  {
+    return _style;
+}
+
 QWidget* MyNetworkElementBase::getFeatureMenu() {
     return new MyFeatureMenu(elementFeatureMenu());
 }

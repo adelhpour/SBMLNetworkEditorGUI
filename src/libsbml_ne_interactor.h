@@ -112,6 +112,8 @@ private slots:
     SBase* getModelEntity(const QString& enitityId);
     
     GraphicalObject* getGraphicalObject(const QString& graphicalObjectId);
+
+    QList<QWidget*> getAssociatedTextsMenu(const QString& graphicalObjectId);
     
     ColorDefinition* getColorDefinition(const QString& colorId);
     

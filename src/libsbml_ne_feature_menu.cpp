@@ -772,6 +772,47 @@ MyStrokeMenu::MyStrokeMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* 
     setLayout(contentLayout);
 }
 
+// MyElementTextsMenu
+
+MyElementTextsMenu::MyElementTextsMenu(QList<QWidget*> textsMenu, QWidget* parent) : MyGroupBox(parent) {
+    _elementTextsMenuTree = NULL;
+    QGridLayout* contentLayout = new QGridLayout(this);
+    contentLayout->setAlignment(Qt::AlignTop);
+    setElementTextsMenuTree(textsMenu);
+    setLayout(contentLayout);
+}
+
+void MyElementTextsMenu::setElementTextsMenuTree(QList<QWidget*> textsMenu) {
+    QGridLayout* contentLayout = (QGridLayout*)layout();
+    if (_elementTextsMenuTree != NULL) {
+        contentLayout->removeWidget(_elementTextsMenuTree);
+        _elementTextsMenuTree->deleteLater();
+    }
+    _elementTextsMenuTree = createElementTextsMenu(textsMenu);
+    contentLayout->addWidget(_elementTextsMenuTree, contentLayout->rowCount(), 0);
+}
+
+QWidget* MyElementTextsMenu::createElementTextsMenu(QList<QWidget*> textsMenu) {
+    MyTreeView* elementTextsMenuTree = new MyTreeView(this);
+    for (unsigned int i = 0; i < textsMenu.size(); i++)
+        elementTextsMenuTree->addBranchWidget(textsMenu.at(i), ": Text " + QString::number(i + 1));
+    return elementTextsMenuTree;
+}
+
+// MyTextFeatureMenu
+
+MyTextFeatureMenu::MyTextFeatureMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGroupBox(parent) {
+    QGridLayout* contentLayout = new QGridLayout(this);
+    // font color
+    _fontColorParameter = new MyTextFontColorParameter(graphicalPrimitive1D);
+    _fontColorParameter->read();
+    connect(_fontColorParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontColorParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontColorParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    setLayout(contentLayout);
+}
+
 // MyAddRemoveButtonsBase
 
 MyAddRemoveButtonsBase::MyAddRemoveButtonsBase(QWidget* parent) : QDialogButtonBox(parent) {

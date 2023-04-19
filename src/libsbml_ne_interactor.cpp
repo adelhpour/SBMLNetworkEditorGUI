@@ -44,7 +44,7 @@ QList<QAction*> MyInteractor::createMenuActions() {
     action = new QAction(tr("&Exit"), this);
     action->setShortcuts(QKeySequence::Quit);
     action->setStatusTip(tr("Exit the application"));
-    //connect(action, &QAction::triggered, this, SLOT(askforExit()));
+    //connect(action, &QAction::triggered, this, SLOT(askForExit()));
     actions.push_back(action);
     
     return actions;
@@ -290,6 +290,7 @@ void MyInteractor::addNetworkElement(MyNetworkElementBase* element) {
     connect(element, &MyNetworkElementBase::askForSetDocumentModified, this, [this] () { setDocumentModified(true); });
     connect(element, SIGNAL(askForModelEntity(const QString&)), this, SLOT(getModelEntity(const QString&)));
     connect(element, SIGNAL(askForGraphicalObject(const QString&)), this, SLOT(getGraphicalObject(const QString&)));
+    connect(element, SIGNAL(askForAssociatedTextsMenu(const QString&)), this, SLOT(getAssociatedTextsMenu(const QString&)));
     connect(element, SIGNAL(askForColorDefinition(const QString&)), this, SLOT(getColorDefinition(const QString&)));
     connect(element, SIGNAL(askForGradientDefinition(const QString&)), this, SLOT(getGradientDefinition(const QString&)));
     connect(element, SIGNAL(askForDisplayFeatureMenu(QWidget*)), this, SIGNAL(askForDisplayFeatureMenu(QWidget*)));
@@ -336,6 +337,20 @@ GraphicalObject* MyInteractor::getGraphicalObject(const QString& graphicalObject
         return layout()->getReactionGlyph(graphicalObjectId.toStdString());
     
     return NULL;
+}
+
+QList<QWidget*> MyInteractor::getAssociatedTextsMenu(const QString& graphicalObjectId) {
+    QList<QWidget*> textMenus;
+    TextGlyph* text = NULL;
+    for (unsigned int i = 0; i < _networkElements.size(); i++) {
+        if (_networkElements.at(i)->getType() == "Text") {
+            text = (TextGlyph*)(_networkElements.at(i)->getGraphicalObject());
+            if (text->isSetGraphicalObjectId() && QString(text->getGraphicalObjectId().c_str()) == graphicalObjectId)
+                textMenus.push_back(_networkElements.at(i)->elementFeatureMenu());
+        }
+    }
+
+    return textMenus;
 }
 
 ColorDefinition* MyInteractor::getColorDefinition(const QString& colorId) {

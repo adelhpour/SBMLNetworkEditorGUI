@@ -13,6 +13,8 @@ public:
     const QString getId() override;
     
     void updateGraphicsItem() override;
+
+    QWidget* elementFeatureMenu() override;
     
 };
 
