@@ -810,6 +810,54 @@ MyTextFeatureMenu::MyTextFeatureMenu(GraphicalPrimitive1D* graphicalPrimitive1D,
     contentLayout->addWidget(new MyLabel(_fontColorParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_fontColorParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
 
+    // font family
+    _fontFamilyParameter = new MyTextFontFamilyParameter(graphicalPrimitive1D);
+    _fontFamilyParameter->read();
+    connect(_fontFamilyParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontFamilyParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontFamilyParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // font size
+    _fontSizeAbsParameter = new MyTextFontSizeAbsoluteParameter(graphicalPrimitive1D);
+    _fontSizeAbsParameter->read();
+    connect(_fontSizeAbsParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontSizeAbsParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontSizeAbsParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    _fontSizeRelParameter = new MyTextFontSizeRelativeParameter(graphicalPrimitive1D);
+    _fontSizeRelParameter->read();
+    connect(_fontSizeRelParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontSizeRelParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontSizeRelParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // font weight
+    _fontWeightParameter = new MyTextFontWeightParameter(graphicalPrimitive1D);
+    _fontWeightParameter->read();
+    connect(_fontWeightParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontWeightParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontWeightParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // font style
+    _fontStyleParameter = new MyTextFontStyleParameter(graphicalPrimitive1D);
+    _fontStyleParameter->read();
+    connect(_fontStyleParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_fontStyleParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_fontStyleParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // text horizontal anchor
+    _textAnchorParameter = new MyTextAnchorParameter(graphicalPrimitive1D);
+    _textAnchorParameter->read();
+    connect(_textAnchorParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_textAnchorParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_textAnchorParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    // text vertical anchor
+    _textVAnchorParameter = new MyTextVAnchorParameter(graphicalPrimitive1D);
+    _textVAnchorParameter->read();
+    connect(_textVAnchorParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_textVAnchorParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_textVAnchorParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
     setLayout(contentLayout);
 }
 

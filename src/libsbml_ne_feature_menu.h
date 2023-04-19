@@ -228,6 +228,13 @@ signals:
 protected:
 
     MyParameterBase* _fontColorParameter;
+    MyParameterBase* _fontFamilyParameter;
+    MyParameterBase* _fontSizeAbsParameter;
+    MyParameterBase* _fontSizeRelParameter;
+    MyParameterBase* _fontWeightParameter;
+    MyParameterBase* _fontStyleParameter;
+    MyParameterBase* _textAnchorParameter;
+    MyParameterBase* _textVAnchorParameter;
 };
 
 class MyAddRemoveButtonsBase : public QDialogButtonBox {

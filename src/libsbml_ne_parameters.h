@@ -927,135 +927,6 @@ protected slots:
     void write() override;
 };
 
-class MyFontFamilyParameter : public MyStringParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyFontFamilyParameter(Transformation2D* styleFeatures);
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
-class MyFontSizeParameter : public MyNominalParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyFontSizeParameter(Transformation2D* styleFeatures);
-    
-    // get the value of default size
-    const qint32 defaultSize() const;
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
-class MyFontWeightParameter : public MyNominalParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyFontWeightParameter(Transformation2D* styleFeatures);
-    
-    // get the value of default weight
-    const bool defaultWeight() const;
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
-class MyFontStyleParameter : public MyNominalParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyFontStyleParameter(Transformation2D* styleFeatures);
-    
-    // get the value of default style
-    const bool defaultStyle() const;
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
-class MyTextAnchorParameter : public MyNominalParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyTextAnchorParameter(Transformation2D* styleFeatures);
-    
-    // get the value of default alignment
-    const Qt::Alignment defaultAlignment() const;
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
-class MyVTextAnchorParameter : public MyNominalParameter {
-    Q_OBJECT
-    
-public:
-    
-    MyVTextAnchorParameter(Transformation2D* styleFeatures);
-    
-    // get the value of default alignment
-    const Qt::Alignment defaultAlignment() const;
-    
-    // reset the values of the parameter
-    void reset() override;
-    
-    // read the parameter info from the graphical object and style
-    void read() override;
-    
-protected slots:
-    
-    // set the value of parameter info to the graphical object and style
-    void write() override;
-};
-
 class MyRectangleShapeXAbsoluteParameter : public MyPositionalParameter {
     Q_OBJECT
     
@@ -1968,6 +1839,141 @@ class MyTextFontColorParameter : public MyColorParameter {
 public:
 
     MyTextFontColorParameter(Transformation2D* styleFeatures);
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextFontFamilyParameter : public MyStringParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontFamilyParameter(Transformation2D* styleFeatures);
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextFontSizeAbsoluteParameter : public MyDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontSizeAbsoluteParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextFontSizeRelativeParameter : public MyRelativeDimensionalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontSizeRelativeParameter(Transformation2D* styleFeatures);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextFontWeightParameter : public MyNominalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontWeightParameter(Transformation2D* styleFeatures);
+
+    const bool defaultWeight() const;
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextFontStyleParameter : public MyNominalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextFontStyleParameter(Transformation2D* styleFeatures);
+
+    const bool defaultStyle() const;
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextAnchorParameter : public MyNominalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextAnchorParameter(Transformation2D* styleFeatures);
+
+    const Qt::Alignment defaultAlignment() const;
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextVAnchorParameter : public MyNominalParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextVAnchorParameter(Transformation2D* styleFeatures);
+
+    const Qt::Alignment defaultAlignment() const;
 
     // reset the values of the parameter
     void reset() override;
