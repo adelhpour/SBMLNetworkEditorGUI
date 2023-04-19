@@ -2053,181 +2053,6 @@ void MyFillParameter::write() {
     emit isUpdated();
 }
 
-// MyFontFamilyParameter
-
-MyFontFamilyParameter::MyFontFamilyParameter(Transformation2D* styleFeatures) : MyStringParameter("font-family", styleFeatures) {
-    reset();
-}
-
-void MyFontFamilyParameter::reset() {
-    setDefaultValue("monospace");
-}
-
-void MyFontFamilyParameter::read() {
-    
-}
-
-void MyFontFamilyParameter::write() {
-    
-}
-
-// MyFontSizeParameter
-
-MyFontSizeParameter::MyFontSizeParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-size", styleFeatures) {
-    int i = 5;
-    while (i <= 72) {
-        _items.push_back(QString::number(i));
-    
-        if (i < 12)
-            ++i;
-        else if (i < 28)
-            i += 2;
-        else if (i < 36)
-            i += 8;
-        else if (i < 48)
-            i += 12;
-        else
-            i += 24;
-    }
-}
-
-void MyFontSizeParameter::reset() {
-    setDefaultValue("10");
-}
-
-const qint32 MyFontSizeParameter::defaultSize() const {
-    return defaultValue().toDouble();
-}
-
-void MyFontSizeParameter::read() {
-    
-}
-
-void MyFontSizeParameter::write() {
-    
-}
-
-// MyFontWeightParameter
-
-MyFontWeightParameter::MyFontWeightParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-weight", styleFeatures) {
-    _items.push_back("normal");
-    _items.push_back("bold");
-    reset();
-}
-
-const bool MyFontWeightParameter::defaultWeight() const {
-    if (defaultValue() == "bold")
-        return true;
-    
-    return false;
-}
-
-void MyFontWeightParameter::reset() {
-    setDefaultValue("normal");
-}
-
-void MyFontWeightParameter::read() {
-    
-}
-
-void MyFontWeightParameter::write() {
-    
-}
-
-// MyFontStyleParameter
-
-MyFontStyleParameter::MyFontStyleParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-style", styleFeatures) {
-    _items.push_back("normal");
-    _items.push_back("italic");
-    reset();
-}
-
-const bool MyFontStyleParameter::defaultStyle() const {
-    if (defaultValue() == "italic")
-        return true;
-    
-    return false;
-}
-
-void MyFontStyleParameter::reset() {
-    setDefaultValue("normal");
-}
-
-void MyFontStyleParameter::read() {
-    
-}
-
-void MyFontStyleParameter::write() {
-    
-}
-
-// MyTextAnchorParameter
-
-MyTextAnchorParameter::MyTextAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("text-anchor", styleFeatures) {
-    _items.push_back("start");
-    _items.push_back("middle");
-    _items.push_back("end");
-    reset();
-}
-
-const Qt::Alignment MyTextAnchorParameter::defaultAlignment() const {
-    if (defaultValue() == "start")
-        return Qt::AlignLeft;
-    else if (defaultValue() == "middle")
-        return Qt::AlignHCenter;
-    else if (defaultValue() == "end")
-        return Qt::AlignRight;
-    
-    return Qt::AlignHCenter;
-}
-
-void MyTextAnchorParameter::reset() {
-    setDefaultValue("middle");
-}
-
-void MyTextAnchorParameter::read() {
-    
-}
-
-void MyTextAnchorParameter::write() {
-    
-}
-
-// MyVTextAnchorParameter
-
-MyVTextAnchorParameter::MyVTextAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("vtext-anchor", styleFeatures) {
-    _items.push_back("top");
-    _items.push_back("middle");
-    _items.push_back("baseline");
-    _items.push_back("bottom");
-    reset();
-}
-
-const Qt::Alignment MyVTextAnchorParameter::defaultAlignment() const {
-    if (defaultValue() == "top")
-        return Qt::AlignTop;
-    else if (defaultValue() == "middle")
-        return Qt::AlignVCenter;
-    else if (defaultValue() == "baseline")
-        return Qt::AlignBaseline;
-    else if (defaultValue() == "bottom")
-        return Qt::AlignBottom;
-    
-    return Qt::AlignVCenter;
-}
-
-void MyVTextAnchorParameter::reset() {
-    setDefaultValue("middle");
-}
-
-void MyVTextAnchorParameter::read() {
-    
-}
-
-void MyVTextAnchorParameter::write() {
-    
-}
-
 // MyRectangleShapeXAbsoluteParameter
 
 MyRectangleShapeXAbsoluteParameter::MyRectangleShapeXAbsoluteParameter(Transformation2D* styleFeatures) : MyPositionalParameter("X (abs)", styleFeatures) {
@@ -3263,5 +3088,188 @@ void MyTextFontColorParameter::read() {
 
 void MyTextFontColorParameter::write() {
     setStrokeColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
+    emit isUpdated();
+}
+
+
+// MyTextFontFamilyParameter
+
+MyTextFontFamilyParameter::MyTextFontFamilyParameter(Transformation2D* styleFeatures) : MyStringParameter("font-family", styleFeatures) {
+    reset();
+}
+
+void MyTextFontFamilyParameter::reset() {
+    setDefaultValue("monospace");
+}
+
+void MyTextFontFamilyParameter::read() {
+    setDefaultValue(QString(getFontFamily((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextFontFamilyParameter::write() {
+    setFontFamily((GraphicalPrimitive1D*)_styleFeatures, ((MyLineEdit*)_inputWidget)->text().toStdString());
+    emit isUpdated();
+}
+
+/*
+// MyTextFontSizeParameter
+
+MyTextFontSizeParameter::MyTextFontSizeParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-size", styleFeatures) {
+    int i = 5;
+    while (i <= 72) {
+        _items.push_back(QString::number(i));
+
+        if (i < 12)
+            ++i;
+        else if (i < 28)
+            i += 2;
+        else if (i < 36)
+            i += 8;
+        else if (i < 48)
+            i += 12;
+        else
+            i += 24;
+    }
+}
+
+void MyFontSizeParameter::reset() {
+    setDefaultValue("10");
+}
+
+const qint32 MyTextFontSizeParameter::defaultSize() const {
+    return defaultValue().toDouble();
+}
+
+void MyFontSizeParameter::read() {
+    setDefaultValue(QString(getFontFamily((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyFontSizeParameter::write() {
+
+}
+*/
+
+// MyTextFontWeightParameter
+
+MyTextFontWeightParameter::MyTextFontWeightParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-weight", styleFeatures) {
+    _items.push_back("normal");
+    _items.push_back("bold");
+    reset();
+}
+
+const bool MyTextFontWeightParameter::defaultWeight() const {
+    if (defaultValue() == "bold")
+        return true;
+
+    return false;
+}
+
+void MyTextFontWeightParameter::reset() {
+    setDefaultValue("normal");
+}
+
+void MyTextFontWeightParameter::read() {
+    setDefaultValue(QString(getFontWeight((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextFontWeightParameter::write() {
+    setFontWeight((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    emit isUpdated();
+}
+
+// MyTextFontStyleParameter
+
+MyTextFontStyleParameter::MyTextFontStyleParameter(Transformation2D* styleFeatures) : MyNominalParameter("font-style", styleFeatures) {
+    _items.push_back("normal");
+    _items.push_back("italic");
+    reset();
+}
+
+const bool MyTextFontStyleParameter::defaultStyle() const {
+    if (defaultValue() == "italic")
+        return true;
+
+    return false;
+}
+
+void MyTextFontStyleParameter::reset() {
+    setDefaultValue("normal");
+}
+
+void MyTextFontStyleParameter::read() {
+    setDefaultValue(QString(getFontStyle((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextFontStyleParameter::write() {
+    setFontStyle((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    emit isUpdated();
+}
+
+// MyTextAnchorParameter
+
+MyTextAnchorParameter::MyTextAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("text-anchor", styleFeatures) {
+    _items.push_back("start");
+    _items.push_back("middle");
+    _items.push_back("end");
+    reset();
+}
+
+const Qt::Alignment MyTextAnchorParameter::defaultAlignment() const {
+    if (defaultValue() == "start")
+        return Qt::AlignLeft;
+    else if (defaultValue() == "middle")
+        return Qt::AlignHCenter;
+    else if (defaultValue() == "end")
+        return Qt::AlignRight;
+
+    return Qt::AlignHCenter;
+}
+
+void MyTextAnchorParameter::reset() {
+    setDefaultValue("middle");
+}
+
+void MyTextAnchorParameter::read() {
+    setDefaultValue(QString(getTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextAnchorParameter::write() {
+    setTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    emit isUpdated();
+}
+
+// MyTextVAnchorParameter
+
+MyTextVAnchorParameter::MyTextVAnchorParameter(Transformation2D* styleFeatures) : MyNominalParameter("vtext-anchor", styleFeatures) {
+    _items.push_back("top");
+    _items.push_back("middle");
+    _items.push_back("baseline");
+    _items.push_back("bottom");
+    reset();
+}
+
+const Qt::Alignment MyTextVAnchorParameter::defaultAlignment() const {
+    if (defaultValue() == "top")
+        return Qt::AlignTop;
+    else if (defaultValue() == "middle")
+        return Qt::AlignVCenter;
+    else if (defaultValue() == "baseline")
+        return Qt::AlignBaseline;
+    else if (defaultValue() == "bottom")
+        return Qt::AlignBottom;
+
+    return Qt::AlignVCenter;
+}
+
+void MyTextVAnchorParameter::reset() {
+    setDefaultValue("middle");
+}
+
+void MyTextVAnchorParameter::read() {
+    setDefaultValue(QString(getVTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+}
+
+void MyTextVAnchorParameter::write() {
+    setVTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
