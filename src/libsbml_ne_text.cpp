@@ -57,7 +57,7 @@ QWidget* MyText::elementFeatureMenu() {
     QWidget* textFeaturesMenu = new MyTextFeatureMenu(_style->getGroup());
     connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    featureMenuTree->addBranchWidget(textFeaturesMenu, "Text Features");
+    featureMenuTree->addBranchWidget(textFeaturesMenu, "Features");
 
     contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
 
