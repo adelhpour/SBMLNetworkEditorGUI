@@ -1558,7 +1558,7 @@ void MyStringParameter::reset() {
 
 MyNominalParameter::MyNominalParameter(const QString& name) : MyParameterBase(name) {
     _inputWidget = new MyComboBox();
-    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    connect(_inputWidget, SIGNAL(currentIndexChanged(int)), SLOT(write()));
     reset();
 }
 
@@ -3083,11 +3083,12 @@ void MyTextFontColorParameter::reset() {
 }
 
 void MyTextFontColorParameter::read() {
-    //setDefaultValue(QString(getStrokeColor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextFontColor((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextFontColor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextFontColorParameter::write() {
-    //setStrokeColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
+    setTextFontColor((GraphicalPrimitive1D*)_styleFeatures, ((MyColorPickerButton*)_inputWidget)->currentColor().toStdString());
     emit isUpdated();
 }
 
@@ -3102,11 +3103,12 @@ void MyTextFontFamilyParameter::reset() {
 }
 
 void MyTextFontFamilyParameter::read() {
-    //setDefaultValue(QString(getFontFamily((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextFontFamily((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextFontFamily((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextFontFamilyParameter::write() {
-    //setFontFamily((GraphicalPrimitive1D*)_styleFeatures, ((MyLineEdit*)_inputWidget)->text().toStdString());
+    setTextFontFamily((GraphicalPrimitive1D*)_styleFeatures, ((MyLineEdit*)_inputWidget)->text().toStdString());
     emit isUpdated();
 }
 
@@ -3117,13 +3119,14 @@ MyTextFontSizeAbsoluteParameter::MyTextFontSizeAbsoluteParameter(Transformation2
 }
 
 void MyTextFontSizeAbsoluteParameter::read() {
-    //setDefaultValue(getTextFontSize((GraphicalPrimitive1D*)_styleFeatures).getAbsoluteValue());
+    if (isSetTextFontSize((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(getTextFontSize((GraphicalPrimitive1D*)_styleFeatures).getAbsoluteValue());
 }
 
 void MyTextFontSizeAbsoluteParameter::write() {
-    //RelAbsVector fontSize = getTextFontSize((GraphicalPrimitive1D*)_styleFeatures);
-    //fontSize.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    //setTextFontSize((GraphicalPrimitive1D*)_styleFeatures, fontSize);
+    RelAbsVector fontSize = getTextFontSize((GraphicalPrimitive1D*)_styleFeatures);
+    fontSize.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setTextFontSize((GraphicalPrimitive1D*)_styleFeatures, fontSize);
     emit isUpdated();
 }
 
@@ -3134,13 +3137,14 @@ MyTextFontSizeRelativeParameter::MyTextFontSizeRelativeParameter(Transformation2
 }
 
 void MyTextFontSizeRelativeParameter::read() {
-    //setDefaultValue(getTextFontSize((GraphicalPrimitive1D*)_styleFeatures).getRelativeValue());
+    if (isSetTextFontSize((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(getTextFontSize((GraphicalPrimitive1D*)_styleFeatures).getRelativeValue());
 }
 
 void MyTextFontSizeRelativeParameter::write() {
-    //RelAbsVector fontSize = getTextFontSize((GraphicalPrimitive1D*)_styleFeatures);
-    //fontSize.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    //setTextFontSize((GraphicalPrimitive1D*)_styleFeatures, fontSize);
+    RelAbsVector fontSize = getTextFontSize((GraphicalPrimitive1D*)_styleFeatures);
+    fontSize.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
+    setTextFontSize((GraphicalPrimitive1D*)_styleFeatures, fontSize);
     emit isUpdated();
 }
 
@@ -3164,11 +3168,12 @@ void MyTextFontWeightParameter::reset() {
 }
 
 void MyTextFontWeightParameter::read() {
-    //setDefaultValue(QString(getFontWeight((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextFontWeight((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextFontWeight((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextFontWeightParameter::write() {
-    //setFontWeight((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    setTextFontWeight((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
 
@@ -3192,11 +3197,12 @@ void MyTextFontStyleParameter::reset() {
 }
 
 void MyTextFontStyleParameter::read() {
-    //setDefaultValue(QString(getFontStyle((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextFontStyle((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextFontStyle((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextFontStyleParameter::write() {
-    //setFontStyle((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    setTextFontStyle((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
 
@@ -3225,11 +3231,12 @@ void MyTextAnchorParameter::reset() {
 }
 
 void MyTextAnchorParameter::read() {
-    //setDefaultValue(QString(getTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextTextAnchor((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextAnchorParameter::write() {
-    //setTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    setTextTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
 
@@ -3261,10 +3268,11 @@ void MyTextVAnchorParameter::reset() {
 }
 
 void MyTextVAnchorParameter::read() {
-    //setDefaultValue(QString(getVTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
+    if (isSetTextVTextAnchor((GraphicalPrimitive1D*)_styleFeatures))
+        setDefaultValue(QString(getTextVTextAnchor((GraphicalPrimitive1D*)_styleFeatures).c_str()));
 }
 
 void MyTextVAnchorParameter::write() {
-    //setVTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
+    setTextVTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
