@@ -19,6 +19,8 @@ public:
     const qreal getStartSlope();
     
     const qreal getEndSlope();
+
+    const qreal getAdjustedRotation(LineEnding* lineEnding, const qreal& rotation);
     
     const QString getType() override;
     

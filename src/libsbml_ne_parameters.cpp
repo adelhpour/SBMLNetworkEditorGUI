@@ -1461,7 +1461,7 @@ void MyIntegerParameter::reset() {
 
 MyBooleanParameter::MyBooleanParameter(const QString& name) : MyParameterBase(name) {
     _inputWidget = new MyComboBox();
-    connect(_inputWidget, SIGNAL(editingFinished()), SLOT(write()));
+    connect(_inputWidget, SIGNAL(currentIndexChanged(int)), SLOT(write()));
     reset();
 }
 
@@ -3365,7 +3365,7 @@ MyEnableRotationalMappingParameter::MyEnableRotationalMappingParameter(LineEndin
 }
 
 void MyEnableRotationalMappingParameter::reset() {
-    setDefaultValue("middle");
+    setDefaultValue("true");
 }
 
 void MyEnableRotationalMappingParameter::read() {
@@ -3378,7 +3378,7 @@ void MyEnableRotationalMappingParameter::read() {
 }
 
 void MyEnableRotationalMappingParameter::write() {
-    if (((MyComboBox*)_inputWidget)->currentText() == true)
+    if (((MyComboBox*)_inputWidget)->currentText() == "true")
         setEnableRotationalMapping(_lineEnding, true);
     else
         setEnableRotationalMapping(_lineEnding, false);

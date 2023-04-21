@@ -23,7 +23,7 @@ void MySpeciesReference::updateLineEndingsGraphicsItem() {
 void MySpeciesReference::addLineEndingGraphicsItem(const QString& lineEndingId, const QPointF& position, const qreal rotation) {
     LineEnding* lineEnding = emit askForLineEnding(lineEndingId);
     if (lineEnding)
-        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(lineEnding->getGroup(), lineEnding->getBoundingBox(), position, rotation);
+        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(lineEnding->getGroup(), lineEnding->getBoundingBox(), position, getAdjustedRotation(lineEnding, rotation));
 }
 
 const QPointF MySpeciesReference::getStartPoint() {
@@ -72,6 +72,13 @@ const qreal MySpeciesReference::getEndSlope() {
     }
     
     return 0.0;
+}
+
+const qreal MySpeciesReference::getAdjustedRotation(LineEnding* lineEnding, const qreal& rotation) {
+    if (lineEnding->isSetEnableRotationalMapping() && !lineEnding->getEnableRotationalMapping())
+        return 0.0;
+
+    return rotation;
 }
 
 const QString MySpeciesReference::getType() {
