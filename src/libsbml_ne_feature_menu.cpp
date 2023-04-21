@@ -18,33 +18,33 @@ MyFeatureMenu::MyFeatureMenu(QWidget* elementFeatureMenu, QWidget* parent) : MyG
 
 // MyBoundingBoxMenu
 
-MyBoundingBoxMenu::MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* parent) : MyGroupBox(parent) {
+MyBoundingBoxMenu::MyBoundingBoxMenu(BoundingBox* boundingBox, QWidget* parent) : MyGroupBox(parent) {
     QGridLayout* contentLayout = new QGridLayout(this);
     contentLayout->setAlignment(Qt::AlignTop);
 
     // x
-    _xParameter = new MyBoundingBoxXParameter(graphicalObject);
+    _xParameter = new MyBoundingBoxXParameter(boundingBox);
     _xParameter->read();
     connect(_xParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_xParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_xParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
     
     // y
-    _yParameter = new MyBoundingBoxYParameter(graphicalObject);
+    _yParameter = new MyBoundingBoxYParameter(boundingBox);
     _yParameter->read();
     connect(_yParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_yParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_yParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
     
     // width
-    _widthParameter = new MyBoundingBoxWidthParameter(graphicalObject);
+    _widthParameter = new MyBoundingBoxWidthParameter(boundingBox);
     _widthParameter->read();
     connect(_widthParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_widthParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_widthParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
     
     // height
-    _heightParameter = new MyBoundingBoxHeightParameter(graphicalObject);
+    _heightParameter = new MyBoundingBoxHeightParameter(boundingBox);
     _heightParameter->read();
     connect(_heightParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_heightParameter->name()), contentLayout->rowCount(), 0);
@@ -886,6 +886,33 @@ MyTextFeatureMenu::MyTextFeatureMenu(GraphicalPrimitive1D* graphicalPrimitive1D,
     connect(_textVAnchorParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     contentLayout->addWidget(new MyLabel(_textVAnchorParameter->name()), contentLayout->rowCount(), 0);
     contentLayout->addWidget(_textVAnchorParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    setLayout(contentLayout);
+}
+
+// MyLineEndingMenu
+
+MyLineEndingMenu::MyLineEndingMenu(LineEnding* lineEnding, QWidget* parent) : MyGroupBox(parent) {
+    QGridLayout* contentLayout = new QGridLayout(this);
+    contentLayout->setAlignment(Qt::AlignTop);
+
+    _enableRotationalMappingParameter = new MyEnableRotationalMappingParameter(lineEnding);
+    _enableRotationalMappingParameter->read();
+    connect(_enableRotationalMappingParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_enableRotationalMappingParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_enableRotationalMappingParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    MyTreeView* lineEndingMenuTree = new MyTreeView(this);
+    // bounding box
+    QWidget* boundingBoxMenu = new MyBoundingBoxMenu(lineEnding->getBoundingBox());
+    connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    lineEndingMenuTree->addBranchWidget(boundingBoxMenu, "BoundingBox");
+
+    // geometric shapes
+    QWidget* geometricShapeMenu = new MyGeometricShapesMenu(lineEnding->getGroup());
+    connect(geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    lineEndingMenuTree->addBranchWidget(geometricShapeMenu, "Geometric Shapes");
+    contentLayout->addWidget(lineEndingMenuTree, contentLayout->rowCount(), 0);
 
     setLayout(contentLayout);
 }

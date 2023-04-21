@@ -522,7 +522,9 @@ protected:
 
 class MyPositionalParameter : public MyDoubleParameter {
 public:
-    
+
+    MyPositionalParameter(const QString& name);
+
     MyPositionalParameter(const QString& name, GraphicalObject* graphicalObject);
     
     MyPositionalParameter(const QString& name, Transformation2D* styleFeatures);
@@ -533,7 +535,9 @@ public:
 
 class MyDimensionalParameter : public MyDoubleParameter {
 public:
-    
+
+    MyDimensionalParameter(const QString& name);
+
     MyDimensionalParameter(const QString& name, GraphicalObject* graphicalObject);
     
     MyDimensionalParameter(const QString& name, Transformation2D* styleFeatures);
@@ -662,12 +666,22 @@ protected:
     bool _isSetDefaultValue;
 };
 
-class MyBoundingBoxXParameter : public MyPositionalParameter {
+class MyBoundingBoxParameterBase {
+
+public:
+
+    MyBoundingBoxParameterBase(BoundingBox* boundingBox);
+
+protected:
+    BoundingBox* _boundingBox;
+};
+
+class MyBoundingBoxXParameter : public MyPositionalParameter, public MyBoundingBoxParameterBase {
     Q_OBJECT
     
 public:
     
-    MyBoundingBoxXParameter(GraphicalObject* graphicalObject);
+    MyBoundingBoxXParameter(BoundingBox* boundingBox);
     
     // read the parameter info from the graphical object and style
     void read() override;
@@ -678,12 +692,12 @@ protected slots:
     void write() override;
 };
 
-class MyBoundingBoxYParameter : public MyPositionalParameter {
+class MyBoundingBoxYParameter : public MyPositionalParameter, public MyBoundingBoxParameterBase {
     Q_OBJECT
     
 public:
     
-    MyBoundingBoxYParameter(GraphicalObject* graphicalObject);
+    MyBoundingBoxYParameter(BoundingBox* boundingBox);
     
     // read the parameter info from the graphical object and style
     void read() override;
@@ -694,12 +708,12 @@ protected slots:
     void write() override;
 };
 
-class MyBoundingBoxWidthParameter : public MyDimensionalParameter {
+class MyBoundingBoxWidthParameter : public MyDimensionalParameter, public MyBoundingBoxParameterBase {
     Q_OBJECT
     
 public:
     
-    MyBoundingBoxWidthParameter(GraphicalObject* graphicalObject);
+    MyBoundingBoxWidthParameter(BoundingBox* boundingBox);
     
     // read the parameter info from the graphical object and style
     void read() override;
@@ -710,12 +724,12 @@ protected slots:
     void write() override;
 };
 
-class MyBoundingBoxHeightParameter : public MyDimensionalParameter {
+class MyBoundingBoxHeightParameter : public MyDimensionalParameter, public MyBoundingBoxParameterBase {
     Q_OBJECT
     
 public:
     
-    MyBoundingBoxHeightParameter(GraphicalObject* graphicalObject);
+    MyBoundingBoxHeightParameter(BoundingBox* boundingBox);
     
     // read the parameter info from the graphical object and style
     void read() override;
@@ -2046,6 +2060,28 @@ protected slots:
 
     // set the value of parameter info to the graphical object and style
     void write() override;
+};
+
+class MyEnableRotationalMappingParameter : public MyBooleanParameter {
+    Q_OBJECT
+
+public:
+
+    MyEnableRotationalMappingParameter(LineEnding* lineEnding);
+
+    // reset the values of the parameter
+    void reset() override;
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+
+protected:
+    LineEnding* _lineEnding;
 };
 
 #endif

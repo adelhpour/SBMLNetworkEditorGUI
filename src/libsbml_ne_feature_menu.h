@@ -15,7 +15,7 @@ class MyBoundingBoxMenu : public MyGroupBox {
     Q_OBJECT
     
 public:
-    MyBoundingBoxMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
+    MyBoundingBoxMenu(BoundingBox* boundingBox, QWidget* parent = nullptr);
     
 signals:
     void isUpdated();
@@ -254,6 +254,20 @@ protected:
     MyParameterBase* _fontStyleParameter;
     MyParameterBase* _textAnchorParameter;
     MyParameterBase* _textVAnchorParameter;
+};
+
+class MyLineEndingMenu : public MyGroupBox {
+    Q_OBJECT
+
+public:
+    MyLineEndingMenu(LineEnding* lineEnding, QWidget* parent = nullptr);
+
+signals:
+        void isUpdated();
+
+protected:
+    QWidget* _lineEndingMenuTree;
+    MyParameterBase* _enableRotationalMappingParameter;
 };
 
 class MyAddRemoveButtonsBase : public QDialogButtonBox {

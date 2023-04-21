@@ -15,9 +15,9 @@ void MySpeciesReference::updateGraphicsItem() {
 
 void MySpeciesReference::updateLineEndingsGraphicsItem() {
     if (_style->getGroup()->isSetStartHead())
-        addLineEndingGraphicsItem(QString(_style->getGroup()->getStartHead().c_str()), getStartPoint(), getStartSlope());
+        addLineEndingGraphicsItem(getStartHeadId(), getStartPoint(), getStartSlope());
     if (_style->getGroup()->isSetEndHead())
-        addLineEndingGraphicsItem(QString((_style->getGroup()->getEndHead().c_str())), getEndPoint(), getEndSlope());
+        addLineEndingGraphicsItem(getEndHeadId(), getEndPoint(), getEndSlope());
 }
 
 void MySpeciesReference::addLineEndingGraphicsItem(const QString& lineEndingId, const QPointF& position, const qreal rotation) {
@@ -93,6 +93,14 @@ const QString MySpeciesReference::getRole() {
     return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getRoleString().c_str());
 }
 
+const QString MySpeciesReference::getStartHeadId() {
+    return QString(_style->getGroup()->getStartHead().c_str());
+}
+
+const QString MySpeciesReference::getEndHeadId() {
+    return QString(_style->getGroup()->getEndHead().c_str());
+}
+
 QWidget* MySpeciesReference::elementFeatureMenu() {
     QWidget* elementFeatureMenu = MyNetworkElementBase::elementFeatureMenu();
     QGridLayout* contentLayout = (QGridLayout*)(elementFeatureMenu->layout());
@@ -120,6 +128,24 @@ QWidget* MySpeciesReference::elementFeatureMenu() {
     connect(_curveMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_curveMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_curveMenu, "Curve");
+
+    // start line ending
+    LineEnding* startLineEnding = askForLineEnding(getStartHeadId());
+    if (startLineEnding) {
+        QWidget* lineEndingMenu = new MyLineEndingMenu(startLineEnding);
+        connect(lineEndingMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(lineEndingMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(lineEndingMenu, "Start Head");
+    }
+
+    // end line ending
+    LineEnding* endLineEnding = askForLineEnding(getEndHeadId());
+    if (endLineEnding) {
+        QWidget* lineEndingMenu = new MyLineEndingMenu(endLineEnding);
+        connect(lineEndingMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(lineEndingMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(lineEndingMenu, "End Head");
+    }
 
     contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
 

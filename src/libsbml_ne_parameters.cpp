@@ -1628,6 +1628,10 @@ void MyNominalParameter::reset() {
 
 // MyPositionalParameter
 
+MyPositionalParameter::MyPositionalParameter(const QString& name) : MyDoubleParameter(name) {
+    reset();
+}
+
 MyPositionalParameter::MyPositionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyDoubleParameter(name, graphicalObject) {
     reset();
 }
@@ -1644,6 +1648,10 @@ void MyPositionalParameter::reset() {
 }
 
 // MyDimensionalParameter
+
+MyDimensionalParameter::MyDimensionalParameter(const QString& name) : MyDoubleParameter(name) {
+    reset();
+}
 
 MyDimensionalParameter::MyDimensionalParameter(const QString& name, GraphicalObject* graphicalObject) : MyDoubleParameter(name, graphicalObject) {
     reset();
@@ -1808,63 +1816,69 @@ void MyFilePathParameter::reset() {
     _isSetDefaultValue = false;
 }
 
+// MyBoundingBoxParameterBase
+
+MyBoundingBoxParameterBase::MyBoundingBoxParameterBase(BoundingBox* boundingBox) {
+    _boundingBox = boundingBox;
+}
+
 // MyBoundingBoxXParameter
 
-MyBoundingBoxXParameter::MyBoundingBoxXParameter(GraphicalObject* graphicalObject) : MyPositionalParameter("X", graphicalObject) {
-    
+MyBoundingBoxXParameter::MyBoundingBoxXParameter(BoundingBox* boundingBox) : MyPositionalParameter("X"), MyBoundingBoxParameterBase(boundingBox) {
+
 }
 
 void MyBoundingBoxXParameter::read() {
-    setDefaultValue(getPositionX(_graphicalObject));
+    setDefaultValue(getPositionX(_boundingBox));
 }
 
 void MyBoundingBoxXParameter::write() {
-    setPositionX(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    setPositionX(_boundingBox, ((MyDoubleSpinBox*)_inputWidget)->value());
     emit isUpdated();
 }
 
 // MyBoundingBoxYParameter
 
-MyBoundingBoxYParameter::MyBoundingBoxYParameter(GraphicalObject* graphicalObject) : MyPositionalParameter("Y", graphicalObject) {
+MyBoundingBoxYParameter::MyBoundingBoxYParameter(BoundingBox* boundingBox) : MyPositionalParameter("Y"), MyBoundingBoxParameterBase(boundingBox) {
     
 }
 
 void MyBoundingBoxYParameter::read() {
-    setDefaultValue(getPositionY(_graphicalObject));
+    setDefaultValue(getPositionY(_boundingBox));
 }
 
 void MyBoundingBoxYParameter::write() {
-    setPositionY(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    setPositionY(_boundingBox, ((MyDoubleSpinBox*)_inputWidget)->value());
     emit isUpdated();
 }
 
 // MyBoundingBoxWidthParameter
 
-MyBoundingBoxWidthParameter::MyBoundingBoxWidthParameter(GraphicalObject* graphicalObject) : MyDimensionalParameter("Width", graphicalObject) {
+MyBoundingBoxWidthParameter::MyBoundingBoxWidthParameter(BoundingBox* boundingBox) : MyDimensionalParameter("Width"), MyBoundingBoxParameterBase(boundingBox) {
     
 }
 
 void MyBoundingBoxWidthParameter::read() {
-    setDefaultValue(getDimensionWidth(_graphicalObject));
+    setDefaultValue(getDimensionWidth(_boundingBox));
 }
 
 void MyBoundingBoxWidthParameter::write() {
-    setDimensionWidth(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    setDimensionWidth(_boundingBox, ((MyDoubleSpinBox*)_inputWidget)->value());
     emit isUpdated();
 }
 
 // MyBoundingBoxHeightParameter
 
-MyBoundingBoxHeightParameter::MyBoundingBoxHeightParameter(GraphicalObject* graphicalObject) : MyDimensionalParameter("Height", graphicalObject) {
+MyBoundingBoxHeightParameter::MyBoundingBoxHeightParameter(BoundingBox* boundingBox) : MyDimensionalParameter("Height"), MyBoundingBoxParameterBase(boundingBox) {
     
 }
 
 void MyBoundingBoxHeightParameter::read() {
-    setDefaultValue(getDimensionHeight(_graphicalObject));
+    setDefaultValue(getDimensionHeight(_boundingBox));
 }
 
 void MyBoundingBoxHeightParameter::write() {
-    setDimensionHeight(_graphicalObject, ((MyDoubleSpinBox*)_inputWidget)->value());
+    setDimensionHeight(_boundingBox, ((MyDoubleSpinBox*)_inputWidget)->value());
     emit isUpdated();
 }
 
@@ -3342,3 +3356,32 @@ void MyTextVAnchorParameter::write() {
     setVTextAnchor((GraphicalPrimitive1D*)_styleFeatures, ((MyComboBox*)_inputWidget)->currentText().toStdString());
     emit isUpdated();
 }
+
+// MyEnableRotationalMappingParameter
+
+MyEnableRotationalMappingParameter::MyEnableRotationalMappingParameter(LineEnding* lineEnding) : MyBooleanParameter("EnableRotationalMapping") {
+    _lineEnding = lineEnding;
+    reset();
+}
+
+void MyEnableRotationalMappingParameter::reset() {
+    setDefaultValue("middle");
+}
+
+void MyEnableRotationalMappingParameter::read() {
+    if (isSetEnableRotationalMapping(_lineEnding)) {
+        if (getEnableRotationalMapping(_lineEnding))
+            setDefaultValue("true");
+        else
+            setDefaultValue("false");
+    }
+}
+
+void MyEnableRotationalMappingParameter::write() {
+    if (((MyComboBox*)_inputWidget)->currentText() == true)
+        setEnableRotationalMapping(_lineEnding, true);
+    else
+        setEnableRotationalMapping(_lineEnding, false);
+    emit isUpdated();
+}
+
