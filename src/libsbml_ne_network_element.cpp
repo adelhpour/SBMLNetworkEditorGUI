@@ -24,6 +24,10 @@ const QString MyNetworkElementBase::getGlyphId() {
     return QString(_graphicalObject->getId().c_str());
 }
 
+bool MyNetworkElementBase::hasAssociatedModelEntity() {
+    return true;
+}
+
 GraphicalObject* MyNetworkElementBase::getGraphicalObject()  {
     return _graphicalObject;
 }
@@ -49,8 +53,10 @@ QWidget* MyNetworkElementBase::elementFeatureMenu() {
     contentLayout->addItem(spacerItem, contentLayout->rowCount(), 0, 1, 2);
     
     // id
-    contentLayout->addWidget(new MyLabel("Id"), contentLayout->rowCount(), 0);
-    contentLayout->addWidget(new MyReadOnlyLineEdit(getId()), contentLayout->rowCount() - 1, 1);
+    if (hasAssociatedModelEntity()) {
+        contentLayout->addWidget(new MyLabel("Id"), contentLayout->rowCount(), 0);
+        contentLayout->addWidget(new MyReadOnlyLineEdit(getId()), contentLayout->rowCount() - 1, 1);
+    }
     
     // glyph id
     contentLayout->addWidget(new MyLabel("Glyph Id"), contentLayout->rowCount(), 0);

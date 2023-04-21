@@ -20,6 +20,8 @@ public:
     
     virtual const QString getId() = 0;
 
+    virtual bool hasAssociatedModelEntity();
+
     GraphicalObject* getGraphicalObject();
 
     Style* getStyle();

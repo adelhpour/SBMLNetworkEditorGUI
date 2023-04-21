@@ -15,6 +15,10 @@ const QString MyText::getId() {
     return QString();
 }
 
+bool MyText::hasAssociatedModelEntity() {
+    return false;
+}
+
 void MyText::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
     QString plaintText;
@@ -45,23 +49,48 @@ QWidget* MyText::elementFeatureMenu() {
 
     contentLayout->addItem(new MySpacerItem(0, 20), contentLayout->rowCount(), 0, 1, 2);
 
-    MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
+    // plain text
+    QWidget* plainTextMenu = createPlainTextMenu();
+    if (plainTextMenu) {
+        MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
 
-    // bounding box
-    QWidget* boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
-    connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    featureMenuTree->addBranchWidget(boundingBoxMenu, "BoundingBox");
+        connect(plainTextMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(plainTextMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(plainTextMenu, "PlainText");
 
-    // text features
-    QWidget* textFeaturesMenu = new MyTextFeatureMenu(_style->getGroup());
-    connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
-    connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
-    featureMenuTree->addBranchWidget(textFeaturesMenu, "Features");
+        // bounding box
+        QWidget* boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
+        connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(boundingBoxMenu, "BoundingBox");
 
-    contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
+        // text features
+        QWidget* textFeaturesMenu = new MyTextFeatureMenu(_style->getGroup());
+        connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+        connect(textFeaturesMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
+        featureMenuTree->addBranchWidget(textFeaturesMenu, "Features");
+
+        contentLayout->addWidget(featureMenuTree, contentLayout->rowCount(), 0, 1, 2);
+    }
 
     elementFeatureMenu->setFixedWidth(400);
 
     return elementFeatureMenu;
+}
+
+QWidget* MyText::createPlainTextMenu() {
+    if (((TextGlyph*)_graphicalObject)->isSetText())
+        return new MyPlainTextMenu((TextGlyph*)_graphicalObject);
+    if (((TextGlyph*)_graphicalObject)->isSetGraphicalObjectId()) {
+        GraphicalObject* associatedGraphicalObject = askForGraphicalObject(QString(((TextGlyph*)_graphicalObject)->getGraphicalObjectId().c_str()));
+        if (associatedGraphicalObject)
+            return new MyPlainTextMenu(associatedGraphicalObject);
+    }
+    if (((TextGlyph*)_graphicalObject)->isSetOriginOfTextId()) {
+        SBase* associatedModelEntity = askForModelEntity(QString(((TextGlyph*)_graphicalObject)->getOriginOfTextId().c_str()));
+        if (associatedModelEntity)
+            return new MyPlainTextMenu(associatedModelEntity);
+    }
+
+    return NULL;
 }

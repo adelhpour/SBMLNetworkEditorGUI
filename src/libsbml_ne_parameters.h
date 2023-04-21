@@ -471,6 +471,16 @@ protected:
     bool _isSetDefaultValue;
 };
 
+class MyReadOnlyStringParameter : public MyStringParameter {
+public:
+
+    MyReadOnlyStringParameter(const QString& name);
+
+    MyReadOnlyStringParameter(const QString& name, GraphicalObject* graphicalObject);
+
+    MyReadOnlyStringParameter(const QString& name, Transformation2D* styleFeatures);
+};
+
 class MyNominalParameter : public MyParameterBase {
 public:
     
@@ -1831,6 +1841,57 @@ protected slots:
 
     // set the value of parameter info to the graphical object and style
     void write() override;
+};
+
+class MyTextPlainTextFromTextGlyphParameter : public MyStringParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextPlainTextFromTextGlyphParameter(TextGlyph* textGlyph);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextPlainTextFromGraphicalObjectParameter : public MyReadOnlyStringParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextPlainTextFromGraphicalObjectParameter(GraphicalObject* graphicalObject);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+};
+
+class MyTextPlainTextFromModelEntityParameter : public MyReadOnlyStringParameter {
+    Q_OBJECT
+
+public:
+
+    MyTextPlainTextFromModelEntityParameter(SBase* modeEntity);
+
+    // read the parameter info from the graphical object and style
+    void read() override;
+
+protected slots:
+
+    // set the value of parameter info to the graphical object and style
+    void write() override;
+
+protected:
+    SBase* _modelEntity;
 };
 
 class MyTextFontColorParameter : public MyColorParameter {

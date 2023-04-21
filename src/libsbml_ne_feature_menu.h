@@ -216,6 +216,25 @@ protected:
     QWidget* _elementTextsMenuTree;
 };
 
+class MyPlainTextMenu : public MyGroupBox {
+    Q_OBJECT
+
+public:
+    MyPlainTextMenu(TextGlyph* textGlyph, QWidget* parent = nullptr);
+
+    MyPlainTextMenu(GraphicalObject* graphicalObject, QWidget* parent = nullptr);
+
+    MyPlainTextMenu(SBase* modelEntity, QWidget* parent = nullptr);
+
+    void setMenu();
+
+signals:
+    void isUpdated();
+
+protected:
+    MyParameterBase* _plainTextParameter;
+};
+
 class MyTextFeatureMenu : public MyGroupBox {
 Q_OBJECT
 

@@ -11,10 +11,14 @@ public:
     const QString getType() override;
     
     const QString getId() override;
+
+    bool hasAssociatedModelEntity() override;
     
     void updateGraphicsItem() override;
 
     QWidget* elementFeatureMenu() override;
+
+    QWidget* createPlainTextMenu();
     
 };
 

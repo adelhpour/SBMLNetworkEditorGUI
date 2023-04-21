@@ -799,6 +799,35 @@ QWidget* MyElementTextsMenu::createElementTextsMenu(QList<QWidget*> textsMenu) {
     return elementTextsMenuTree;
 }
 
+// MyPlainTextMenu
+
+MyPlainTextMenu::MyPlainTextMenu(TextGlyph* textGlyph, QWidget* parent) : MyGroupBox(parent) {
+    _plainTextParameter = new MyTextPlainTextFromTextGlyphParameter(textGlyph);
+    setMenu();
+}
+
+MyPlainTextMenu::MyPlainTextMenu(GraphicalObject* graphicalObject, QWidget* parent) : MyGroupBox(parent) {
+    _plainTextParameter = new MyTextPlainTextFromGraphicalObjectParameter(graphicalObject);
+    setMenu();
+}
+
+MyPlainTextMenu::MyPlainTextMenu(SBase* modelEntity, QWidget* parent) : MyGroupBox(parent) {
+    _plainTextParameter = new MyTextPlainTextFromModelEntityParameter(modelEntity);
+    setMenu();
+}
+
+void MyPlainTextMenu::setMenu() {
+    QGridLayout* contentLayout = new QGridLayout(this);
+    contentLayout->setAlignment(Qt::AlignTop);
+
+    _plainTextParameter->read();
+    connect(_plainTextParameter, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
+    contentLayout->addWidget(new MyLabel(_plainTextParameter->name()), contentLayout->rowCount(), 0);
+    contentLayout->addWidget(_plainTextParameter->inputWidget(), contentLayout->rowCount() - 1, 1);
+
+    setLayout(contentLayout);
+}
+
 // MyTextFeatureMenu
 
 MyTextFeatureMenu::MyTextFeatureMenu(GraphicalPrimitive1D* graphicalPrimitive1D, QWidget* parent) : MyGroupBox(parent) {
