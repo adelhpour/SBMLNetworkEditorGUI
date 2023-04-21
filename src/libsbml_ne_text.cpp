@@ -59,7 +59,7 @@ QWidget* MyText::elementFeatureMenu() {
         featureMenuTree->addBranchWidget(plainTextMenu, "PlainText");
 
         // bounding box
-        QWidget* boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
+        QWidget* boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject->getBoundingBox());
         connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
         connect(boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
         featureMenuTree->addBranchWidget(boundingBoxMenu, "BoundingBox");

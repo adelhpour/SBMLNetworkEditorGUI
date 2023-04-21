@@ -29,6 +29,10 @@ public:
     const QString getRole();
     
     QWidget* elementFeatureMenu() override;
+
+    const QString getStartHeadId();
+
+    const QString getEndHeadId();
     
 public slots:
         

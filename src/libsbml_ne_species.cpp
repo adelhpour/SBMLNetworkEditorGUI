@@ -41,7 +41,7 @@ QWidget* MySpecies::elementFeatureMenu() {
     MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
     
     // bounding box
-    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject);
+    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject->getBoundingBox());
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
