@@ -1,5 +1,7 @@
 #include "libsbml_ne_rect_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyRectGraphicsItem::MyRectGraphicsItem(QGraphicsItem* parent) : QGraphicsPathItem(parent) {
     
 }
@@ -18,27 +20,27 @@ void MyRectGraphicsItem::updateFeatures(RenderGroup* group, Rectangle* rectangle
 }
 
 const QRectF MyRectGraphicsItem::getRect(Rectangle* rectangle, BoundingBox* boundingBox) {
-    qreal x = boundingBox->x();
-    if (rectangle->isSetX())
-        x += rectangle->getX().getAbsoluteValue() + 0.01 * rectangle->getX().getRelativeValue() * boundingBox->width();
-    qreal y = boundingBox->y();
-    if (rectangle->isSetY())
-        y += rectangle->getY().getAbsoluteValue() + 0.01 * rectangle->getY().getRelativeValue() * boundingBox->height();
+    qreal x = getPositionX(boundingBox);
+    if (isSetRectangleShapeX(rectangle))
+        x += getRectangleShapeX(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
+    qreal y = getPositionY(boundingBox);
+    if (isSetRectangleShapeY(rectangle))
+        y += getRectangleShapeY(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
     qreal width = 0.0;
-    if (rectangle->isSetWidth())
-        width = rectangle->getWidth().getAbsoluteValue() + 0.01 * rectangle->getWidth().getRelativeValue() * boundingBox->width();
+    if (isSetRectangleShapeWidth(rectangle))
+        width = getRectangleShapeWidth(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeWidth(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
     qreal height = 0.0;
-    if (rectangle->isSetHeight())
-        height = rectangle->getHeight().getAbsoluteValue() + 0.01 * rectangle->getHeight().getRelativeValue() * boundingBox->height();
-    if (rectangle->isSetRatio()) {
-        qreal ratio = rectangle->getRatio();
-        if ((boundingBox->width() / boundingBox->height()) <= ratio) {
-            width = boundingBox->width();
-            height = boundingBox->width() / ratio;
+    if (isSetRectangleShapeHeight(rectangle))
+        height = getRectangleShapeHeight(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeHeight(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetRectangleShapeRatio(rectangle)) {
+        qreal ratio = getRectangleShapeRatio(rectangle);
+        if ((getDimensionWidth(boundingBox) / getDimensionHeight(boundingBox)) <= ratio) {
+            width = getDimensionWidth(boundingBox);
+            height = getDimensionWidth(boundingBox) / ratio;
         }
         else {
-            width = boundingBox->height() / ratio;
-            height = boundingBox->height();
+            width = getDimensionHeight(boundingBox) / ratio;
+            height = getDimensionHeight(boundingBox);
         }
     }
     
