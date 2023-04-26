@@ -1,5 +1,7 @@
 #include "libsbml_ne_polygon_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyPolygonGraphicsItem::MyPolygonGraphicsItem(QGraphicsItem* parent) : QGraphicsPolygonItem(parent) {
     
 }
@@ -16,11 +18,12 @@ void MyPolygonGraphicsItem::updateFeatures(RenderGroup* group, Polygon* polygon,
 
 const QPolygonF MyPolygonGraphicsItem::getPolygon(Polygon* polygon, BoundingBox* boundingBox) {
     QPolygonF polygonShape;
-    for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
-        qreal x = boundingBox->x() + polygon->getElement(i)->getX().getAbsoluteValue() + 0.01 * polygon->getElement(i)->getX().getRelativeValue() * boundingBox->width();
-        qreal y = boundingBox->y() + polygon->getElement(i)->getY().getAbsoluteValue() + 0.01 * polygon->getElement(i)->getY().getRelativeValue() * boundingBox->height();
+    for (unsigned int i = 0; i < getPolygonShapeNumElements(polygon); i++) {
+        qreal x = getPositionX(boundingBox) + getPolygonShapeElementX(polygon, i).getAbsoluteValue() + 0.01 * getPolygonShapeElementX(polygon, i).getRelativeValue() * getDimensionWidth(boundingBox);
+        qreal y = getPositionY(boundingBox) + getPolygonShapeElementY(polygon, i).getAbsoluteValue() + 0.01 * getPolygonShapeElementY(polygon, i).getRelativeValue() * getDimensionHeight(boundingBox);
         polygonShape << QPointF(x, y);
     }
     
+    return polygonShape;
     return polygonShape;
 }
