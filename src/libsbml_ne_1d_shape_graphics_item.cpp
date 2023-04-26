@@ -1,5 +1,7 @@
 #include "libsbml_ne_1d_shape_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 My1DShapeGraphicsItem::My1DShapeGraphicsItem() {
     
 }
@@ -9,21 +11,21 @@ const QPen My1DShapeGraphicsItem::getPen(RenderGroup* group) {
 }
 
 const QPen My1DShapeGraphicsItem::getPen(GraphicalPrimitive1D* graphicalPrimitive1D, QPen pen) {
-    if (graphicalPrimitive1D->isSetStrokeWidth())
-        pen.setWidth(graphicalPrimitive1D->getStrokeWidth());
+    if (isSetStrokeWidth(graphicalPrimitive1D))
+        pen.setWidth(getStrokeWidth(graphicalPrimitive1D));
     
-    if (graphicalPrimitive1D->isSetStroke()) {
-        ColorDefinition* color = emit askForColorDefinition(graphicalPrimitive1D->getStroke().c_str());
+    if (isSetStrokeColor(graphicalPrimitive1D)) {
+        ColorDefinition* color = emit askForColorDefinition(getStrokeColor(graphicalPrimitive1D).c_str());
         if (color)
             pen.setColor(QColor(color->getValue().c_str()));
         else
-            pen.setColor(QColor(graphicalPrimitive1D->getStroke().c_str()));
+            pen.setColor(QColor(getStrokeColor(graphicalPrimitive1D).c_str()));
     }
     
-    if (graphicalPrimitive1D->isSetDashArray()) {
+    if (isSetStrokeDashArray(graphicalPrimitive1D)) {
         QVector<qreal> dashes;
-        for (unsigned int i = 0; i < graphicalPrimitive1D->getDashArray().size(); i++)
-            dashes.push_back(qreal(graphicalPrimitive1D->getDashByIndex(i)));
+        for (unsigned int i = 0; i < getNumStrokeDashes(graphicalPrimitive1D); i++)
+            dashes.push_back(qreal(getDash(graphicalPrimitive1D, i)));
         pen.setDashPattern(dashes);
     }
     
