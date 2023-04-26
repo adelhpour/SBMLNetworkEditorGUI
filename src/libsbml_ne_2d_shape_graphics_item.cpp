@@ -1,5 +1,7 @@
 #include "libsbml_ne_2d_shape_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 My2DShapeGraphicsItem::My2DShapeGraphicsItem() {
     
 }
@@ -9,15 +11,15 @@ const QBrush My2DShapeGraphicsItem::getBrush(RenderGroup* group, BoundingBox* bo
 }
 
 const QBrush My2DShapeGraphicsItem::getBrush(GraphicalPrimitive2D* graphicalPrimitive2D, BoundingBox* boundingBox, QBrush brush) {
-    if (graphicalPrimitive2D->isSetFill()) {
-        ColorDefinition* color = emit askForColorDefinition(graphicalPrimitive2D->getFill().c_str());
-        GradientBase* gradient = emit askForGradientDefinition(graphicalPrimitive2D->getFill().c_str());
+    if (isSetFillColor(graphicalPrimitive2D)) {
+        ColorDefinition* color = emit askForColorDefinition(getFillColor(graphicalPrimitive2D).c_str());
+        GradientBase* gradient = emit askForGradientDefinition(getFillColor(graphicalPrimitive2D).c_str());
         if (color)
             brush.setColor(QColor(color->getValue().c_str()));
         else if (gradient)
             brush = QBrush(getGradient(gradient, boundingBox));
         else
-            brush.setColor(QColor(graphicalPrimitive2D->getFill().c_str()));
+            brush.setColor(QColor(getFillColor(graphicalPrimitive2D).c_str()));
     }
     
     return brush;
@@ -25,9 +27,9 @@ const QBrush My2DShapeGraphicsItem::getBrush(GraphicalPrimitive2D* graphicalPrim
 
 QGradient My2DShapeGraphicsItem::getGradient(GradientBase* gradientBase, BoundingBox* boundingBox) {
     QGradient gradient;
-    if (gradientBase->isLinearGradient())
+    if (isLinearGradient(gradientBase))
         gradient = *createLinearGradient((LinearGradient*)gradientBase, boundingBox);
-    else if (gradientBase->isRadialGradient())
+    else if (isRadialGradient(gradientBase))
         gradient = *createRadialGradient((RadialGradient*)gradientBase, boundingBox);
     
     return gradient;
@@ -38,17 +40,17 @@ QGradient* My2DShapeGraphicsItem::createLinearGradient(LinearGradient* linearGra
     setGradientFeatures(gradient, linearGradinet);
     // start point
     QPointF startPoint(0.0, 0.0);
-    if (linearGradinet->isSetX1())
-        startPoint.setX(linearGradinet->getX1().getAbsoluteValue() + 0.01 * linearGradinet->getX1().getRelativeValue() * boundingBox->width());
-    if (linearGradinet->isSetY1())
-        startPoint.setY(linearGradinet->getY1().getAbsoluteValue() + 0.01 * linearGradinet->getY1().getRelativeValue() * boundingBox->height());
+    if (isSetLinearGradientX1(linearGradinet))
+        startPoint.setX(getLinearGradientX1(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientX1(linearGradinet).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetLinearGradientY1(linearGradinet))
+        startPoint.setY(getLinearGradientY1(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientY1(linearGradinet).getRelativeValue() * getDimensionHeight(boundingBox));
     ((QLinearGradient*)gradient)->setStart(startPoint);
     // final stop point
     QPointF finalStopPoint = startPoint;
-    if (linearGradinet->isSetX2())
-        finalStopPoint.setX(linearGradinet->getX2().getAbsoluteValue() + 0.01 * linearGradinet->getX2().getRelativeValue() * boundingBox->width());
-    if (linearGradinet->isSetY2())
-        finalStopPoint.setY(linearGradinet->getY2().getAbsoluteValue() + 0.01 * linearGradinet->getY2().getRelativeValue() * boundingBox->height());
+    if (isSetLinearGradientX2(linearGradinet))
+        finalStopPoint.setX(getLinearGradientX2(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientX2(linearGradinet).getRelativeValue() * boundingBox->width());
+    if (isSetLinearGradientY2(linearGradinet))
+        finalStopPoint.setY(getLinearGradientY2(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientY2(linearGradinet).getRelativeValue() * boundingBox->height());
     ((QLinearGradient*)gradient)->setFinalStop(finalStopPoint);
     return gradient;
 }
@@ -58,22 +60,22 @@ QGradient* My2DShapeGraphicsItem::createRadialGradient(RadialGradient* radialGra
     setGradientFeatures(gradient, radialGradient);
     // center
     QPointF centerPoint(0.0, 0.0);
-    if (radialGradient->isSetCx())
-        centerPoint.setX(radialGradient->getCx().getAbsoluteValue() + 0.01 * radialGradient->getCx().getRelativeValue() * boundingBox->width());
-    if (radialGradient->isSetCy())
-        centerPoint.setY(radialGradient->getCy().getAbsoluteValue() + 0.01 * radialGradient->getCy().getRelativeValue() * boundingBox->height());
+    if (isSetRadialGradientCx(radialGradient))
+        centerPoint.setX(getRadialGradientCx(radialGradient).getAbsoluteValue() + 0.01 * getRadialGradientCx(radialGradient).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetRadialGradientCy(radialGradient))
+        centerPoint.setY(getRadialGradientCy(radialGradient).getAbsoluteValue() + 0.01 * getRadialGradientCy(radialGradient).getRelativeValue() * getDimensionHeight(boundingBox));
     ((QRadialGradient*)gradient)->setCenter(centerPoint);
     // focal point
     QPointF focalPoint = centerPoint;
-    if (radialGradient->isSetFx())
-        focalPoint.setX(radialGradient->getFx().getAbsoluteValue() + 0.01 * radialGradient->getFx().getRelativeValue() * boundingBox->width());
-    if (radialGradient->isSetFy())
-        focalPoint.setY(radialGradient->getFy().getAbsoluteValue() + 0.01 * radialGradient->getFy().getRelativeValue() * boundingBox->height());
+    if (isSetRadialGradientFx(radialGradient))
+        focalPoint.setX(getRadialGradientFx(radialGradient).getAbsoluteValue() + 0.01 * getRadialGradientFx(radialGradient).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetRadialGradientFy(radialGradient))
+        focalPoint.setY(getRadialGradientFy(radialGradient).getAbsoluteValue() + 0.01 * getRadialGradientFy(radialGradient).getRelativeValue() * getDimensionHeight(boundingBox));
     ((QRadialGradient*)gradient)->setFocalPoint(focalPoint);
     // radius
     qreal radius = 0.0;
-    if (radialGradient->isSetR())
-        radius = radialGradient->getR().getAbsoluteValue() + 0.01 * radialGradient->getR().getRelativeValue() * 0.5 * (boundingBox->width() + boundingBox->height());
+    if (isSetRadialGradientR(radialGradient))
+        radius = getRadialGradientR(radialGradient).getAbsoluteValue() + 0.01 * getRadialGradientR(radialGradient).getRelativeValue() * 0.5 * (getDimensionWidth(boundingBox) + getDimensionHeight(boundingBox));
     ((QRadialGradient*)gradient)->setFocalRadius(radius);
         
     return gradient;
