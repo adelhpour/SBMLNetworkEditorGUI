@@ -1,5 +1,7 @@
 #include "libsbml_ne_ellipse_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyEllipseGraphicsItem::MyEllipseGraphicsItem(QGraphicsItem* parent) : QGraphicsEllipseItem(parent) {
     
 }
@@ -15,27 +17,27 @@ void MyEllipseGraphicsItem::updateFeatures(RenderGroup* group, Ellipse* ellipse,
 }
 
 const QRectF MyEllipseGraphicsItem::getRect(Ellipse* ellipse, BoundingBox* boundingBox) {
-    qreal cx = boundingBox->x();
-    if (ellipse->isSetCX())
-        cx += ellipse->getCX().getAbsoluteValue() + 0.01 * ellipse->getCX().getRelativeValue() * boundingBox->width();
-    qreal cy = boundingBox->y();
-    if (ellipse->isSetCY())
-        cy += ellipse->getCY().getAbsoluteValue() + 0.01 * ellipse->getCY().getRelativeValue() * boundingBox->height();
-    qreal rx = 0.5 * boundingBox->width();
-    if (ellipse->isSetRX())
-        rx = ellipse->getRX().getAbsoluteValue() + 0.01 * ellipse->getRX().getRelativeValue() * boundingBox->width();
-    qreal ry = 0.5 * boundingBox->height();
-    if (ellipse->isSetRY())
-        ry = ellipse->getRY().getAbsoluteValue() + 0.01 * ellipse->getRY().getRelativeValue() * boundingBox->height();
-    if (ellipse->isSetRatio()) {
-        qreal ratio = ellipse->getRatio();
-        if ((boundingBox->width() / boundingBox->height()) <= ratio) {
-            rx = 0.5 * boundingBox->width();
-            ry = 0.5 * boundingBox->width() / ratio;
+    qreal cx = getPositionX(boundingBox);
+    if (isSetEllipseShapeCX(ellipse))
+        cx += getEllipseShapeCX(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeCX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
+    qreal cy = getPositionY(boundingBox);
+    if (isSetEllipseShapeCY(ellipse))
+        cy += getEllipseShapeCY(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeCY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
+    qreal rx = 0.5 * getDimensionWidth(boundingBox);
+    if (isSetEllipseShapeRX(ellipse))
+        rx = getEllipseShapeRX(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeRX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
+    qreal ry = 0.5 * getDimensionHeight(boundingBox);
+    if (isSetEllipseShapeRY(ellipse))
+        ry = getEllipseShapeRY(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeRY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetEllipseShapeRatio(ellipse)) {
+        qreal ratio = getEllipseShapeRatio(ellipse);
+        if ((getDimensionWidth(boundingBox) / getDimensionHeight(boundingBox)) <= ratio) {
+            rx = 0.5 * getDimensionWidth(boundingBox);
+            ry = 0.5 * getDimensionWidth(boundingBox) / ratio;
         }
         else {
-            rx = 0.5 * boundingBox->height() / ratio;
-            ry = 0.5 * boundingBox->height();
+            rx = 0.5 * getDimensionHeight(boundingBox) / ratio;
+            ry = 0.5 * getDimensionHeight(boundingBox);
         }
     }
     
