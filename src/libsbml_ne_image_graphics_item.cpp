@@ -1,5 +1,7 @@
 #include "libsbml_ne_image_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyImageGraphicsItem::MyImageGraphicsItem(QGraphicsItem* parent) : QGraphicsPixmapItem(parent) {
 
 }
@@ -12,10 +14,10 @@ void MyImageGraphicsItem::updateFeatures(Image* image, BoundingBox* boundingBox,
 const QPixmap MyImageGraphicsItem::getImage(Image* image, BoundingBox* boundingBox) {
     QPixmap pixmapImage(image->getHref().c_str());
     if (!pixmapImage.isNull())
-        pixmapImage = pixmapImage.scaled(image->getWidth().getAbsoluteValue() + 0.01 *  image->getWidth().getRelativeValue() * boundingBox->width(), image->getHeight().getAbsoluteValue() + 0.01 *  image->getHeight().getRelativeValue() * boundingBox->height());
+        pixmapImage = pixmapImage.scaled(getImageShapeWidth(image).getAbsoluteValue() + 0.01 *  getImageShapeWidth(image).getRelativeValue() * getDimensionWidth(boundingBox), getImageShapeHeight(image).getAbsoluteValue() + 0.01 * getImageShapeHeight(image).getRelativeValue() * getDimensionHeight(boundingBox));
     return pixmapImage;
 }
 
 const QPointF MyImageGraphicsItem::getPosition(Image* image, BoundingBox* boundingBox) {
-    return QPointF(boundingBox->x() + image->getX().getAbsoluteValue() + 0.01 *  image->getX().getRelativeValue() * boundingBox->width(), boundingBox->y() + image->getY().getAbsoluteValue() + 0.01 *  image->getY().getRelativeValue() * boundingBox->height());
+    return QPointF(getPositionX(boundingBox) + getImageShapeX(image).getAbsoluteValue() + 0.01 * getImageShapeX(image).getRelativeValue() * getDimensionWidth(boundingBox), getPositionY(boundingBox) + getImageShapeY(image).getAbsoluteValue() + 0.01 *  getImageShapeY(image).getRelativeValue() * getDimensionHeight(boundingBox));
 }
