@@ -3,13 +3,15 @@
 #include <QTextDocument>
 #include <QFontMetrics>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyTextGraphicsItem::MyTextGraphicsItem(QGraphicsItem* parent) : QGraphicsTextItem(parent) {
     
 }
 
 void MyTextGraphicsItem::updateFeatures(RenderGroup* group, BoundingBox* boundingBox, const QString& plainText) {
     setPlainText(getElidedPlainText(group, boundingBox, plainText));
-    setTextWidth(boundingBox->width());
+    setTextWidth(getDimensionWidth(boundingBox));
     setPos(getPos(group, boundingBox));
     setDefaultTextColor(getDefaultTextColor(group));
     setFont(getFont(group, boundingBox));
@@ -20,7 +22,7 @@ void MyTextGraphicsItem::updateFeatures(RenderGroup* group, BoundingBox* boundin
 
 void MyTextGraphicsItem::updateFeatures(RenderGroup* group, Text* text, BoundingBox* boundingBox, const QString& plainText) {
     setPlainText(getElidedPlainText(text, boundingBox, plainText));
-    setTextWidth(boundingBox->width());
+    setTextWidth(getDimensionWidth(boundingBox));
     setPos(getPos(text, boundingBox));
     setDefaultTextColor(getDefaultTextColor(group));
     setDefaultTextColor(getDefaultTextColor(text, defaultTextColor()));
@@ -33,25 +35,25 @@ void MyTextGraphicsItem::updateFeatures(RenderGroup* group, Text* text, Bounding
 
 const QString MyTextGraphicsItem::getElidedPlainText(RenderGroup* group, BoundingBox* boundingBox, const QString& plainText) {
     QFontMetrics fontMetrics(getFont(group, boundingBox));
-    return fontMetrics.elidedText(plainText, Qt::ElideRight, 0.9 * boundingBox->width());
+    return fontMetrics.elidedText(plainText, Qt::ElideRight, 0.9 * getDimensionWidth(boundingBox));
 }
 
 const QString MyTextGraphicsItem::getElidedPlainText(Text* text, BoundingBox* boundingBox, const QString& plainText) {
     QFontMetrics fontMetrics(getFont(text, boundingBox, font()));
-    return fontMetrics.elidedText(plainText, Qt::ElideRight, boundingBox->width());
+    return fontMetrics.elidedText(plainText, Qt::ElideRight, getDimensionWidth(boundingBox));
 }
 
 const QPointF MyTextGraphicsItem::getPos(RenderGroup* group, BoundingBox* boundingBox) {
-    return QPointF(boundingBox->x(), boundingBox->y() + getTextVerticalPadding(group, boundingBox));
+    return QPointF(getPositionX(boundingBox), getPositionY(boundingBox) + getTextVerticalPadding(group, boundingBox));
 }
 
 const QPointF MyTextGraphicsItem::getPos(Text* text, BoundingBox* boundingBox) {
-    qreal x = boundingBox->x();
-    qreal y = boundingBox->y();
-    if (text->isSetX())
-        x += text->getX().getAbsoluteValue() + 0.01 * text->getX().getRelativeValue() * boundingBox->width();
-    if (text->isSetY())
-        y += text->getY().getAbsoluteValue() + 0.01 * text->getY().getRelativeValue() * boundingBox->height();
+    qreal x = getPositionX(boundingBox);
+    qreal y = getPositionY(boundingBox);
+    if (isSetTextShapeX(text))
+        x += getTextShapeX(text).getAbsoluteValue() + 0.01 * getTextShapeX(text).getRelativeValue() * getDimensionWidth(boundingBox);
+    if (isSetTextShapeY(text))
+        y += getTextShapeY(text).getAbsoluteValue() + 0.01 * getTextShapeY(text).getRelativeValue() * getDimensionHeight(boundingBox);
     
     return QPointF(x, y + getTextVerticalPadding(text, boundingBox));
 }
@@ -61,12 +63,12 @@ const QColor MyTextGraphicsItem::getDefaultTextColor(RenderGroup* group) {
 }
 
 const QColor MyTextGraphicsItem::getDefaultTextColor(GraphicalPrimitive1D* graphicalPrimitive1D, QColor textColor) {
-    if (graphicalPrimitive1D->isSetStroke()) {
-        ColorDefinition* color = emit askForColorDefinition(graphicalPrimitive1D->getStroke().c_str());
+    if (isSetStrokeColor(graphicalPrimitive1D)) {
+        ColorDefinition* color = emit askForColorDefinition(getStrokeColor(graphicalPrimitive1D).c_str());
         if (color)
             textColor = QColor(color->getValue().c_str());
         else
-            textColor = QColor(graphicalPrimitive1D->getStroke().c_str());
+            textColor = QColor(getStrokeColor(graphicalPrimitive1D).c_str());
     }
 
     return textColor;
@@ -74,16 +76,16 @@ const QColor MyTextGraphicsItem::getDefaultTextColor(GraphicalPrimitive1D* graph
 
 const QFont MyTextGraphicsItem::getFont(RenderGroup* group, BoundingBox* boundingBox) {
     QFont font;
-    if (group->isSetFontFamily())
-        font.setFamily(group->getFontFamily().c_str());
-    if (group->isSetFontSize())
-        font.setPointSize(group->getFontSize().getAbsoluteValue() + 0.01 * group->getFontSize().getRelativeValue() * boundingBox->width());
-    if (group->isSetFontWeight()) {
-        if (group->getFontWeightAsString () == "bold")
+    if (isSetFontFamily(group))
+        font.setFamily(getFontFamily(group).c_str());
+    if (isSetFontSize(group))
+        font.setPointSize(getFontSize(group).getAbsoluteValue() + 0.01 * getFontSize(group).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetFontWeight(group)) {
+        if (getFontWeight (group) == "bold")
             font.setBold(true);;
     }
-    if (group->isSetFontStyle()) {
-        if (group->getFontStyleAsString() == "italic")
+    if (isSetFontStyle(group)) {
+        if (getFontStyle(group) == "italic")
             font.setItalic(true);
     }
 
@@ -91,16 +93,16 @@ const QFont MyTextGraphicsItem::getFont(RenderGroup* group, BoundingBox* boundin
 }
                         
 const QFont MyTextGraphicsItem::getFont(Text* text, BoundingBox* boundingBox, QFont font) {
-    if (text->isSetFontFamily())
-        font.setFamily(text->getFontFamily().c_str());
-    if (text->isSetFontSize())
-        font.setPointSize(text->getFontSize().getAbsoluteValue() + 0.01 * text->getFontSize().getRelativeValue() * boundingBox->width());
-    if (text->isSetFontWeight()) {
-        if (text->getFontWeightAsString () == "bold")
+    if (isSetFontFamily(text))
+        font.setFamily(getFontFamily(text).c_str());
+    if (isSetFontSize(text))
+        font.setPointSize(getFontSize(text).getAbsoluteValue() + 0.01 * getFontSize(text).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetFontWeight(text)) {
+        if (getFontWeight(text) == "bold")
             font.setBold(true);;
     }
-    if (text->isSetFontStyle()) {
-        if (text->getFontStyleAsString() == "italic")
+    if (isSetFontStyle(text)) {
+        if (getFontStyle(text) == "italic")
             font.setItalic(true);
     }
 
@@ -108,12 +110,12 @@ const QFont MyTextGraphicsItem::getFont(Text* text, BoundingBox* boundingBox, QF
 }
 
 const Qt::Alignment MyTextGraphicsItem::getTextHorizontalAlignment(RenderGroup* group) {
-    if (group->isSetTextAnchor()) {
-        if (group->getTextAnchorAsString() == "start")
+    if (isSetTextAnchor(group)) {
+        if (getTextAnchor(group) == "start")
             return Qt::AlignLeft;
-        else if (group->getTextAnchorAsString() == "middle")
+        else if (getTextAnchor(group) == "middle")
             return Qt::AlignHCenter;
-        else if (group->getTextAnchorAsString() == "end")
+        else if (getTextAnchor(group) == "end")
             return Qt::AlignRight;
     }
 
@@ -121,12 +123,12 @@ const Qt::Alignment MyTextGraphicsItem::getTextHorizontalAlignment(RenderGroup* 
 }
 
 const Qt::Alignment MyTextGraphicsItem::getTextHorizontalAlignment(Text* text) {
-    if (text->isSetTextAnchor()) {
-        if (text->getTextAnchorAsString() == "start")
+    if (isSetTextAnchor(text)) {
+        if (getTextAnchor(text) == "start")
             return Qt::AlignLeft;
-        else if (text->getTextAnchorAsString() == "middle")
+        else if (getTextAnchor(text) == "middle")
             return Qt::AlignHCenter;
-        else if (text->getTextAnchorAsString() == "end")
+        else if (getTextAnchor(text) == "end")
             return Qt::AlignRight;
     }
 
@@ -134,14 +136,14 @@ const Qt::Alignment MyTextGraphicsItem::getTextHorizontalAlignment(Text* text) {
 }
 
 const Qt::Alignment MyTextGraphicsItem::getTextVerticalAlignment(RenderGroup* group) {
-    if (group->isSetVTextAnchor()) {
-        if (group->getVTextAnchorAsString() == "top")
+    if (isSetVTextAnchor(group)) {
+        if (getVTextAnchor(group) == "top")
             return Qt::AlignTop;
-        else if (group->getVTextAnchorAsString() == "middle")
+        else if (getVTextAnchor(group) == "middle")
             return Qt::AlignVCenter;
-        else if (group->getVTextAnchorAsString() == "bottom")
+        else if (getVTextAnchor(group) == "bottom")
             return Qt::AlignBottom;
-        else if (group->getVTextAnchorAsString() == "baseline")
+        else if (getVTextAnchor(group) == "baseline")
             return Qt::AlignBaseline;
     }
 
@@ -150,13 +152,13 @@ const Qt::Alignment MyTextGraphicsItem::getTextVerticalAlignment(RenderGroup* gr
 
 const Qt::Alignment MyTextGraphicsItem::getTextVerticalAlignment(Text* text) {
     if (text->isSetVTextAnchor()) {
-        if (text->getVTextAnchorAsString() == "top")
+        if (getVTextAnchor(text) == "top")
             return Qt::AlignTop;
-        else if (text->getVTextAnchorAsString() == "middle")
+        else if (getVTextAnchor(text) == "middle")
             return Qt::AlignVCenter;
-        else if (text->getVTextAnchorAsString() == "bottom")
+        else if (getVTextAnchor(text) == "bottom")
             return Qt::AlignBottom;
-        else if (text->getVTextAnchorAsString() == "baseline")
+        else if (getVTextAnchor(text) == "baseline")
             return Qt::AlignBaseline;
     }
 
@@ -165,13 +167,13 @@ const Qt::Alignment MyTextGraphicsItem::getTextVerticalAlignment(Text* text) {
 
 const qreal MyTextGraphicsItem::getTextVerticalPadding(RenderGroup* group, BoundingBox* boundingBox) {
     QFontMetrics fontMetrics(getFont(group, boundingBox));
-    if (boundingBox->height() > fontMetrics.height()) {
+    if (getDimensionHeight(boundingBox) > fontMetrics.height()) {
         if (getTextVerticalAlignment(group) == Qt::AlignVCenter)
-            return 0.5 * boundingBox->height() - 0.75 * fontMetrics.height();
+            return 0.5 * getDimensionHeight(boundingBox) - 0.75 * fontMetrics.height();
         else if (getTextVerticalAlignment(group) == Qt::AlignBaseline)
-            return 0.5 * boundingBox->height() - 0.5 * fontMetrics.height();
+            return 0.5 * getDimensionHeight(boundingBox) - 0.5 * fontMetrics.height();
         else if (getTextVerticalAlignment(group) == Qt::AlignBottom)
-            return boundingBox->height() - 1.5 * fontMetrics.height();
+            return getDimensionHeight(boundingBox) - 1.5 * fontMetrics.height();
     }
     
     return 0.000;
@@ -179,13 +181,13 @@ const qreal MyTextGraphicsItem::getTextVerticalPadding(RenderGroup* group, Bound
 
 const qreal MyTextGraphicsItem::getTextVerticalPadding(Text* text, BoundingBox* boundingBox) {
     QFontMetrics fontMetrics(getFont(text, boundingBox, font()));
-    if (boundingBox->height() > fontMetrics.height()) {
+    if (getDimensionHeight(boundingBox) > fontMetrics.height()) {
         if (getTextVerticalAlignment(text) == Qt::AlignVCenter)
-            return 0.5 * boundingBox->height() - 0.75 * fontMetrics.height();
+            return 0.5 * getDimensionHeight(boundingBox) - 0.75 * fontMetrics.height();
         else if (getTextVerticalAlignment(text) == Qt::AlignBaseline)
-            return 0.5 * boundingBox->height() - 0.5 * fontMetrics.height();
+            return 0.5 * getDimensionHeight(boundingBox) - 0.5 * fontMetrics.height();
         else if (getTextVerticalAlignment(text) == Qt::AlignBottom)
-            return boundingBox->height() - 1.5 * fontMetrics.height();
+            return getDimensionHeight(boundingBox) - 1.5 * fontMetrics.height();
     }
     
     return 0.000;
