@@ -3,6 +3,8 @@
 #include "libsbml_ne_feature_menu.h"
 #include <QGridLayout>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyNetworkElementBase::MyNetworkElementBase(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) {
     _graphicalObject = graphicalObject;
     _style = style;
@@ -21,7 +23,7 @@ const QRectF MyNetworkElementBase::getExtents() {
 }
 
 const QString MyNetworkElementBase::getGlyphId() {
-    return QString(_graphicalObject->getId().c_str());
+    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getId(_graphicalObject).c_str());
 }
 
 bool MyNetworkElementBase::hasAssociatedModelEntity() {
