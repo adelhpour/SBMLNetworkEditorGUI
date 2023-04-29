@@ -4,55 +4,53 @@
 #include <QtMath>
 #include <QGridLayout>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MySpeciesReference::MySpeciesReference(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
+
 }
 
 void MySpeciesReference::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
-    ((MyElementGraphicsItem*)_graphicsItem)->addCurveGraphicsItem(_style->getGroup(), ((SpeciesReferenceGlyph*)_graphicalObject)->getCurve());
+    ((MyElementGraphicsItem*)_graphicsItem)->addCurveGraphicsItem(getRenderGroup(_style), getCurve(_graphicalObject));
     updateLineEndingsGraphicsItem();
 }
 
 void MySpeciesReference::updateLineEndingsGraphicsItem() {
-    if (_style->getGroup()->isSetStartHead())
+    if (isSetStartHead(getRenderGroup(_style)))
         addLineEndingGraphicsItem(getStartHeadId(), getStartPoint(), getStartSlope());
-    if (_style->getGroup()->isSetEndHead())
+    if (isSetEndHead(getRenderGroup(_style)))
         addLineEndingGraphicsItem(getEndHeadId(), getEndPoint(), getEndSlope());
 }
 
 void MySpeciesReference::addLineEndingGraphicsItem(const QString& lineEndingId, const QPointF& position, const qreal rotation) {
     LineEnding* lineEnding = emit askForLineEnding(lineEndingId);
     if (lineEnding)
-        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(lineEnding->getGroup(), lineEnding->getBoundingBox(), position, getAdjustedRotation(lineEnding, rotation));
+        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(getRenderGroup(lineEnding), getBoundingBox(lineEnding), position, getAdjustedRotation(lineEnding, rotation));
 }
 
 const QPointF MySpeciesReference::getStartPoint() {
-    Curve* curve = ((SpeciesReferenceGlyph*)_graphicalObject)->getCurve();
-    if (curve->getNumCurveSegments()) {
-        return QPointF(curve->getCurveSegment(0)->getStart()->x(), curve->getCurveSegment(0)->getStart()->y());
+    if (getNumCurveSegments(_graphicalObject)) {
+        return QPointF(getCurveSegmentStartPointX(_graphicalObject, 0), getCurveSegmentStartPointY(_graphicalObject, 0));
     }
     
     return QPointF(0.0, 0.0);
 }
 
 const QPointF MySpeciesReference::getEndPoint() {
-    Curve* curve = ((SpeciesReferenceGlyph*)_graphicalObject)->getCurve();
-    if (curve->getNumCurveSegments()) {
-        return QPointF(curve->getCurveSegment(curve->getNumCurveSegments() - 1)->getEnd()->x(), curve->getCurveSegment(curve->getNumCurveSegments() - 1)->getEnd()->y());
+    if (getNumCurveSegments(_graphicalObject)) {
+        return QPointF(getCurveSegmentEndPointX(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1), getCurveSegmentEndPointY(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1));
     }
     
     return QPointF(0.0, 0.0);
 }
 
 const qreal MySpeciesReference::getStartSlope() {
-    Curve* curve = ((SpeciesReferenceGlyph*)_graphicalObject)->getCurve();
-    if (curve->getNumCurveSegments()) {
-        LineSegment* lineSegment = curve->getCurveSegment(0);
-        QPointF secondPoint = QPointF(lineSegment->getStart()->x(), lineSegment->getStart()->y());
-        QPointF firstPoint = QPointF(lineSegment->getEnd()->x(), lineSegment->getEnd()->y());
-        const CubicBezier* cubicBezier = dynamic_cast< const CubicBezier* >(lineSegment);
-        if (cubicBezier)
-            firstPoint = QPointF(cubicBezier->getBasePoint1()->x(), cubicBezier->getBasePoint1()->y());
+    if (getNumCurveSegments(_graphicalObject)) {
+        QPointF secondPoint = QPointF(getCurveSegmentStartPointX(_graphicalObject, 0), getCurveSegmentStartPointY(_graphicalObject, 0));
+        QPointF firstPoint = QPointF(getCurveSegmentEndPointX(_graphicalObject, 0), getCurveSegmentEndPointY(_graphicalObject, 0));
+        if (isCubicBezier(getCurveSegment(_graphicalObject, 0)))
+            firstPoint = QPointF(getCurveSegmentBasePoint1X(_graphicalObject, 0), getCurveSegmentBasePoint1Y(_graphicalObject, 0));
         return qRadiansToDegrees(qAtan2((secondPoint.y() - firstPoint.y()), (secondPoint.x() - firstPoint.x())));
     }
     
@@ -60,14 +58,11 @@ const qreal MySpeciesReference::getStartSlope() {
 }
 
 const qreal MySpeciesReference::getEndSlope() {
-    Curve* curve = ((SpeciesReferenceGlyph*)_graphicalObject)->getCurve();
-    if (curve->getNumCurveSegments()) {
-        LineSegment* lineSegment = curve->getCurveSegment(curve->getNumCurveSegments() - 1);
-        QPointF secondPoint = QPointF(lineSegment->getEnd()->x(), lineSegment->getEnd()->y());
-        QPointF firstPoint = QPointF(lineSegment->getStart()->x(), lineSegment->getStart()->y());
-        const CubicBezier* cubicBezier = dynamic_cast< const CubicBezier* >(lineSegment);
-        if (cubicBezier)
-            firstPoint = QPointF(cubicBezier->getBasePoint2()->x(), cubicBezier->getBasePoint2()->y());
+    if (getNumCurveSegments(_graphicalObject)) {
+        QPointF secondPoint = QPointF(getCurveSegmentEndPointX(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1), getCurveSegmentEndPointY(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1));
+        QPointF firstPoint = QPointF(getCurveSegmentStartPointX(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1), getCurveSegmentStartPointY(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1));
+        if (isCubicBezier(getCurveSegment(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1)))
+            firstPoint = QPointF(getCurveSegmentBasePoint2X(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1), getCurveSegmentBasePoint2Y(_graphicalObject, getNumCurveSegments(_graphicalObject) - 1));
         return qRadiansToDegrees(qAtan2((secondPoint.y() - firstPoint.y()), (secondPoint.x() - firstPoint.x())));
     }
     
@@ -75,7 +70,7 @@ const qreal MySpeciesReference::getEndSlope() {
 }
 
 const qreal MySpeciesReference::getAdjustedRotation(LineEnding* lineEnding, const qreal& rotation) {
-    if (lineEnding->isSetEnableRotationalMapping() && !lineEnding->getEnableRotationalMapping())
+    if (isSetEnableRotationalMapping(lineEnding) && !getEnableRotationalMapping(lineEnding))
         return 0.0;
 
     return rotation;
@@ -86,26 +81,26 @@ const QString MySpeciesReference::getType() {
 }
 
 const QString MySpeciesReference::getId() {
-    if (!((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesReferenceId().empty())
-        return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesReferenceId().c_str());
+    if (getSpeciesReferenceId((SpeciesReferenceGlyph*)_graphicalObject).empty())
+        return QString((getSpeciesReferenceId((SpeciesReferenceGlyph*)_graphicalObject).c_str()));
     else
         return "N/A";
 }
 
 const QString MySpeciesReference::getSpeciesGlyphId() {
-    return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getSpeciesGlyphId().c_str());
+    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getSpeciesGlyphId((SpeciesReferenceGlyph*)_graphicalObject).c_str());
 }
 
 const QString MySpeciesReference::getRole() {
-    return QString(((SpeciesReferenceGlyph*)_graphicalObject)->getRoleString().c_str());
+    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getRole((SpeciesReferenceGlyph*)_graphicalObject).c_str());
 }
 
 const QString MySpeciesReference::getStartHeadId() {
-    return QString(_style->getGroup()->getStartHead().c_str());
+    return QString(getStartHead(getRenderGroup(_style)).c_str());
 }
 
 const QString MySpeciesReference::getEndHeadId() {
-    return QString(_style->getGroup()->getEndHead().c_str());
+    return QString(getEndHead(getRenderGroup(_style)).c_str());
 }
 
 QWidget* MySpeciesReference::elementFeatureMenu() {

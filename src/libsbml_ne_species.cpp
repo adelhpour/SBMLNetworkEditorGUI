@@ -3,13 +3,15 @@
 #include "libsbml_ne_feature_menu.h"
 #include <QGridLayout>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MySpecies::MySpecies(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
     
 }
 
 void MySpecies::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
-    ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(_style->getGroup(), _graphicalObject->getBoundingBox());
+    ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(getRenderGroup(_style), getBoundingBox(_graphicalObject));
 }
 
 const QString MySpecies::getType() {
@@ -17,11 +19,11 @@ const QString MySpecies::getType() {
 }
 
 const QString MySpecies::getId() {
-    return QString(((SpeciesGlyph*)_graphicalObject)->getSpeciesId().c_str());
+    return QString(getSpeciesId((SpeciesGlyph*)_graphicalObject).c_str());
 }
 
 const QString MySpecies::getCompartmentId() {
-    SBase* species = askForModelEntity(((SpeciesGlyph*)_graphicalObject)->getSpeciesId().c_str());
+    SBase* species = askForModelEntity(getSpeciesId((SpeciesGlyph*)_graphicalObject).c_str());
     if (species)
         return ((Species*)species)->getCompartment().c_str();
     else
@@ -41,13 +43,13 @@ QWidget* MySpecies::elementFeatureMenu() {
     MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
     
     // bounding box
-    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject->getBoundingBox());
+    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(getBoundingBox(_graphicalObject));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
     
     // geometric shape
-    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_style->getGroup());
+    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(getRenderGroup(_style));
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");

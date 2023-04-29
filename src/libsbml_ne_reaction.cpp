@@ -11,9 +11,9 @@ MyReaction::MyReaction(GraphicalObject* graphicalObject, Style* style, const qre
 void MyReaction::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
     if (((ReactionGlyph*)_graphicalObject)->isSetCurve())
-        ((MyElementGraphicsItem*)_graphicsItem)->addCurveGraphicsItem(_style->getGroup(), ((ReactionGlyph*)_graphicalObject)->getCurve());
+        ((MyElementGraphicsItem*)_graphicsItem)->addCurveGraphicsItem(getRenderGroup(_style), getCurve(_graphicalObject));
     else
-        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(_style->getGroup(), _graphicalObject->getBoundingBox());
+        ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(getRenderGroup(_style), getBoundingBox(_graphicalObject));
 }
 
 const QString MyReaction::getType() {
@@ -21,7 +21,7 @@ const QString MyReaction::getType() {
 }
 
 const QString MyReaction::getId() {
-    return QString(((ReactionGlyph*)_graphicalObject)->getReactionId().c_str());
+    return QString(getReactionId((ReactionGlyph*)_graphicalObject).c_str());
 }
 
 const QString MyReaction::getCompartmentId() {
@@ -66,7 +66,7 @@ QWidget* MyReaction::createReactionFeaturesMenuTree() {
 
     if (isSetCurve(_graphicalObject)) {
         // stroke
-        QWidget* _strokeMenu = new MyStrokeMenu(_style->getGroup());
+        QWidget* _strokeMenu = new MyStrokeMenu(getRenderGroup(_style));
         connect(_strokeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
         connect(_strokeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
         featureMenuTree->addBranchWidget(_strokeMenu, "Stroke");
@@ -79,13 +79,13 @@ QWidget* MyReaction::createReactionFeaturesMenuTree() {
     }
     else {
         // bounding box
-        QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject->getBoundingBox());
+        QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(getBoundingBox(_graphicalObject));
         connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
         connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
         featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
 
         // geometric shape
-        QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_style->getGroup());
+        QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(getRenderGroup(_style));
         connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
         connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
         featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
@@ -150,5 +150,3 @@ void MyReactionBoundingBoxCurveSwitch::removeCurve() {
         removeCurveSegment(_graphicalObject, 0);
     emit isUpdated();
 }
-
-

@@ -3,12 +3,14 @@
 #include "libsbml_ne_feature_menu.h"
 #include <QGridLayout>
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyCompartment::MyCompartment(GraphicalObject* graphicalObject, Style* style, const qreal& graphicsItemZValue) : MyNetworkElementBase(graphicalObject, style, graphicsItemZValue) {
 }
 
 void MyCompartment::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
-    ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(_style->getGroup(), _graphicalObject->getBoundingBox());
+    ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(getRenderGroup(_style), getBoundingBox(_graphicalObject));
 }
 
 const QString MyCompartment::getType() {
@@ -16,7 +18,7 @@ const QString MyCompartment::getType() {
 }
 
 const QString MyCompartment::getId() {
-    return QString(((CompartmentGlyph*)_graphicalObject)->getCompartmentId().c_str());
+    return QString(getCompartmentId((CompartmentGlyph*)_graphicalObject).c_str());
 }
 
 QWidget* MyCompartment::elementFeatureMenu() {
@@ -27,13 +29,13 @@ QWidget* MyCompartment::elementFeatureMenu() {
     MyTreeView* featureMenuTree = new MyTreeView(elementFeatureMenu);
     
     // bounding box
-    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(_graphicalObject->getBoundingBox());
+    QWidget* _boundingBoxMenu = new MyBoundingBoxMenu(getBoundingBox(_graphicalObject));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_boundingBoxMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_boundingBoxMenu, "BoundingBox");
     
     // geometric shape
-    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(_style->getGroup());
+    QWidget* _geometricShapeMenu = new MyGeometricShapesMenu(getRenderGroup(_style));
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SIGNAL(isUpdated()));
     connect(_geometricShapeMenu, SIGNAL(isUpdated()), this, SLOT(updateGraphicsItem()));
     featureMenuTree->addBranchWidget(_geometricShapeMenu, "Geometric Shapes");
