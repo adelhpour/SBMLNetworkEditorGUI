@@ -187,26 +187,26 @@ void MyGeometricShapesMenu::setGeometricShapesMenuTree(RenderGroup* renderGroup)
 
 QWidget* MyGeometricShapesMenu::createGeometricShapesMenu(RenderGroup* renderGroup) {
     MyTreeView* geometricShapesMenuTree = new MyTreeView(this);
-    for (unsigned int i = 0; i < renderGroup->getNumElements(); i++) {
-        Transformation2D* shape = renderGroup->getElement(i);
+    for (unsigned int i = 0; i < getNumGeometricShapes(renderGroup); i++) {
+        Transformation2D* shape = getGeometricShape(renderGroup, i);
         QWidget* geometricShapeMenu = NULL;
-        if (shape->isRectangle()) {
+        if (isRectangle(shape)) {
             geometricShapeMenu = new MyRectangleShapeMenu((Rectangle*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Rectangle");
         }
-        else if (shape->isEllipse()) {
+        else if (isEllipse(shape)) {
             geometricShapeMenu = new MyEllipseShapeMenu((Ellipse*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Ellipse");
         }
-        else if (shape->isPolygon()) {
+        else if (isPolygon(shape)) {
             geometricShapeMenu = new MyPolygonShapeMenu((Polygon*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Polygon");
         }
-        else if (shape->isRenderCurve()) {
+        else if (isRenderCurve(shape)) {
             geometricShapeMenu = new MyRenderCurveShapeMenu((RenderCurve*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": RenderCurve");
         }
-        else if (shape->isImage()) {
+        else if (isImage(shape)) {
             geometricShapeMenu = new MyImageShapeMenu((Image*)shape, this);
             geometricShapesMenuTree->addBranchWidget(geometricShapeMenu, QString::number(i + 1) + ": Image");
         }
@@ -395,7 +395,7 @@ QWidget* MyRenderCurveShapeMenu::createElementsMenuTree(RenderCurve* renderCurve
         elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
         elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
-        if (renderCurve->getElement(i)->isRenderCubicBezier()) {
+        if (isRenderCubicBezier(renderCurve, i)) {
             // base point 1 x
             _vertexBasePoint1XAbsParameter = new MyRenderCurveShapeBasePoint1XAbsoluteParameter(renderCurve, i);
             _vertexBasePoint1XAbsParameter->read();
@@ -496,7 +496,7 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
     MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
     QWidget* elementMenu = NULL;
     QGridLayout* elementMenuLayout = NULL;
-    for (unsigned int i = 0; i < polygon->getNumElements(); i++) {
+    for (unsigned int i = 0; i < getPolygonShapeNumElements(polygon); i++) {
         elementMenu = new QWidget(elementsMenuTree);
         elementMenuLayout = new QGridLayout(elementMenu);
         // x
@@ -525,7 +525,7 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
         elementMenuLayout->addWidget(new MyLabel(_vertexYRelParameter->name()), elementMenuLayout->rowCount(), 0);
         elementMenuLayout->addWidget(_vertexYRelParameter->inputWidget(), elementMenuLayout->rowCount() - 1, 1);
 
-        if (polygon->getElement(i)->isRenderCubicBezier()) {
+        if (isRenderCubicBezier(polygon, i)) {
             // base point 1 x
             _vertexBasePoint1XAbsParameter = new MyPolygonShapeBasePoint1XAbsoluteParameter(polygon, i);
             _vertexBasePoint1XAbsParameter->read();

@@ -29,7 +29,7 @@ QList<QAction*> MyInteractor::createMenuActions() {
     
     action = new QAction(tr("&Save"), this);
     action->setShortcuts(QKeySequence::Save);
-    action->setStatusTip(tr("Save the file with the enetered file name"));
+    action->setStatusTip(tr("Save the file with the entered file name"));
     action->setEnabled(false);
     connect(action, &QAction::triggered, this, &MyInteractor::saveToFile);
     actions.push_back(action);
@@ -181,11 +181,10 @@ void MyInteractor::setDocumentModified(const bool& isModified) {
 
 Layout* MyInteractor::layout() {
     Layout* layout = NULL;
-    ListOfLayouts* listOfLayouts = getListOfLayouts(document());
-    if (listOfLayouts && listOfLayouts->size())
-        layout = listOfLayouts->get(0);
+    if (getNumLayouts(document()))
+        layout = getLayout(document(), 0);
     else {
-        layout = createLayout(_document);
+        layout = createLayout(document());
         setDefaultLayoutFeatures(document(), layout);
         emit documentIsModified();
     }
@@ -195,12 +194,11 @@ Layout* MyInteractor::layout() {
 
 GlobalRenderInformation* MyInteractor::globalRenderInformation() {
     GlobalRenderInformation* globalRenderInformation = NULL;
-    ListOfGlobalRenderInformation* listOfGlobalRenderInformation =  getListOfGlobalRenderInformation(document());
-    if (listOfGlobalRenderInformation && listOfGlobalRenderInformation->size())
-        globalRenderInformation = listOfGlobalRenderInformation->get(0);
+    if (getNumGlobalRenderInformation(document()))
+        globalRenderInformation = getGlobalRenderInformation(document(), 0);
     else {
-        globalRenderInformation = createGlobalRender(_document);
-        setDefaultGlobalRenderFeatures(document(), globalRenderInformation);
+        globalRenderInformation = createGlobalRenderInformation(document());
+        setDefaultGlobalRenderInformationFeatures(document(), globalRenderInformation);
         emit documentIsModified();
     }
     
@@ -210,11 +208,11 @@ GlobalRenderInformation* MyInteractor::globalRenderInformation() {
 LocalRenderInformation* MyInteractor::localRenderInformation() {
     LocalRenderInformation* localRenderInformation = NULL;
     ListOfLocalRenderInformation* listOfLocalRenderInformation = getListOfLocalRenderInformation(layout());
-    if (listOfLocalRenderInformation && listOfLocalRenderInformation->size())
-        localRenderInformation = listOfLocalRenderInformation->get(0);
+    if (getNumLocalRenderInformation(layout()))
+        localRenderInformation = getLocalRenderInformation(layout(), 0);
     else {
-        localRenderInformation = createLocalRender(layout());
-        setDefaultLocalRenderFeatures(document(), layout(), localRenderInformation);
+        localRenderInformation = createLocalRenderInformation(layout());
+        setDefaultLocalRenderInformationFeatures(document(), layout(), localRenderInformation);
         emit documentIsModified();
     }
     
