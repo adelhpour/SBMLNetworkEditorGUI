@@ -7,6 +7,8 @@
 #include "libsbml_ne_image_graphics_item.h"
 #include "libsbml_ne_text_graphics_item.h"
 
+using namespace LIBSBML_NETWORKEDITOR_CPP_NAMESPACE;
+
 MyElementGraphicsItem::MyElementGraphicsItem(const qreal& zValue, QGraphicsItem* parent) : QGraphicsItemGroup(parent) {
     setHandlesChildEvents(false);
     setZValue(zValue);
@@ -20,20 +22,20 @@ void MyElementGraphicsItem::clear() {
 }
 
 void MyElementGraphicsItem::addGeometricShapes(RenderGroup* group, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
-    for (unsigned int i = 0; i < group->getNumElements(); i++)
-        addGeometricShape(group, group->getElement(i), boundingBox, position, rotation);
+    for (unsigned int i = 0; i < getNumGeometricShapes(group); i++)
+        addGeometricShape(group, getGeometricShape(group, i), boundingBox, position, rotation);
 }
 
 void MyElementGraphicsItem::addGeometricShape(RenderGroup* group, Transformation2D* geometricShape, BoundingBox* boundingBox, const QPointF& position, const qreal& rotation) {
-    if (geometricShape->isRectangle())
+    if (isRectangle(geometricShape))
         addRectangleGraphicsItem(group, (Rectangle*)geometricShape, boundingBox, position, rotation);
-    else if (geometricShape->isEllipse())
+    else if (isEllipse(geometricShape))
         addEllipseGraphicsItem(group, (Ellipse*)geometricShape, boundingBox, position, rotation);
-    else if (geometricShape->isPolygon())
+    else if (isPolygon(geometricShape))
         addPolygonGraphicsItem(group, (Polygon*)geometricShape, boundingBox, position, rotation);
-    else if (geometricShape->isRenderCurve())
+    else if (isRenderCurve(geometricShape))
         addRenderCurveGraphicsItem(group, (RenderCurve*)geometricShape, boundingBox, position, rotation);
-    else if (geometricShape->isImage())
+    else if (isImage(geometricShape))
         addImageGraphicsItem((Image*)geometricShape, boundingBox, position, rotation);
 }
 
@@ -85,9 +87,9 @@ void MyElementGraphicsItem::addCurveGraphicsItem(RenderGroup* group, Curve* curv
 void MyElementGraphicsItem::addTextGraphicsItem(RenderGroup* group, BoundingBox* boundingBox, const QString& plainText) {
     MyTextGraphicsItem* shape = new MyTextGraphicsItem(this);
     connect((My1DShapeGraphicsItem*)shape, SIGNAL(askForColorDefinition(const QString&)), this, SIGNAL(askForColorDefinition(const QString&)));
-    for (unsigned int i = 0; i < group->getNumElements(); i++) {
-        Transformation2D* geometricShape = group->getElement(i);
-        if (geometricShape->isText()) {
+    for (unsigned int i = 0; i < getNumGeometricShapes(group); i++) {
+        Transformation2D* geometricShape = getGeometricShape(group, i);
+        if (isText(geometricShape)) {
             shape->updateFeatures(group, (Text*)geometricShape, boundingBox, plainText);
             addToGroup(shape);
             return;

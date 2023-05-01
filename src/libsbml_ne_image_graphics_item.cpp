@@ -12,7 +12,7 @@ void MyImageGraphicsItem::updateFeatures(Image* image, BoundingBox* boundingBox,
 }
 
 const QPixmap MyImageGraphicsItem::getImage(Image* image, BoundingBox* boundingBox) {
-    QPixmap pixmapImage(image->getHref().c_str());
+    QPixmap pixmapImage(getImageShapeHref(image).c_str());
     if (!pixmapImage.isNull())
         pixmapImage = pixmapImage.scaled(getImageShapeWidth(image).getAbsoluteValue() + 0.01 *  getImageShapeWidth(image).getRelativeValue() * getDimensionWidth(boundingBox), getImageShapeHeight(image).getAbsoluteValue() + 0.01 * getImageShapeHeight(image).getRelativeValue() * getDimensionHeight(boundingBox));
     return pixmapImage;

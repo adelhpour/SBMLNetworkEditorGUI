@@ -1011,20 +1011,20 @@ void MyAddRemoveGeometricShapesButtons::setAddingMenu() {
 void MyAddRemoveGeometricShapesButtons::setRemovingMenu() {
     _removingMenu->clear();
     _removePushButton->setEnabled(false);
-    if (_renderGroup->getNumElements() > 1) {
+    if (getNumGeometricShapes(_renderGroup) > 1) {
         _removePushButton->setEnabled(true);
-        for (unsigned int i = 0; i < _renderGroup->getNumElements(); i++) {
-            if (_renderGroup->getElement(i)->isImage())
+        for (unsigned int i = 0; i < getNumGeometricShapes(_renderGroup); i++) {
+            if (isImage(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Image"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isRenderCurve())
+            else if (isRenderCurve(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "RenderCurve"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isText())
+            else if (isText(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Text"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isRectangle())
+            else if (isRectangle(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Rectangle"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isEllipse())
+            else if (isEllipse(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Ellipse"), &QAction::triggered, this, [this, i] () { removeShape(i); });
-            else if (_renderGroup->getElement(i)->isPolygon())
+            else if (isPolygon(getGeometricShape(_renderGroup, i)))
                 connect(_removingMenu->addAction(QString::number(i + 1) + ": " + "Polygon"), &QAction::triggered, this, [this, i] () { removeShape(i); });
         }
     }
@@ -1078,14 +1078,14 @@ MyAddRemovePolygonElementButtons::MyAddRemovePolygonElementButtons(Polygon* poly
 }
 
 const bool MyAddRemovePolygonElementButtons::hasEnoughElementsLeft() {
-    if (((Polygon*)_shape)->getNumElements() > 3)
+    if (getPolygonShapeNumElements((Polygon*)_shape) > 3)
         return true;
 
     return false;
 }
 
 unsigned int MyAddRemovePolygonElementButtons::numberOfShapeElements() {
-    return ((Polygon*)_shape)->getNumElements();
+    return getPolygonShapeNumElements((Polygon*)_shape);
 }
 
 // MyAddRemoveRenderCurveElementButtons
@@ -1100,14 +1100,14 @@ void MyAddRemoveRenderCurveElementButtons::setAddingMenu() {
 }
 
 const bool MyAddRemoveRenderCurveElementButtons::hasEnoughElementsLeft() {
-    if (((RenderCurve*)_shape)->getNumElements() > 2)
+    if (getRenderCurveShapeNumElements((RenderCurve*)_shape) > 2)
         return true;
 
     return false;
 }
 
 unsigned int MyAddRemoveRenderCurveElementButtons::numberOfShapeElements() {
-    return ((RenderCurve*)_shape)->getNumElements();
+    return getRenderCurveShapeNumElements((RenderCurve*)_shape);
 }
 
 void MyAddRemoveRenderCurveElementButtons::addRenderCubicBezier() {
