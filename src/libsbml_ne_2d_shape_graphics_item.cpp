@@ -15,7 +15,7 @@ const QBrush My2DShapeGraphicsItem::getBrush(GraphicalPrimitive2D* graphicalPrim
         ColorDefinition* color = emit askForColorDefinition(getFillColor(graphicalPrimitive2D).c_str());
         GradientBase* gradient = emit askForGradientDefinition(getFillColor(graphicalPrimitive2D).c_str());
         if (color)
-            brush.setColor(QColor(color->getValue().c_str()));
+            brush.setColor(QColor(getValue(color).c_str()));
         else if (gradient)
             brush = QBrush(getGradient(gradient, boundingBox));
         else
@@ -35,23 +35,24 @@ QGradient My2DShapeGraphicsItem::getGradient(GradientBase* gradientBase, Boundin
     return gradient;
 }
 
-QGradient* My2DShapeGraphicsItem::createLinearGradient(LinearGradient* linearGradinet, BoundingBox* boundingBox) {
+QGradient* My2DShapeGraphicsItem::createLinearGradient(LinearGradient* linearGradient, BoundingBox* boundingBox) {
     QGradient* gradient = new QLinearGradient();
-    setGradientFeatures(gradient, linearGradinet);
+    setGradientFeatures(gradient, linearGradient);
     // start point
     QPointF startPoint(0.0, 0.0);
-    if (isSetLinearGradientX1(linearGradinet))
-        startPoint.setX(getLinearGradientX1(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientX1(linearGradinet).getRelativeValue() * getDimensionWidth(boundingBox));
-    if (isSetLinearGradientY1(linearGradinet))
-        startPoint.setY(getLinearGradientY1(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientY1(linearGradinet).getRelativeValue() * getDimensionHeight(boundingBox));
+    if (isSetLinearGradientX1(linearGradient))
+        startPoint.setX(getLinearGradientX1(linearGradient).getAbsoluteValue() + 0.01 * getLinearGradientX1(linearGradient).getRelativeValue() * getDimensionWidth(boundingBox));
+    if (isSetLinearGradientY1(linearGradient))
+        startPoint.setY(getLinearGradientY1(linearGradient).getAbsoluteValue() + 0.01 * getLinearGradientY1(linearGradient).getRelativeValue() * getDimensionHeight(boundingBox));
     ((QLinearGradient*)gradient)->setStart(startPoint);
     // final stop point
     QPointF finalStopPoint = startPoint;
-    if (isSetLinearGradientX2(linearGradinet))
-        finalStopPoint.setX(getLinearGradientX2(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientX2(linearGradinet).getRelativeValue() * boundingBox->width());
-    if (isSetLinearGradientY2(linearGradinet))
-        finalStopPoint.setY(getLinearGradientY2(linearGradinet).getAbsoluteValue() + 0.01 * getLinearGradientY2(linearGradinet).getRelativeValue() * boundingBox->height());
+    if (isSetLinearGradientX2(linearGradient))
+        finalStopPoint.setX(getLinearGradientX2(linearGradient).getAbsoluteValue() + 0.01 * getLinearGradientX2(linearGradient).getRelativeValue() * boundingBox->width());
+    if (isSetLinearGradientY2(linearGradient))
+        finalStopPoint.setY(getLinearGradientY2(linearGradient).getAbsoluteValue() + 0.01 * getLinearGradientY2(linearGradient).getRelativeValue() * boundingBox->height());
     ((QLinearGradient*)gradient)->setFinalStop(finalStopPoint);
+    
     return gradient;
 }
 
@@ -83,26 +84,26 @@ QGradient* My2DShapeGraphicsItem::createRadialGradient(RadialGradient* radialGra
 
 void My2DShapeGraphicsItem::setGradientFeatures(QGradient* gradient, GradientBase* gradientBase) {
     // spread method
-    if (gradientBase->isSetSpreadMethod()) {
-        if (gradientBase->getSpreadMethod() == GRADIENT_SPREADMETHOD_PAD)
+    if (isSetSpreadMethod(gradientBase)) {
+        if (getSpreadMethod(gradientBase) == "pad")
             gradient->setSpread(QGradient::PadSpread);
-        else if (gradientBase->getSpreadMethod() == GRADIENT_SPREADMETHOD_REFLECT)
+        else if (getSpreadMethod(gradientBase) == "reflect")
             gradient->setSpread(QGradient::ReflectSpread);
-        else if (gradientBase->getSpreadMethod() == GRADIENT_SPREADMETHOD_REPEAT)
+        else if (getSpreadMethod(gradientBase) == "repeat")
             gradient->setSpread(QGradient::RepeatSpread);
     }
     // stops
     QGradientStops gradientStops;
-    for (unsigned int i = 0; i < gradientBase->getNumGradientStops(); i++) {
+    for (unsigned int i = 0; i < getNumGradientStops(gradientBase); i++) {
         QGradientStop gradientStop;
-        if (gradientBase->getGradientStop(i)->isSetOffset())
-            gradientStop.first = 0.01 * gradientBase->getGradientStop(i)->getOffset().getRelativeValue();
-        if (gradientBase->getGradientStop(i)->isSetStopColor()) {
-            ColorDefinition* color = emit askForColorDefinition(QString(gradientBase->getGradientStop(i)->getStopColor().c_str()));
+        if (isSetOffset(getGradientStop(gradientBase, i)))
+            gradientStop.first = 0.01 * getOffset(getGradientStop(gradientBase, i)).getRelativeValue();
+        if (isSetStopColor(gradientBase, i)) {
+            ColorDefinition* color = emit askForColorDefinition(QString(getStopColor(getGradientStop(gradientBase, i)).c_str()));
             if (color)
-                gradientStop.second = QColor(color->getValue().c_str());
+                gradientStop.second = QColor(getValue(color).c_str());
             else
-                gradientStop.second = QColor(gradientBase->getGradientStop(i)->getStopColor().c_str());
+                gradientStop.second = QColor(getStopColor(getGradientStop(gradientBase, i)).c_str());
         }
         gradientStops.push_back(gradientStop);
     }

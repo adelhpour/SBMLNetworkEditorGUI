@@ -17,7 +17,7 @@ const QPen My1DShapeGraphicsItem::getPen(GraphicalPrimitive1D* graphicalPrimitiv
     if (isSetStrokeColor(graphicalPrimitive1D)) {
         ColorDefinition* color = emit askForColorDefinition(getStrokeColor(graphicalPrimitive1D).c_str());
         if (color)
-            pen.setColor(QColor(color->getValue().c_str()));
+            pen.setColor(QColor(getValue(color).c_str()));
         else
             pen.setColor(QColor(getStrokeColor(graphicalPrimitive1D).c_str()));
     }
