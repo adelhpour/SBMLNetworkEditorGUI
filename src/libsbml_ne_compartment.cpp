@@ -18,7 +18,7 @@ const QString MyCompartment::getType() {
 }
 
 const QString MyCompartment::getId() {
-    return QString(getCompartmentId((CompartmentGlyph*)_graphicalObject).c_str());
+    return QString(getCompartmentId(_graphicalObject).c_str());
 }
 
 QWidget* MyCompartment::elementFeatureMenu() {

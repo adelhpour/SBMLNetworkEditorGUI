@@ -81,18 +81,18 @@ const QString MySpeciesReference::getType() {
 }
 
 const QString MySpeciesReference::getId() {
-    if (getSpeciesReferenceId((SpeciesReferenceGlyph*)_graphicalObject).empty())
-        return QString((getSpeciesReferenceId((SpeciesReferenceGlyph*)_graphicalObject).c_str()));
+    if (getSpeciesReferenceId(_graphicalObject).empty())
+        return QString((getSpeciesReferenceId(_graphicalObject).c_str()));
     else
         return "N/A";
 }
 
 const QString MySpeciesReference::getSpeciesGlyphId() {
-    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getSpeciesGlyphId((SpeciesReferenceGlyph*)_graphicalObject).c_str());
+    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getSpeciesGlyphId(_graphicalObject).c_str());
 }
 
 const QString MySpeciesReference::getRole() {
-    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getRole((SpeciesReferenceGlyph*)_graphicalObject).c_str());
+    return QString(LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getRole(_graphicalObject).c_str());
 }
 
 const QString MySpeciesReference::getStartHeadId() {

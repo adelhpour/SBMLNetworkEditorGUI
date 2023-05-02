@@ -19,11 +19,11 @@ const QString MySpecies::getType() {
 }
 
 const QString MySpecies::getId() {
-    return QString(getSpeciesId((SpeciesGlyph*)_graphicalObject).c_str());
+    return QString(getSpeciesId(_graphicalObject).c_str());
 }
 
 const QString MySpecies::getCompartmentId() {
-    SBase* species = askForModelEntity(getSpeciesId((SpeciesGlyph*)_graphicalObject).c_str());
+    SBase* species = askForModelEntity(getSpeciesId(_graphicalObject).c_str());
     if (species)
         return ((Species*)species)->getCompartment().c_str();
     else

@@ -21,11 +21,11 @@ const QString MyReaction::getType() {
 }
 
 const QString MyReaction::getId() {
-    return QString(getReactionId((ReactionGlyph*)_graphicalObject).c_str());
+    return QString(getReactionId(_graphicalObject).c_str());
 }
 
 const QString MyReaction::getCompartmentId() {
-    SBase* reaction = askForModelEntity(((ReactionGlyph*)_graphicalObject)->getReactionId().c_str());
+    SBase* reaction = askForModelEntity(getReactionId(_graphicalObject).c_str());
     if (reaction && !((Reaction*)reaction)->getCompartment().empty())
         return ((Reaction*)reaction)->getCompartment().c_str();
     else

@@ -24,15 +24,15 @@ bool MyText::hasAssociatedModelEntity() {
 void MyText::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
     QString plaintText;
-    if (isSetText((TextGlyph*)_graphicalObject))
-        plaintText = QString(getText((TextGlyph*)_graphicalObject).c_str());
-    else if (isSetOriginOfTextId((TextGlyph*)_graphicalObject)) {
-        SBase* entity = emit askForModelEntity(QString(getOriginOfTextId((TextGlyph*)_graphicalObject).c_str()));
+    if (isSetText(_graphicalObject))
+        plaintText = QString(getText(_graphicalObject).c_str());
+    else if (isSetOriginOfTextId(_graphicalObject)) {
+        SBase* entity = emit askForModelEntity(QString(getOriginOfTextId(_graphicalObject).c_str()));
         if (entity)
             plaintText = QString(entity->getId().c_str());
     }
-    else if (isSetGraphicalObjectId((TextGlyph*)_graphicalObject)) {
-        GraphicalObject* graphicalObject = emit askForGraphicalObject(QString(getGraphicalObjectId((TextGlyph*)_graphicalObject).c_str()));
+    else if (isSetGraphicalObjectId(_graphicalObject)) {
+        GraphicalObject* graphicalObject = emit askForGraphicalObject(QString(getGraphicalObjectId(_graphicalObject).c_str()));
         if (graphicalObject) {
             if (isSetName(graphicalObject))
                 plaintText = QString(getName(graphicalObject).c_str());
@@ -81,15 +81,15 @@ QWidget* MyText::elementFeatureMenu() {
 }
 
 QWidget* MyText::createPlainTextMenu() {
-    if (isSetText((TextGlyph*)_graphicalObject))
-        return new MyPlainTextMenu((TextGlyph*)_graphicalObject);
-    if (isSetGraphicalObjectId((TextGlyph*)_graphicalObject)) {
-        GraphicalObject* associatedGraphicalObject = askForGraphicalObject(QString(getGraphicalObjectId((TextGlyph*)_graphicalObject).c_str()));
+    if (isSetText(_graphicalObject))
+        return new MyPlainTextMenu(_graphicalObject);
+    if (isSetGraphicalObjectId(_graphicalObject)) {
+        GraphicalObject* associatedGraphicalObject = askForGraphicalObject(QString(getGraphicalObjectId(_graphicalObject).c_str()));
         if (associatedGraphicalObject)
             return new MyPlainTextMenu(associatedGraphicalObject);
     }
-    if (isSetOriginOfTextId((TextGlyph*)_graphicalObject)) {
-        SBase* associatedModelEntity = askForModelEntity(QString(getOriginOfTextId((TextGlyph*)_graphicalObject).c_str()));
+    if (isSetOriginOfTextId(_graphicalObject)) {
+        SBase* associatedModelEntity = askForModelEntity(QString(getOriginOfTextId(_graphicalObject).c_str()));
         if (associatedModelEntity)
             return new MyPlainTextMenu(associatedModelEntity);
     }
