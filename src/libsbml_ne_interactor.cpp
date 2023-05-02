@@ -207,7 +207,6 @@ GlobalRenderInformation* MyInteractor::globalRenderInformation() {
 
 LocalRenderInformation* MyInteractor::localRenderInformation() {
     LocalRenderInformation* localRenderInformation = NULL;
-    ListOfLocalRenderInformation* listOfLocalRenderInformation = getListOfLocalRenderInformation(layout());
     if (getNumLocalRenderInformation(layout()))
         localRenderInformation = getLocalRenderInformation(layout(), 0);
     else {
@@ -220,18 +219,18 @@ LocalRenderInformation* MyInteractor::localRenderInformation() {
 }
 
 void MyInteractor::addElementsToNetwork() {
-    for (unsigned int i = 0; i < layout()->getNumCompartmentGlyphs(); i++)
-        addComparmtent(layout()->getCompartmentGlyph(i));
-    for (unsigned int i = 0; i < layout()->getNumSpeciesGlyphs(); i++)
-        addSpecies(layout()->getSpeciesGlyph(i));
-    for (unsigned int i = 0; i < layout()->getNumReactionGlyphs(); i++) {
-        ReactionGlyph* reactionGlyph = layout()->getReactionGlyph(i);
+    for (unsigned int i = 0; i < getNumCompartmentGlyphs(layout()); i++)
+        addComparmtent(getCompartmentGlyph(layout(), i));
+    for (unsigned int i = 0; i < getNumSpeciesGlyphs(layout()); i++)
+        addSpecies(getSpeciesGlyph(layout(), i));
+    for (unsigned int i = 0; i < getNumReactionGlyphs(layout()); i++) {
+        ReactionGlyph* reactionGlyph = getReactionGlyph(layout(), i);
         addReaction(reactionGlyph);
-        for (unsigned int j = 0; j < reactionGlyph->getNumSpeciesReferenceGlyphs(); j++)
-            addSpeciesReference(reactionGlyph->getSpeciesReferenceGlyph(j));
+        for (unsigned int j = 0; j < getNumSpeciesReferenceGlyphs(reactionGlyph); j++)
+            addSpeciesReference(getSpeciesReferenceGlyph(reactionGlyph, j));
     }
-    for (unsigned int i = 0; i < layout()->getNumTextGlyphs(); i++)
-        addText(layout()->getTextGlyph(i));
+    for (unsigned int i = 0; i < getNumTextGlyphs(layout()); i++)
+        addText(getTextGlyph(layout(), i));
 }
 
 void MyInteractor::addComparmtent(GraphicalObject* graphicalObject) {
@@ -308,20 +307,20 @@ const QRectF MyInteractor::networkExtents() {
 }
 
 const QBrush MyInteractor::networkBackgroundColor() {
-    if (globalRenderInformation() && globalRenderInformation()->isSetBackgroundColor())
-        return QBrush(QColor(globalRenderInformation()->getBackgroundColor().c_str()));
+    if (isSetBackgroundColor(globalRenderInformation()))
+        return QBrush(QColor(getBackgroundColor(globalRenderInformation()).c_str()));
     
     return Qt::NoBrush;
 }
 
-SBase* MyInteractor::getModelEntity(const QString& enitityId) {
+SBase* MyInteractor::getModelEntity(const QString& entityId) {
     Model* model = document()->getModel();
-    if (document()->getModel()->getCompartment(enitityId.toStdString()))
-        return document()->getModel()->getCompartment(enitityId.toStdString());
-    else if (document()->getModel()->getSpecies(enitityId.toStdString()))
-        return document()->getModel()->getSpecies(enitityId.toStdString());
-    else if (document()->getModel()->getReaction(enitityId.toStdString()))
-        return document()->getModel()->getReaction(enitityId.toStdString());
+    if (document()->getModel()->getCompartment(entityId.toStdString()))
+        return document()->getModel()->getCompartment(entityId.toStdString());
+    else if (document()->getModel()->getSpecies(entityId.toStdString()))
+        return document()->getModel()->getSpecies(entityId.toStdString());
+    else if (document()->getModel()->getReaction(entityId.toStdString()))
+        return document()->getModel()->getReaction(entityId.toStdString());
     
     return NULL;
 }
@@ -343,7 +342,7 @@ QList<QWidget*> MyInteractor::getAssociatedTextsMenu(const QString& graphicalObj
     for (unsigned int i = 0; i < _networkElements.size(); i++) {
         if (_networkElements.at(i)->getType() == "Text") {
             text = (TextGlyph*)(_networkElements.at(i)->getGraphicalObject());
-            if (text->isSetGraphicalObjectId() && QString(text->getGraphicalObjectId().c_str()) == graphicalObjectId)
+            if (QString(getGraphicalObjectId(text).c_str()) == graphicalObjectId)
                 textMenus.push_back(_networkElements.at(i)->elementFeatureMenu());
         }
     }
@@ -353,30 +352,30 @@ QList<QWidget*> MyInteractor::getAssociatedTextsMenu(const QString& graphicalObj
 
 ColorDefinition* MyInteractor::getColorDefinition(const QString& colorId) {
     ColorDefinition* colorDefinition = NULL;
-    if (globalRenderInformation()->getColorDefinition(colorId.toStdString()))
-        colorDefinition =  globalRenderInformation()->getColorDefinition(colorId.toStdString());
-    if (localRenderInformation()->getColorDefinition(colorId.toStdString()))
-        colorDefinition = localRenderInformation()->getColorDefinition(colorId.toStdString());
+    if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getColorDefinition(globalRenderInformation(), colorId.toStdString()))
+        colorDefinition =  LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getColorDefinition(globalRenderInformation(), colorId.toStdString());
+    else if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getColorDefinition(localRenderInformation(), colorId.toStdString()))
+        colorDefinition = LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getColorDefinition(localRenderInformation(), colorId.toStdString());
     
     return colorDefinition;
 }
 
 GradientBase* MyInteractor::getGradientDefinition(const QString& gradientId) {
     GradientBase* gradientBase = NULL;
-    if (globalRenderInformation()->getGradientDefinition(gradientId.toStdString()))
-        gradientBase = globalRenderInformation()->getGradientDefinition(gradientId.toStdString());
-    if (localRenderInformation()->getGradientDefinition(gradientId.toStdString()))
-        gradientBase = localRenderInformation()->getGradientDefinition(gradientId.toStdString());
+    if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getGradientDefinition(globalRenderInformation(), gradientId.toStdString()))
+        gradientBase = LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getGradientDefinition(globalRenderInformation(), gradientId.toStdString());
+    else if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getGradientDefinition(localRenderInformation(), gradientId.toStdString()))
+        gradientBase = LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getGradientDefinition(localRenderInformation(), gradientId.toStdString());
     
     return gradientBase;
 }
 
 LineEnding* MyInteractor::getLineEnding(const QString& lineEndingId) {
     LineEnding* lineEnding = NULL;
-    if (globalRenderInformation()->getLineEnding(lineEndingId.toStdString()))
-        lineEnding = globalRenderInformation()->getLineEnding(lineEndingId.toStdString());
-    if (localRenderInformation()->getLineEnding(lineEndingId.toStdString()))
-        lineEnding = localRenderInformation()->getLineEnding(lineEndingId.toStdString());
+    if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getLineEnding(globalRenderInformation(), lineEndingId.toStdString()))
+        lineEnding = LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getLineEnding(globalRenderInformation(), lineEndingId.toStdString());
+    else if (LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getLineEnding(localRenderInformation(), lineEndingId.toStdString()))
+        lineEnding = LIBSBML_NETWORKEDITOR_CPP_NAMESPACE::getLineEnding(localRenderInformation(), lineEndingId.toStdString());
     
     return lineEnding;
 }

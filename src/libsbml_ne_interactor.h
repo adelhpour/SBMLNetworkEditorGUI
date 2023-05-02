@@ -109,7 +109,7 @@ private slots:
     
     const QBrush networkBackgroundColor();
     
-    SBase* getModelEntity(const QString& enitityId);
+    SBase* getModelEntity(const QString& entityId);
     
     GraphicalObject* getGraphicalObject(const QString& graphicalObjectId);
 
