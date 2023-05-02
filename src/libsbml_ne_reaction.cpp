@@ -10,7 +10,7 @@ MyReaction::MyReaction(GraphicalObject* graphicalObject, Style* style, const qre
 
 void MyReaction::updateGraphicsItem() {
     ((MyElementGraphicsItem*)_graphicsItem)->clear();
-    if (((ReactionGlyph*)_graphicalObject)->isSetCurve())
+    if (isSetCurve(_graphicalObject))
         ((MyElementGraphicsItem*)_graphicsItem)->addCurveGraphicsItem(getRenderGroup(_style), getCurve(_graphicalObject));
     else
         ((MyElementGraphicsItem*)_graphicsItem)->addGeometricShapes(getRenderGroup(_style), getBoundingBox(_graphicalObject));

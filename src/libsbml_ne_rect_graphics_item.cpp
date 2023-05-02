@@ -49,16 +49,16 @@ const QRectF MyRectGraphicsItem::getRect(Rectangle* rectangle, BoundingBox* boun
 
 const qreal MyRectGraphicsItem::getRX(Rectangle* rectangle, BoundingBox* boundingBox) {
     qreal rx = 0.0;
-    if (rectangle->isSetRX())
-        rx = rectangle->getRX().getAbsoluteValue() + 0.01 * rectangle->getRX().getRelativeValue() * boundingBox->width();
+    if (isSetRectangleShapeRX(rectangle))
+        rx = getRectangleShapeRX(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeRX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
     
     return rx;
 }
 
 const qreal MyRectGraphicsItem::getRY(Rectangle* rectangle, BoundingBox* boundingBox) {
     qreal ry = 0.0;
-    if (rectangle->isSetRY())
-        ry = rectangle->getRY().getAbsoluteValue() + 0.01 * rectangle->getRY().getRelativeValue() * boundingBox->height();
+    if (isSetRectangleShapeRY(rectangle))
+        ry = getRectangleShapeRY(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeRY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
     
     return ry;
 }
