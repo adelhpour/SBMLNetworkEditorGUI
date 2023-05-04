@@ -234,36 +234,36 @@ void MyInteractor::addElementsToNetwork() {
 }
 
 void MyInteractor::addComparmtent(GraphicalObject* graphicalObject) {
-    Style* style = findStyle(localRenderInformation(), graphicalObject);
+    Style* style = getStyle(localRenderInformation(), graphicalObject);
     if (!style)
-        style = findStyle(globalRenderInformation(), graphicalObject, "COMPARTMENTGLYPH");
+        style = getStyle(globalRenderInformation(), graphicalObject);
     
     if (style)
         addNetworkElement(createCompartment(graphicalObject, style));
 }
 
 void MyInteractor::addSpecies(GraphicalObject* graphicalObject) {
-    Style* style = findStyle(localRenderInformation(), graphicalObject);
+    Style* style = getStyle(localRenderInformation(), graphicalObject);
     if (!style)
-        style = findStyle(globalRenderInformation(), graphicalObject, "SPECIESGLYPH");
+        style = getStyle(globalRenderInformation(), graphicalObject);
     
     if (style)
         addNetworkElement(createSpecies(graphicalObject, style));
 }
 
 void MyInteractor::addReaction(GraphicalObject* graphicalObject) {
-    Style* style = findStyle(localRenderInformation(), graphicalObject);
+    Style* style = getStyle(localRenderInformation(), graphicalObject);
     if (!style)
-        style = findStyle(globalRenderInformation(), graphicalObject, "REACTIONGLYPH");
+        style = getStyle(globalRenderInformation(), graphicalObject);
     
     if (style)
         addNetworkElement(createReaction(graphicalObject, style));
 }
 
 void MyInteractor::addSpeciesReference(GraphicalObject* graphicalObject) {
-    Style* style = findStyle(localRenderInformation(), graphicalObject);
+    Style* style = getStyle(localRenderInformation(), graphicalObject);
     if (!style)
-        style = findStyle(globalRenderInformation(), graphicalObject, "SPECIESREFERENCEGLYPH");
+        style = getStyle(globalRenderInformation(), graphicalObject);
     
     if (style) {
         MyNetworkElementBase* element = createSpeciesReference(graphicalObject, style);
@@ -273,9 +273,9 @@ void MyInteractor::addSpeciesReference(GraphicalObject* graphicalObject) {
 }
 
 void MyInteractor::addText(GraphicalObject* graphicalObject) {
-    Style* style = findStyle(localRenderInformation(), graphicalObject);
+    Style* style = getStyle(localRenderInformation(), graphicalObject);
     if (!style)
-        style = findStyle(globalRenderInformation(), graphicalObject, "TEXTGLYPH");
+        style = getStyle(globalRenderInformation(), graphicalObject);
     
     if (style) {
         MyNetworkElementBase* element = createText(graphicalObject, style);
