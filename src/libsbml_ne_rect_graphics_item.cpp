@@ -21,19 +21,19 @@ void MyRectGraphicsItem::updateFeatures(RenderGroup* group, Rectangle* rectangle
 
 const QRectF MyRectGraphicsItem::getRect(Rectangle* rectangle, BoundingBox* boundingBox) {
     qreal x = getPositionX(boundingBox);
-    if (isSetRectangleShapeX(rectangle))
-        x += getRectangleShapeX(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
+    if (isSetGeometricShapeX(rectangle))
+        x += getGeometricShapeX(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
     qreal y = getPositionY(boundingBox);
-    if (isSetRectangleShapeY(rectangle))
-        y += getRectangleShapeY(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetGeometricShapeY(rectangle))
+        y += getGeometricShapeY(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
     qreal width = 0.0;
-    if (isSetRectangleShapeWidth(rectangle))
-        width = getRectangleShapeWidth(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeWidth(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
+    if (isSetGeometricShapeWidth(rectangle))
+        width = getGeometricShapeWidth(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeWidth(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
     qreal height = 0.0;
-    if (isSetRectangleShapeHeight(rectangle))
-        height = getRectangleShapeHeight(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeHeight(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
-    if (isSetRectangleShapeRatio(rectangle)) {
-        qreal ratio = getRectangleShapeRatio(rectangle);
+    if (isSetGeometricShapeHeight(rectangle))
+        height = getGeometricShapeHeight(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeHeight(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetGeometricShapeRatio(rectangle)) {
+        qreal ratio = getGeometricShapeRatio(rectangle);
         if ((getDimensionWidth(boundingBox) / getDimensionHeight(boundingBox)) <= ratio) {
             width = getDimensionWidth(boundingBox);
             height = getDimensionWidth(boundingBox) / ratio;
@@ -43,22 +43,22 @@ const QRectF MyRectGraphicsItem::getRect(Rectangle* rectangle, BoundingBox* boun
             height = getDimensionHeight(boundingBox);
         }
     }
-    
+
     return QRectF(x, y, width, height);
 }
 
 const qreal MyRectGraphicsItem::getRX(Rectangle* rectangle, BoundingBox* boundingBox) {
     qreal rx = 0.0;
-    if (isSetRectangleShapeRX(rectangle))
-        rx = getRectangleShapeRX(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeRX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
-    
+    if (isSetGeometricShapeCornerCurvatureRadiusX(rectangle))
+        rx = getGeometricShapeCornerCurvatureRadiusX(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeCornerCurvatureRadiusX(rectangle).getRelativeValue() * getDimensionWidth(boundingBox);
+
     return rx;
 }
 
 const qreal MyRectGraphicsItem::getRY(Rectangle* rectangle, BoundingBox* boundingBox) {
     qreal ry = 0.0;
-    if (isSetRectangleShapeRY(rectangle))
-        ry = getRectangleShapeRY(rectangle).getAbsoluteValue() + 0.01 * getRectangleShapeRY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetGeometricShapeCornerCurvatureRadiusY(rectangle))
+        ry = getGeometricShapeCornerCurvatureRadiusY(rectangle).getAbsoluteValue() + 0.01 * getGeometricShapeCornerCurvatureRadiusY(rectangle).getRelativeValue() * getDimensionHeight(boundingBox);
     
     return ry;
 }

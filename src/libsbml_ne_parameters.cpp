@@ -2090,14 +2090,14 @@ MyRectangleShapeXAbsoluteParameter::MyRectangleShapeXAbsoluteParameter(Transform
 }
 
 void MyRectangleShapeXAbsoluteParameter::read() {
-    if (isSetRectangleShapeX((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeX((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeX(_styleFeatures))
+        setDefaultValue(getGeometricShapeX(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeXAbsoluteParameter::write() {
-    RelAbsVector x = getRectangleShapeX((Rectangle*)_styleFeatures);
+    RelAbsVector x = getGeometricShapeX(_styleFeatures);
     x.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeX((Rectangle*)_styleFeatures, x);
+    setGeometricShapeX(_styleFeatures, x);
     emit isUpdated();
 }
 
@@ -2108,14 +2108,14 @@ MyRectangleShapeXRelativeParameter::MyRectangleShapeXRelativeParameter(Transform
 }
 
 void MyRectangleShapeXRelativeParameter::read() {
-    if (isSetRectangleShapeX((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeX((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeX(_styleFeatures))
+        setDefaultValue(getGeometricShapeX(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeXRelativeParameter::write() {
-    RelAbsVector x = getRectangleShapeX((Rectangle*)_styleFeatures);
+    RelAbsVector x = getGeometricShapeX(_styleFeatures);
     x.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeX((Rectangle*)_styleFeatures, x);
+    setGeometricShapeX(_styleFeatures, x);
     emit isUpdated();
 }
 
@@ -2126,14 +2126,14 @@ MyRectangleShapeYAbsoluteParameter::MyRectangleShapeYAbsoluteParameter(Transform
 }
 
 void MyRectangleShapeYAbsoluteParameter::read() {
-    if (isSetRectangleShapeY((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeY((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeY(_styleFeatures))
+        setDefaultValue(getGeometricShapeY(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeYAbsoluteParameter::write() {
-    RelAbsVector y = getRectangleShapeY((Rectangle*)_styleFeatures);
+    RelAbsVector y = getGeometricShapeY(_styleFeatures);
     y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeY((Rectangle*)_styleFeatures, y);
+    setGeometricShapeY(_styleFeatures, y);
     emit isUpdated();
 }
 
@@ -2144,14 +2144,14 @@ MyRectangleShapeYRelativeParameter::MyRectangleShapeYRelativeParameter(Transform
 }
 
 void MyRectangleShapeYRelativeParameter::read() {
-    if (isSetRectangleShapeY((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeY((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeY(_styleFeatures))
+        setDefaultValue(getGeometricShapeY(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeYRelativeParameter::write() {
-    RelAbsVector y = getRectangleShapeY((Rectangle*)_styleFeatures);
+    RelAbsVector y = getGeometricShapeY(_styleFeatures);
     y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeY((Rectangle*)_styleFeatures, y);
+    setGeometricShapeY(_styleFeatures, y);
     emit isUpdated();
 }
 
@@ -2162,14 +2162,14 @@ MyRectangleShapeWidthAbsoluteParameter::MyRectangleShapeWidthAbsoluteParameter(T
 }
 
 void MyRectangleShapeWidthAbsoluteParameter::read() {
-    if (isSetRectangleShapeWidth((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeWidth((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeWidth(_styleFeatures))
+        setDefaultValue(getGeometricShapeWidth(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeWidthAbsoluteParameter::write() {
-    RelAbsVector width = getRectangleShapeWidth((Rectangle*)_styleFeatures);
+    RelAbsVector width = getGeometricShapeWidth(_styleFeatures);
     width.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeWidth((Rectangle*)_styleFeatures, width);
+    setGeometricShapeWidth(_styleFeatures, width);
     emit isUpdated();
 }
 
@@ -2180,14 +2180,14 @@ MyRectangleShapeWidthRelativeParameter::MyRectangleShapeWidthRelativeParameter(T
 }
 
 void MyRectangleShapeWidthRelativeParameter::read() {
-    if (isSetRectangleShapeWidth((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeWidth((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeWidth(_styleFeatures))
+        setDefaultValue(getGeometricShapeWidth(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeWidthRelativeParameter::write() {
-    RelAbsVector width = getRectangleShapeWidth((Rectangle*)_styleFeatures);
+    RelAbsVector width = getGeometricShapeWidth(_styleFeatures);
     width.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeWidth((Rectangle*)_styleFeatures, width);
+    setGeometricShapeWidth(_styleFeatures, width);
     emit isUpdated();
 }
 
@@ -2198,14 +2198,14 @@ MyRectangleShapeHeightAbsoluteParameter::MyRectangleShapeHeightAbsoluteParameter
 }
 
 void MyRectangleShapeHeightAbsoluteParameter::read() {
-    if (isSetRectangleShapeHeight((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeHeight((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeHeight(_styleFeatures))
+        setDefaultValue(getGeometricShapeHeight(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeHeightAbsoluteParameter::write() {
-    RelAbsVector height = getRectangleShapeHeight((Rectangle*)_styleFeatures);
+    RelAbsVector height = getGeometricShapeHeight(_styleFeatures);
     height.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeHeight((Rectangle*)_styleFeatures, height);
+    setGeometricShapeHeight(_styleFeatures, height);
     emit isUpdated();
 }
 
@@ -2216,14 +2216,14 @@ MyRectangleShapeHeightRelativeParameter::MyRectangleShapeHeightRelativeParameter
 }
 
 void MyRectangleShapeHeightRelativeParameter::read() {
-    if (isSetRectangleShapeHeight((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeHeight((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeHeight(_styleFeatures))
+        setDefaultValue(getGeometricShapeHeight(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeHeightRelativeParameter::write() {
-    RelAbsVector height = getRectangleShapeHeight((Rectangle*)_styleFeatures);
+    RelAbsVector height = getGeometricShapeHeight(_styleFeatures);
     height.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeHeight((Rectangle*)_styleFeatures, height);
+    setGeometricShapeHeight(_styleFeatures, height);
     emit isUpdated();
 }
 
@@ -2234,13 +2234,13 @@ MyRectangleShapeRatioParameter::MyRectangleShapeRatioParameter(Transformation2D*
 }
 
 void MyRectangleShapeRatioParameter::read() {
-    if (isSetRectangleShapeRatio((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeRatio((Rectangle*)_styleFeatures));
+    if (isSetGeometricShapeRatio(_styleFeatures))
+        setDefaultValue(getGeometricShapeRatio(_styleFeatures));
 }
 
 void MyRectangleShapeRatioParameter::write() {
     if (((MyDoubleSpinBox*)_inputWidget)->value() > 0.0) {
-        setRectangleShapeRatio((Rectangle*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
+        setGeometricShapeRatio(_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
         emit isUpdated();
     }
 }
@@ -2259,14 +2259,14 @@ MyRectangleShapeRXAbsoluteParameter::MyRectangleShapeRXAbsoluteParameter(Transfo
 }
 
 void MyRectangleShapeRXAbsoluteParameter::read() {
-    if (isSetRectangleShapeRX((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeRX((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeCornerCurvatureRadiusX(_styleFeatures))
+        setDefaultValue(getGeometricShapeCornerCurvatureRadiusX(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeRXAbsoluteParameter::write() {
-    RelAbsVector rx = getRectangleShapeRX((Rectangle*)_styleFeatures);
+    RelAbsVector rx = getGeometricShapeCornerCurvatureRadiusX(_styleFeatures);
     rx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeRX((Rectangle*)_styleFeatures, rx);
+    setGeometricShapeCornerCurvatureRadiusX(_styleFeatures, rx);
     emit isUpdated();
 }
 
@@ -2277,14 +2277,14 @@ MyRectangleShapeRXRelativeParameter::MyRectangleShapeRXRelativeParameter(Transfo
 }
 
 void MyRectangleShapeRXRelativeParameter::read() {
-    if (isSetRectangleShapeRX((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeRX((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeCornerCurvatureRadiusX(_styleFeatures))
+        setDefaultValue(getGeometricShapeCornerCurvatureRadiusX(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeRXRelativeParameter::write() {
-    RelAbsVector rx = getRectangleShapeRX((Rectangle*)_styleFeatures);
+    RelAbsVector rx = getGeometricShapeCornerCurvatureRadiusX(_styleFeatures);
     rx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeRX((Rectangle*)_styleFeatures, rx);
+    setGeometricShapeCornerCurvatureRadiusX(_styleFeatures, rx);
     emit isUpdated();
 }
 
@@ -2295,14 +2295,14 @@ MyRectangleShapeRYAbsoluteParameter::MyRectangleShapeRYAbsoluteParameter(Transfo
 }
 
 void MyRectangleShapeRYAbsoluteParameter::read() {
-    if (isSetRectangleShapeRY((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeRY((Rectangle*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeCornerCurvatureRadiusY(_styleFeatures))
+        setDefaultValue(getGeometricShapeCornerCurvatureRadiusY(_styleFeatures).getAbsoluteValue());
 }
 
 void MyRectangleShapeRYAbsoluteParameter::write() {
-    RelAbsVector ry = getRectangleShapeRY((Rectangle*)_styleFeatures);
+    RelAbsVector ry = getGeometricShapeCornerCurvatureRadiusY(_styleFeatures);
     ry.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeRY((Rectangle*)_styleFeatures, ry);
+    setGeometricShapeCornerCurvatureRadiusY(_styleFeatures, ry);
     emit isUpdated();
 }
 
@@ -2313,14 +2313,14 @@ MyRectangleShapeRYRelativeParameter::MyRectangleShapeRYRelativeParameter(Transfo
 }
 
 void MyRectangleShapeRYRelativeParameter::read() {
-    if (isSetRectangleShapeRY((Rectangle*)_styleFeatures))
-        setDefaultValue(getRectangleShapeRY((Rectangle*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeCornerCurvatureRadiusY(_styleFeatures))
+        setDefaultValue(getGeometricShapeCornerCurvatureRadiusY(_styleFeatures).getRelativeValue());
 }
 
 void MyRectangleShapeRYRelativeParameter::write() {
-    RelAbsVector ry = getRectangleShapeRY((Rectangle*)_styleFeatures);
+    RelAbsVector ry = getGeometricShapeCornerCurvatureRadiusY(_styleFeatures);
     ry.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRectangleShapeRY((Rectangle*)_styleFeatures, ry);
+    setGeometricShapeCornerCurvatureRadiusY(_styleFeatures, ry);
     emit isUpdated();
 }
 
@@ -2331,14 +2331,14 @@ MyEllipseShapeCXAbsoluteParameter::MyEllipseShapeCXAbsoluteParameter(Transformat
 }
 
 void MyEllipseShapeCXAbsoluteParameter::read() {
-    if (isSetEllipseShapeCX((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeCX((Ellipse*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeCenterX(_styleFeatures))
+        setDefaultValue(getGeometricShapeCenterX(_styleFeatures).getAbsoluteValue());
 }
 
 void MyEllipseShapeCXAbsoluteParameter::write() {
-    RelAbsVector cx = getEllipseShapeCX((Ellipse*)_styleFeatures);
+    RelAbsVector cx = getGeometricShapeCenterX(_styleFeatures);
     cx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeCX((Ellipse*)_styleFeatures, cx);
+    setGeometricShapeCenterX(_styleFeatures, cx);
     emit isUpdated();
 }
 
@@ -2349,14 +2349,14 @@ MyEllipseShapeCXRelativeParameter::MyEllipseShapeCXRelativeParameter(Transformat
 }
 
 void MyEllipseShapeCXRelativeParameter::read() {
-    if (isSetEllipseShapeCX((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeCX((Ellipse*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeCenterX(_styleFeatures))
+        setDefaultValue(getGeometricShapeCenterX(_styleFeatures).getRelativeValue());
 }
 
 void MyEllipseShapeCXRelativeParameter::write() {
-    RelAbsVector cx = getEllipseShapeCX((Ellipse*)_styleFeatures);
+    RelAbsVector cx = getGeometricShapeCenterX(_styleFeatures);
     cx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeCX((Ellipse*)_styleFeatures, cx);
+    setGeometricShapeCenterX(_styleFeatures, cx);
     emit isUpdated();
 }
 
@@ -2367,14 +2367,14 @@ MyEllipseShapeCYAbsoluteParameter::MyEllipseShapeCYAbsoluteParameter(Transformat
 }
 
 void MyEllipseShapeCYAbsoluteParameter::read() {
-    if (isSetEllipseShapeCY((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeCY((Ellipse*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeCenterY(_styleFeatures))
+        setDefaultValue(getGeometricShapeCenterY(_styleFeatures).getAbsoluteValue());
 }
 
 void MyEllipseShapeCYAbsoluteParameter::write() {
-    RelAbsVector cy = getEllipseShapeCY((Ellipse*)_styleFeatures);
+    RelAbsVector cy = getGeometricShapeCenterY(_styleFeatures);
     cy.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeCY((Ellipse*)_styleFeatures, cy);
+    setGeometricShapeCenterY(_styleFeatures, cy);
     emit isUpdated();
 }
 
@@ -2385,14 +2385,14 @@ MyEllipseShapeCYRelativeParameter::MyEllipseShapeCYRelativeParameter(Transformat
 }
 
 void MyEllipseShapeCYRelativeParameter::read() {
-    if (isSetEllipseShapeCY((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeCY((Ellipse*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeCenterY(_styleFeatures))
+        setDefaultValue(getGeometricShapeCenterY(_styleFeatures).getRelativeValue());
 }
 
 void MyEllipseShapeCYRelativeParameter::write() {
-    RelAbsVector cy = getEllipseShapeCY((Ellipse*)_styleFeatures);
+    RelAbsVector cy = getGeometricShapeCenterY(_styleFeatures);
     cy.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeCY((Ellipse*)_styleFeatures, cy);
+    setGeometricShapeCenterY(_styleFeatures, cy);
     emit isUpdated();
 }
 
@@ -2403,14 +2403,14 @@ MyEllipseShapeRXAbsoluteParameter::MyEllipseShapeRXAbsoluteParameter(Transformat
 }
 
 void MyEllipseShapeRXAbsoluteParameter::read() {
-    if (isSetEllipseShapeRX((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeRX((Ellipse*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeRadiusX(_styleFeatures))
+        setDefaultValue(getGeometricShapeRadiusX(_styleFeatures).getAbsoluteValue());
 }
 
 void MyEllipseShapeRXAbsoluteParameter::write() {
-    RelAbsVector rx = getEllipseShapeRX((Ellipse*)_styleFeatures);
+    RelAbsVector rx = getGeometricShapeRadiusX(_styleFeatures);
     rx.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeRX((Ellipse*)_styleFeatures, rx);
+    setGeometricShapeRadiusX(_styleFeatures, rx);
     emit isUpdated();
 }
 
@@ -2421,14 +2421,14 @@ MyEllipseShapeRXRelativeParameter::MyEllipseShapeRXRelativeParameter(Transformat
 }
 
 void MyEllipseShapeRXRelativeParameter::read() {
-    if (isSetEllipseShapeRX((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeRX((Ellipse*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeRadiusX(_styleFeatures))
+        setDefaultValue(getGeometricShapeRadiusX(_styleFeatures).getRelativeValue());
 }
 
 void MyEllipseShapeRXRelativeParameter::write() {
-    RelAbsVector rx = getEllipseShapeRX((Ellipse*)_styleFeatures);
+    RelAbsVector rx = getGeometricShapeRadiusX(_styleFeatures);
     rx.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeRX((Ellipse*)_styleFeatures, rx);
+    setGeometricShapeRadiusX(_styleFeatures, rx);
     emit isUpdated();
 }
 
@@ -2439,14 +2439,14 @@ MyEllipseShapeRYAbsoluteParameter::MyEllipseShapeRYAbsoluteParameter(Transformat
 }
 
 void MyEllipseShapeRYAbsoluteParameter::read() {
-    if (isSetEllipseShapeRY((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeRY((Ellipse*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeRadiusY(_styleFeatures))
+        setDefaultValue(getGeometricShapeRadiusY(_styleFeatures).getAbsoluteValue());
 }
 
 void MyEllipseShapeRYAbsoluteParameter::write() {
-    RelAbsVector ry = getEllipseShapeRY((Ellipse*)_styleFeatures);
+    RelAbsVector ry = getGeometricShapeRadiusY(_styleFeatures);
     ry.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeRY((Ellipse*)_styleFeatures, ry);
+    setGeometricShapeRadiusY(_styleFeatures, ry);
     emit isUpdated();
 }
 
@@ -2457,14 +2457,14 @@ MyEllipseShapeRYRelativeParameter::MyEllipseShapeRYRelativeParameter(Transformat
 }
 
 void MyEllipseShapeRYRelativeParameter::read() {
-    if (isSetEllipseShapeRY((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeRY((Ellipse*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeRadiusY(_styleFeatures))
+        setDefaultValue(getGeometricShapeRadiusY(_styleFeatures).getRelativeValue());
 }
 
 void MyEllipseShapeRYRelativeParameter::write() {
-    RelAbsVector ry = getEllipseShapeRY((Ellipse*)_styleFeatures);
+    RelAbsVector ry = getGeometricShapeRadiusY(_styleFeatures);
     ry.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setEllipseShapeRY((Ellipse*)_styleFeatures, ry);
+    setGeometricShapeRadiusY(_styleFeatures, ry);
     emit isUpdated();
 }
 
@@ -2475,13 +2475,13 @@ MyEllipseShapeRatioParameter::MyEllipseShapeRatioParameter(Transformation2D* sty
 }
 
 void MyEllipseShapeRatioParameter::read() {
-    if (isSetEllipseShapeRatio((Ellipse*)_styleFeatures))
-        setDefaultValue(getEllipseShapeRatio((Ellipse*)_styleFeatures));
+    if (isSetGeometricShapeRatio(_styleFeatures))
+        setDefaultValue(getGeometricShapeRatio(_styleFeatures));
 }
 
 void MyEllipseShapeRatioParameter::write() {
     if (((MyDoubleSpinBox*)_inputWidget)->value() > 0.0) {
-        setEllipseShapeRatio((Ellipse*)_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
+        setGeometricShapeRatio(_styleFeatures, ((MyDoubleSpinBox*)_inputWidget)->value());
         emit isUpdated();
     }
 }
@@ -2965,14 +2965,14 @@ MyImageShapeXAbsoluteParameter::MyImageShapeXAbsoluteParameter(Transformation2D*
 }
 
 void MyImageShapeXAbsoluteParameter::read() {
-    if (isSetImageShapeX((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeX((Image*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeX(_styleFeatures))
+        setDefaultValue(getGeometricShapeX(_styleFeatures).getAbsoluteValue());
 }
 
 void MyImageShapeXAbsoluteParameter::write() {
-    RelAbsVector x = getImageShapeX((Image*)_styleFeatures);
+    RelAbsVector x = getGeometricShapeX(_styleFeatures);
     x.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeX((Image*)_styleFeatures, x);
+    setGeometricShapeX(_styleFeatures, x);
     emit isUpdated();
 }
 
@@ -2983,14 +2983,14 @@ MyImageShapeXRelativeParameter::MyImageShapeXRelativeParameter(Transformation2D*
 }
 
 void MyImageShapeXRelativeParameter::read() {
-    if (isSetImageShapeX((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeX((Image*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeX(_styleFeatures))
+        setDefaultValue(getGeometricShapeX(_styleFeatures).getRelativeValue());
 }
 
 void MyImageShapeXRelativeParameter::write() {
-    RelAbsVector x = getImageShapeX((Image*)_styleFeatures);
+    RelAbsVector x = getGeometricShapeX(_styleFeatures);
     x.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeX((Image*)_styleFeatures, x);
+    setGeometricShapeX(_styleFeatures, x);
     emit isUpdated();
 }
 
@@ -3001,14 +3001,14 @@ MyImageShapeYAbsoluteParameter::MyImageShapeYAbsoluteParameter(Transformation2D*
 }
 
 void MyImageShapeYAbsoluteParameter::read() {
-    if (isSetImageShapeY((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeY((Image*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeY(_styleFeatures))
+        setDefaultValue(getGeometricShapeY(_styleFeatures).getAbsoluteValue());
 }
 
 void MyImageShapeYAbsoluteParameter::write() {
-    RelAbsVector y = getImageShapeY((Image*)_styleFeatures);
+    RelAbsVector y = getGeometricShapeY(_styleFeatures);
     y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeY((Image*)_styleFeatures, y);
+    setGeometricShapeY(_styleFeatures, y);
     emit isUpdated();
 }
 
@@ -3019,14 +3019,14 @@ MyImageShapeYRelativeParameter::MyImageShapeYRelativeParameter(Transformation2D*
 }
 
 void MyImageShapeYRelativeParameter::read() {
-    if (isSetImageShapeY((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeY((Image*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeY(_styleFeatures))
+        setDefaultValue(getGeometricShapeY(_styleFeatures).getRelativeValue());
 }
 
 void MyImageShapeYRelativeParameter::write() {
-    RelAbsVector y = getImageShapeY((Image*)_styleFeatures);
+    RelAbsVector y = getGeometricShapeY(_styleFeatures);
     y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeY((Image*)_styleFeatures, y);
+    setGeometricShapeY(_styleFeatures, y);
     emit isUpdated();
 }
 
@@ -3037,14 +3037,14 @@ MyImageShapeWidthAbsoluteParameter::MyImageShapeWidthAbsoluteParameter(Transform
 }
 
 void MyImageShapeWidthAbsoluteParameter::read() {
-    if (isSetImageShapeWidth((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeWidth((Image*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeWidth(_styleFeatures))
+        setDefaultValue(getGeometricShapeWidth(_styleFeatures).getAbsoluteValue());
 }
 
 void MyImageShapeWidthAbsoluteParameter::write() {
-    RelAbsVector width = getImageShapeWidth((Image*)_styleFeatures);
+    RelAbsVector width = getGeometricShapeWidth(_styleFeatures);
     width.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeWidth((Image*)_styleFeatures, width);
+    setGeometricShapeWidth(_styleFeatures, width);
     emit isUpdated();
 }
 
@@ -3055,14 +3055,14 @@ MyImageShapeWidthRelativeParameter::MyImageShapeWidthRelativeParameter(Transform
 }
 
 void MyImageShapeWidthRelativeParameter::read() {
-    if (isSetImageShapeWidth((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeWidth((Image*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeWidth(_styleFeatures))
+        setDefaultValue(getGeometricShapeWidth(_styleFeatures).getRelativeValue());
 }
 
 void MyImageShapeWidthRelativeParameter::write() {
-    RelAbsVector width = getImageShapeWidth((Image*)_styleFeatures);
+    RelAbsVector width = getGeometricShapeWidth(_styleFeatures);
     width.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeWidth((Image*)_styleFeatures, width);
+    setGeometricShapeWidth(_styleFeatures, width);
     emit isUpdated();
 }
 
@@ -3073,14 +3073,14 @@ MyImageShapeHeightAbsoluteParameter::MyImageShapeHeightAbsoluteParameter(Transfo
 }
 
 void MyImageShapeHeightAbsoluteParameter::read() {
-    if (isSetImageShapeHeight((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeHeight((Image*)_styleFeatures).getAbsoluteValue());
+    if (isSetGeometricShapeHeight(_styleFeatures))
+        setDefaultValue(getGeometricShapeHeight(_styleFeatures).getAbsoluteValue());
 }
 
 void MyImageShapeHeightAbsoluteParameter::write() {
-    RelAbsVector height = getImageShapeHeight((Image*)_styleFeatures);
+    RelAbsVector height = getGeometricShapeHeight(_styleFeatures);
     height.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeHeight((Image*)_styleFeatures, height);
+    setGeometricShapeHeight(_styleFeatures, height);
     emit isUpdated();
 }
 
@@ -3091,14 +3091,14 @@ MyImageShapeHeightRelativeParameter::MyImageShapeHeightRelativeParameter(Transfo
 }
 
 void MyImageShapeHeightRelativeParameter::read() {
-    if (isSetImageShapeHeight((Image*)_styleFeatures))
-        setDefaultValue(getImageShapeHeight((Image*)_styleFeatures).getRelativeValue());
+    if (isSetGeometricShapeHeight(_styleFeatures))
+        setDefaultValue(getGeometricShapeHeight(_styleFeatures).getRelativeValue());
 }
 
 void MyImageShapeHeightRelativeParameter::write() {
-    RelAbsVector height = getImageShapeHeight((Image*)_styleFeatures);
+    RelAbsVector height = getGeometricShapeHeight(_styleFeatures);
     height.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setImageShapeHeight((Image*)_styleFeatures, height);
+    setGeometricShapeHeight(_styleFeatures, height);
     emit isUpdated();
 }
 

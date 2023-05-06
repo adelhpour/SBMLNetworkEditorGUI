@@ -18,19 +18,19 @@ void MyEllipseGraphicsItem::updateFeatures(RenderGroup* group, Ellipse* ellipse,
 
 const QRectF MyEllipseGraphicsItem::getRect(Ellipse* ellipse, BoundingBox* boundingBox) {
     qreal cx = getPositionX(boundingBox);
-    if (isSetEllipseShapeCX(ellipse))
-        cx += getEllipseShapeCX(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeCX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
+    if (isSetGeometricShapeCenterX(ellipse))
+        cx += getGeometricShapeCenterX(ellipse).getAbsoluteValue() + 0.01 * getGeometricShapeCenterX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
     qreal cy = getPositionY(boundingBox);
-    if (isSetEllipseShapeCY(ellipse))
-        cy += getEllipseShapeCY(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeCY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetGeometricShapeCenterY(ellipse))
+        cy += getGeometricShapeCenterY(ellipse).getAbsoluteValue() + 0.01 * getGeometricShapeCenterY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
     qreal rx = 0.5 * getDimensionWidth(boundingBox);
-    if (isSetEllipseShapeRX(ellipse))
-        rx = getEllipseShapeRX(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeRX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
+    if (isSetGeometricShapeRadiusX(ellipse))
+        rx = getGeometricShapeRadiusX(ellipse).getAbsoluteValue() + 0.01 * getGeometricShapeRadiusX(ellipse).getRelativeValue() * getDimensionWidth(boundingBox);
     qreal ry = 0.5 * getDimensionHeight(boundingBox);
-    if (isSetEllipseShapeRY(ellipse))
-        ry = getEllipseShapeRY(ellipse).getAbsoluteValue() + 0.01 * getEllipseShapeRY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
-    if (isSetEllipseShapeRatio(ellipse)) {
-        qreal ratio = getEllipseShapeRatio(ellipse);
+    if (isSetGeometricShapeRadiusY(ellipse))
+        ry = getGeometricShapeRadiusY(ellipse).getAbsoluteValue() + 0.01 * getGeometricShapeRadiusY(ellipse).getRelativeValue() * getDimensionHeight(boundingBox);
+    if (isSetGeometricShapeRatio(ellipse)) {
+        qreal ratio = getGeometricShapeRatio(ellipse);
         if ((getDimensionWidth(boundingBox) / getDimensionHeight(boundingBox)) <= ratio) {
             rx = 0.5 * getDimensionWidth(boundingBox);
             ry = 0.5 * getDimensionWidth(boundingBox) / ratio;
