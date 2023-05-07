@@ -18,9 +18,9 @@ void MyPolygonGraphicsItem::updateFeatures(RenderGroup* group, Polygon* polygon,
 
 const QPolygonF MyPolygonGraphicsItem::getPolygon(Polygon* polygon, BoundingBox* boundingBox) {
     QPolygonF polygonShape;
-    for (unsigned int i = 0; i < getPolygonShapeNumElements(polygon); i++) {
-        qreal x = getPositionX(boundingBox) + getPolygonShapeElementX(polygon, i).getAbsoluteValue() + 0.01 * getPolygonShapeElementX(polygon, i).getRelativeValue() * getDimensionWidth(boundingBox);
-        qreal y = getPositionY(boundingBox) + getPolygonShapeElementY(polygon, i).getAbsoluteValue() + 0.01 * getPolygonShapeElementY(polygon, i).getRelativeValue() * getDimensionHeight(boundingBox);
+    for (unsigned int i = 0; i < getGeometricShapeNumElements(polygon); i++) {
+        qreal x = getPositionX(boundingBox) +  getGeometricShapeElementX(polygon, i).getAbsoluteValue() + 0.01 *  getGeometricShapeElementX(polygon, i).getRelativeValue() * getDimensionWidth(boundingBox);
+        qreal y = getPositionY(boundingBox) +  getGeometricShapeElementY(polygon, i).getAbsoluteValue() + 0.01 *  getGeometricShapeElementY(polygon, i).getRelativeValue() * getDimensionHeight(boundingBox);
         polygonShape << QPointF(x, y);
     }
     

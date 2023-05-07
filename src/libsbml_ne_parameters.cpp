@@ -2506,14 +2506,14 @@ MyPolygonShapeVertexXAbsoluteParameter::MyPolygonShapeVertexXAbsoluteParameter(T
 }
 
 void MyPolygonShapeVertexXAbsoluteParameter::read() {
-    RelAbsVector elementX = getPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     setDefaultValue(elementX.getAbsoluteValue());
 }
 
 void MyPolygonShapeVertexXAbsoluteParameter::write() {
-    RelAbsVector elementX = getPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     elementX.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex, elementX);
+    setGeometricShapeElementX(_styleFeatures, _elementIndex, elementX);
     emit isUpdated();
 }
 
@@ -2524,14 +2524,14 @@ MyPolygonShapeVertexXRelativeParameter::MyPolygonShapeVertexXRelativeParameter(T
 }
 
 void MyPolygonShapeVertexXRelativeParameter::read() {
-    RelAbsVector elementX = getPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     setDefaultValue(elementX.getRelativeValue());
 }
 
 void MyPolygonShapeVertexXRelativeParameter::write() {
-    RelAbsVector elementX = getPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     elementX.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeElementX((Polygon*)_styleFeatures, _elementIndex, elementX);
+    setGeometricShapeElementX(_styleFeatures, _elementIndex, elementX);
     emit isUpdated();
 }
 
@@ -2542,14 +2542,14 @@ MyPolygonShapeVertexYAbsoluteParameter::MyPolygonShapeVertexYAbsoluteParameter(T
 }
 
 void MyPolygonShapeVertexYAbsoluteParameter::read() {
-    RelAbsVector elementY = getPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getAbsoluteValue());
 }
 
 void MyPolygonShapeVertexYAbsoluteParameter::write() {
-    RelAbsVector elementY = getPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     elementY.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex, elementY);
+    setGeometricShapeElementY(_styleFeatures, _elementIndex, elementY);
     emit isUpdated();
 }
 
@@ -2561,14 +2561,14 @@ MyPolygonShapeVertexYRelativeParameter::MyPolygonShapeVertexYRelativeParameter(T
 }
 
 void MyPolygonShapeVertexYRelativeParameter::read() {
-    RelAbsVector elementY = getPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getRelativeValue());
 }
 
 void MyPolygonShapeVertexYRelativeParameter::write() {
-    RelAbsVector elementY = getPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     elementY.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeElementY((Polygon*)_styleFeatures, _elementIndex, elementY);
+    setGeometricShapeElementY(_styleFeatures, _elementIndex, elementY);
     emit isUpdated();
 }
 
@@ -2579,14 +2579,14 @@ MyPolygonShapeBasePoint1XAbsoluteParameter::MyPolygonShapeBasePoint1XAbsolutePar
 }
 
 void MyPolygonShapeBasePoint1XAbsoluteParameter::read() {
-    RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1X.getAbsoluteValue());
 }
 
 void MyPolygonShapeBasePoint1XAbsoluteParameter::write() {
-    RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     basePoint1X.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex, basePoint1X);
+    setGeometricShapeBasePoint1X(_styleFeatures, _elementIndex, basePoint1X);
     emit isUpdated();
 }
 
@@ -2597,14 +2597,14 @@ MyPolygonShapeBasePoint1XRelativeParameter::MyPolygonShapeBasePoint1XRelativePar
 }
 
 void MyPolygonShapeBasePoint1XRelativeParameter::read() {
-    RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1X.getRelativeValue());
 }
 
 void MyPolygonShapeBasePoint1XRelativeParameter::write() {
-    RelAbsVector basePoint1X = getPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     basePoint1X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint1X((Polygon*)_styleFeatures, _elementIndex, basePoint1X);
+    setGeometricShapeBasePoint1X(_styleFeatures, _elementIndex, basePoint1X);
     emit isUpdated();
 }
 
@@ -2615,14 +2615,14 @@ MyPolygonShapeBasePoint1YAbsoluteParameter::MyPolygonShapeBasePoint1YAbsolutePar
 }
 
 void MyPolygonShapeBasePoint1YAbsoluteParameter::read() {
-    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1Y.getAbsoluteValue());
 }
 
 void MyPolygonShapeBasePoint1YAbsoluteParameter::write() {
-    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     basePoint1Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex, basePoint1Y);
+    setGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex, basePoint1Y);
     emit isUpdated();
 }
 
@@ -2633,14 +2633,14 @@ MyPolygonShapeBasePoint1YRelativeParameter::MyPolygonShapeBasePoint1YRelativePar
 }
 
 void MyPolygonShapeBasePoint1YRelativeParameter::read() {
-    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1Y.getRelativeValue());
 }
 
 void MyPolygonShapeBasePoint1YRelativeParameter::write() {
-    RelAbsVector basePoint1Y = getPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     basePoint1Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint1Y((Polygon*)_styleFeatures, _elementIndex, basePoint1Y);
+    setGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex, basePoint1Y);
     emit isUpdated();
 }
 
@@ -2651,14 +2651,14 @@ MyPolygonShapeBasePoint2XAbsoluteParameter::MyPolygonShapeBasePoint2XAbsolutePar
 }
 
 void MyPolygonShapeBasePoint2XAbsoluteParameter::read() {
-    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2X.getAbsoluteValue());
 }
 
 void MyPolygonShapeBasePoint2XAbsoluteParameter::write() {
-    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     basePoint2X.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex, basePoint2X);
+    setGeometricShapeBasePoint2X(_styleFeatures, _elementIndex, basePoint2X);
     emit isUpdated();
 }
 
@@ -2669,14 +2669,14 @@ MyPolygonShapeBasePoint2XRelativeParameter::MyPolygonShapeBasePoint2XRelativePar
 }
 
 void MyPolygonShapeBasePoint2XRelativeParameter::read() {
-    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2X.getRelativeValue());
 }
 
 void MyPolygonShapeBasePoint2XRelativeParameter::write() {
-    RelAbsVector basePoint2X = getPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     basePoint2X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint2X((Polygon*)_styleFeatures, _elementIndex, basePoint2X);
+    setGeometricShapeBasePoint2X(_styleFeatures, _elementIndex, basePoint2X);
     emit isUpdated();
 }
 
@@ -2687,14 +2687,14 @@ MyPolygonShapeBasePoint2YAbsoluteParameter::MyPolygonShapeBasePoint2YAbsolutePar
 }
 
 void MyPolygonShapeBasePoint2YAbsoluteParameter::read() {
-    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     (basePoint2Y.getAbsoluteValue());
 }
 
 void MyPolygonShapeBasePoint2YAbsoluteParameter::write() {
-    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     basePoint2Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex, basePoint2Y);
+    setGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
 
@@ -2705,14 +2705,14 @@ MyPolygonShapeBasePoint2YRelativeParameter::MyPolygonShapeBasePoint2YRelativePar
 }
 
 void MyPolygonShapeBasePoint2YRelativeParameter::read() {
-    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2Y.getRelativeValue());
 }
 
 void MyPolygonShapeBasePoint2YRelativeParameter::write() {
-    RelAbsVector basePoint2Y = getPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     basePoint2Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setPolygonShapeBasePoint2Y((Polygon*)_styleFeatures, _elementIndex, basePoint2Y);
+    setGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
 
@@ -2729,14 +2729,14 @@ MyRenderCurveShapePointXAbsoluteParameter::MyRenderCurveShapePointXAbsoluteParam
 }
 
 void MyRenderCurveShapePointXAbsoluteParameter::read() {
-    RelAbsVector elementX = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     setDefaultValue(elementX.getAbsoluteValue());
 }
 
 void MyRenderCurveShapePointXAbsoluteParameter::write() {
-    RelAbsVector elementX = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     elementX.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex, elementX);
+    setGeometricShapeElementX(_styleFeatures, _elementIndex, elementX);
     emit isUpdated();
 }
 
@@ -2747,14 +2747,14 @@ MyRenderCurveShapePointXRelativeParameter::MyRenderCurveShapePointXRelativeParam
 }
 
 void MyRenderCurveShapePointXRelativeParameter::read() {
-    RelAbsVector elementX = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     setDefaultValue(elementX.getRelativeValue());
 }
 
 void MyRenderCurveShapePointXRelativeParameter::write() {
-    RelAbsVector elementX = getRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementX = getGeometricShapeElementX(_styleFeatures, _elementIndex);
     elementX.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeElementX((RenderCurve*)_styleFeatures, _elementIndex, elementX);
+    setGeometricShapeElementX(_styleFeatures, _elementIndex, elementX);
     emit isUpdated();
 }
 
@@ -2765,14 +2765,14 @@ MyRenderCurveShapePointYAbsoluteParameter::MyRenderCurveShapePointYAbsoluteParam
 }
 
 void MyRenderCurveShapePointYAbsoluteParameter::read() {
-    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getAbsoluteValue());
 }
 
 void MyRenderCurveShapePointYAbsoluteParameter::write() {
-    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     elementY.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex, elementY);
+    setGeometricShapeElementY(_styleFeatures, _elementIndex, elementY);
     emit isUpdated();
 }
 
@@ -2783,14 +2783,14 @@ MyRenderCurveShapePointYRelativeParameter::MyRenderCurveShapePointYRelativeParam
 }
 
 void MyRenderCurveShapePointYRelativeParameter::read() {
-    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     setDefaultValue(elementY.getRelativeValue());
 }
 
 void MyRenderCurveShapePointYRelativeParameter::write() {
-    RelAbsVector elementY = getRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector elementY = getGeometricShapeElementY(_styleFeatures, _elementIndex);
     elementY.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeElementY((RenderCurve*)_styleFeatures, _elementIndex, elementY);
+    setGeometricShapeElementY(_styleFeatures, _elementIndex, elementY);
     emit isUpdated();
 }
 
@@ -2801,14 +2801,14 @@ MyRenderCurveShapeBasePoint1XAbsoluteParameter::MyRenderCurveShapeBasePoint1XAbs
 }
 
 void MyRenderCurveShapeBasePoint1XAbsoluteParameter::read() {
-    RelAbsVector basePoint1X = getRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1X.getAbsoluteValue());
 }
 
 void MyRenderCurveShapeBasePoint1XAbsoluteParameter::write() {
-    RelAbsVector basePoint1X = getRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     basePoint1X.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex, basePoint1X);
+    setGeometricShapeBasePoint1X(_styleFeatures, _elementIndex, basePoint1X);
     emit isUpdated();
 }
 
@@ -2819,14 +2819,14 @@ MyRenderCurveShapeBasePoint1XRelativeParameter::MyRenderCurveShapeBasePoint1XRel
 }
 
 void MyRenderCurveShapeBasePoint1XRelativeParameter::read() {
-    RelAbsVector basePoint1X = getRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1X.getRelativeValue());
 }
 
 void MyRenderCurveShapeBasePoint1XRelativeParameter::write() {
-    RelAbsVector basePoint1X = getRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1X = getGeometricShapeBasePoint1X(_styleFeatures, _elementIndex);
     basePoint1X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint1X((RenderCurve*)_styleFeatures, _elementIndex, basePoint1X);
+    setGeometricShapeBasePoint1X(_styleFeatures, _elementIndex, basePoint1X);
     emit isUpdated();
 }
 
@@ -2837,14 +2837,14 @@ MyRenderCurveShapeBasePoint1YAbsoluteParameter::MyRenderCurveShapeBasePoint1YAbs
 }
 
 void MyRenderCurveShapeBasePoint1YAbsoluteParameter::read() {
-    RelAbsVector basePoint1Y = getRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1Y.getAbsoluteValue());
 }
 
 void MyRenderCurveShapeBasePoint1YAbsoluteParameter::write() {
-    RelAbsVector basePoint1Y = getRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     basePoint1Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint1Y);
+    setGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex, basePoint1Y);
     emit isUpdated();
 }
 
@@ -2855,14 +2855,14 @@ MyRenderCurveShapeBasePoint1YRelativeParameter::MyRenderCurveShapeBasePoint1YRel
 }
 
 void MyRenderCurveShapeBasePoint1YRelativeParameter::read() {
-    RelAbsVector basePoint1Y = getRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint1Y.getRelativeValue());
 }
 
 void MyRenderCurveShapeBasePoint1YRelativeParameter::write() {
-    RelAbsVector basePoint1Y = getRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint1Y = getGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex);
     basePoint1Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint1Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint1Y);
+    setGeometricShapeBasePoint1Y(_styleFeatures, _elementIndex, basePoint1Y);
     emit isUpdated();
 }
 
@@ -2873,14 +2873,14 @@ MyRenderCurveShapeBasePoint2XAbsoluteParameter::MyRenderCurveShapeBasePoint2XAbs
 }
 
 void MyRenderCurveShapeBasePoint2XAbsoluteParameter::read() {
-    RelAbsVector basePoint2X = getRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2X.getAbsoluteValue());
 }
 
 void MyRenderCurveShapeBasePoint2XAbsoluteParameter::write() {
-    RelAbsVector basePoint2X = getRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     basePoint2X.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex, basePoint2X);
+    setGeometricShapeBasePoint2X(_styleFeatures, _elementIndex, basePoint2X);
     emit isUpdated();
 }
 
@@ -2891,14 +2891,14 @@ MyRenderCurveShapeBasePoint2XRelativeParameter::MyRenderCurveShapeBasePoint2XRel
 }
 
 void MyRenderCurveShapeBasePoint2XRelativeParameter::read() {
-    RelAbsVector basePoint2X = getRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2X.getRelativeValue());
 }
 
 void MyRenderCurveShapeBasePoint2XRelativeParameter::write() {
-    RelAbsVector basePoint2X = getRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2X = getGeometricShapeBasePoint2X(_styleFeatures, _elementIndex);
     basePoint2X.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint2X((RenderCurve*)_styleFeatures, _elementIndex, basePoint2X);
+    setGeometricShapeBasePoint2X(_styleFeatures, _elementIndex, basePoint2X);
     emit isUpdated();
 }
 
@@ -2909,14 +2909,14 @@ MyRenderCurveShapeBasePoint2YAbsoluteParameter::MyRenderCurveShapeBasePoint2YAbs
 }
 
 void MyRenderCurveShapeBasePoint2YAbsoluteParameter::read() {
-    RelAbsVector basePoint2Y = getRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2Y.getAbsoluteValue());
 }
 
 void MyRenderCurveShapeBasePoint2YAbsoluteParameter::write() {
-    RelAbsVector basePoint2Y = getRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     basePoint2Y.setAbsoluteValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint2Y);
+    setGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
 
@@ -2927,14 +2927,14 @@ MyRenderCurveShapeBasePoint2YRelativeParameter::MyRenderCurveShapeBasePoint2YRel
 }
 
 void MyRenderCurveShapeBasePoint2YRelativeParameter::read() {
-    RelAbsVector basePoint2Y = getRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     setDefaultValue(basePoint2Y.getRelativeValue());
 }
 
 void MyRenderCurveShapeBasePoint2YRelativeParameter::write() {
-    RelAbsVector basePoint2Y = getRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex);
+    RelAbsVector basePoint2Y = getGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex);
     basePoint2Y.setRelativeValue(((MyDoubleSpinBox*)_inputWidget)->value());
-    setRenderCurveShapeBasePoint2Y((RenderCurve*)_styleFeatures, _elementIndex, basePoint2Y);
+    setGeometricShapeBasePoint2Y(_styleFeatures, _elementIndex, basePoint2Y);
     emit isUpdated();
 }
 

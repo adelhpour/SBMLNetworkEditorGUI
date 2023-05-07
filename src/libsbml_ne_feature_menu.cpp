@@ -496,7 +496,7 @@ QWidget* MyPolygonShapeMenu::createElementsMenuTree(Polygon* polygon) {
     MyParameterBase* _vertexBasePoint2YRelParameter = NULL;
     QWidget* elementMenu = NULL;
     QGridLayout* elementMenuLayout = NULL;
-    for (unsigned int i = 0; i < getPolygonShapeNumElements(polygon); i++) {
+    for (unsigned int i = 0; i < getGeometricShapeNumElements(polygon); i++) {
         elementMenu = new QWidget(elementsMenuTree);
         elementMenuLayout = new QGridLayout(elementMenu);
         // x
@@ -1078,14 +1078,14 @@ MyAddRemovePolygonElementButtons::MyAddRemovePolygonElementButtons(Polygon* poly
 }
 
 const bool MyAddRemovePolygonElementButtons::hasEnoughElementsLeft() {
-    if (getPolygonShapeNumElements((Polygon*)_shape) > 3)
+    if (getGeometricShapeNumElements((Polygon*)_shape) > 3)
         return true;
 
     return false;
 }
 
 unsigned int MyAddRemovePolygonElementButtons::numberOfShapeElements() {
-    return getPolygonShapeNumElements((Polygon*)_shape);
+    return getGeometricShapeNumElements((Polygon*)_shape);
 }
 
 // MyAddRemoveRenderCurveElementButtons
@@ -1100,14 +1100,14 @@ void MyAddRemoveRenderCurveElementButtons::setAddingMenu() {
 }
 
 const bool MyAddRemoveRenderCurveElementButtons::hasEnoughElementsLeft() {
-    if (getRenderCurveShapeNumElements((RenderCurve*)_shape) > 2)
+    if (getGeometricShapeNumElements((RenderCurve*)_shape) > 2)
         return true;
 
     return false;
 }
 
 unsigned int MyAddRemoveRenderCurveElementButtons::numberOfShapeElements() {
-    return getRenderCurveShapeNumElements((RenderCurve*)_shape);
+    return getGeometricShapeNumElements((RenderCurve*)_shape);
 }
 
 void MyAddRemoveRenderCurveElementButtons::addRenderCubicBezier() {
